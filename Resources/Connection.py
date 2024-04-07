@@ -1,5 +1,4 @@
 import sqlite3
 
-class Communication():
-  def __init__(self):
-    self.connection = sqlite3.connect('SIEIDB.db')
+db = sqlite3.connect("Resources\SIEIDB.db")
+cur = db.cursor()
