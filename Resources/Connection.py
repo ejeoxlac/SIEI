@@ -1,23 +1,21 @@
 import sqlite3
 
-db = sqlite3.connect("Resources\SIEIDB.db")
+db = sqlite3.connect("Resources\\SIEIDB.db")
 cur = db.cursor()
 
 def loginc(user, psw):
-  db = sqlite3.connect("Resources\SIEIDB.db")
-  cur = db.cursor()
   cur.execute ('SELECT * FROM "Usuarios-Sis" WHERE Usuario = ? AND PSW = ?', [user, psw])
 
-def insert_course(id, name, model, serial, stat):
-  db = sqlite3.connect("Resources\SIEIDB.db")
+def insert_course(id, name, model, serial, color, colormb, cpu, ram, disk, stat, fei, fsi):
+  db = sqlite3.connect("Resources\\SIEIDB.db")
   cur = db.cursor()
-  cur.execute('INSERT INTO "BO" (id, Nombre, Modelo, Serial, Estado) VALUES(?,?,?,?,?)',
-              (id, name, model, serial, stat))
+  cur.execute('INSERT INTO "BO" (id, Nombre, Modelo, Serial, Color, "Color-MB", CPU, Ram, HDDoSDD, Estado, "Fecha-ENT-I", "Fecha-SAL-I") VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',
+              (id, name, model, serial, color, colormb, cpu, ram, disk, stat, fei, fsi))
   db.commit()
   db.close()
   
 def id_exist(id):
-  db = sqlite3.connect("Resources\SIEIDB.db")
+  db = sqlite3.connect("Resources\\SIEIDB.db")
   cur = db.cursor()
   cur.execute('SELECT COUNT(*) FROM BO WHERE id = ?', [id])
   result = cur.fetchone()
