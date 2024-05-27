@@ -37,12 +37,12 @@ def submit_bo ():
   dfa = dateofarrival_entry.get ()
   dtd = departuredate_entry.get ()
   try:
-    if not (id and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa and dtd):
-      messagebox.showerror ('Error', 'Se deben llenar todas las celdas')
+    if not (id and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
+      messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida')
     elif Resources.Connection.id_exist (id):
       messagebox.showerror ('Error', 'El ID ya existe')
     else:
-      Resources.Connection.insert_bo (id, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dtd)
+      Resources.Connection.insert_pc (id, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd)
       messagebox.showinfo ('Éxito', 'La información fue registrada')
   except:
     messagebox.showerror ('Error', 'A ocurrido un error')
