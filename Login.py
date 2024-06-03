@@ -1,6 +1,7 @@
 # Libraries
 from customtkinter import *
 from tkinter import messagebox
+from PIL import Image
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
@@ -25,10 +26,16 @@ set_default_color_theme ('blue')
 main = CTk ()
 main.title ('Inicio de sesión a el SIEI')
 main.geometry ('500x500')
+main.resizable (False, False)
+
+# Format to create the background of the application
+bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 500))
+bg_image_label = CTkLabel (main, text='', image=bg_image)
+bg_image_label.place (x=0, y=0)
 
 # Format of the frame that forms the main body of the window
 frame = CTkFrame (main)
-frame.pack (expand=True, fill='both', padx=20, pady=60)
+frame.pack (expand=True, fill='both', padx=50, pady=60)
 
 # Title
 CTkLabel (frame, text='Inicio de sesión', font=('Roboto', 26)).pack (pady=20)

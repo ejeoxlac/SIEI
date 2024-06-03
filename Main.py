@@ -59,10 +59,10 @@ app.resizable (False, False)
 
 # Fonts for the letters
 font1 = ('Roboto', 30, 'bold')
-font2 = ('Roboto', 20, 'bold')
+font2 = ('Roboto', 18, 'bold')
 
 # User interface objects
-title_label = CTkLabel (app, font=font1, text='Datos del computador', text_color='#fff', bg_color='#292933')
+title_label = CTkLabel (app, font=font1, text='Datos del computador', text_color='#fff')
 title_label.place (x=25, y=20)
 
 ## Frame that will contain the objects that will record the data

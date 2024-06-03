@@ -18,7 +18,7 @@ def insert_pc(id, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa
   db.close ()
 
 # IDs checker to avoid duplication
-def id_exist (id):
+def id_exist_pc (id):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
   cur.execute ('SELECT COUNT(*) FROM PC WHERE idpc=?', [id])
@@ -26,6 +26,23 @@ def id_exist (id):
   db.close ()
   return result [0] > 0
 
-# Search engine for data about computers
+# Search Engines
+## Search engine for data about computers
 def search_pc (val, stat):
   cur.execute ('SELECT * FROM PC WHERE idpc=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+
+## Data finder about keyboards
+def search_pk (val, stat):
+  cur.execute ('SELECT * FROM Pk WHERE idpk=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+
+## Data finder about monitors
+def search_pm (val, stat):
+  cur.execute ('SELECT * FROM PM WHERE idpm=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+
+## Search for data about mouses
+def search_pmo (val, stat):
+  cur.execute ('SELECT * FROM PMO WHERE idpmo=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+
+## Search for data about printers
+def search_pp (val, stat):
+  cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
