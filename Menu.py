@@ -32,12 +32,14 @@ image4 = CTkImage (Image.open('Resources\\Img\\Exit.png'), size=(30, 30))
 CTkLabel (frame, text='Menu', font=('Roboto', 26)).pack (pady=20)
 
 # Buttons for accessing the functions of the application
-CTkButton (frame, text='Registro de equipos informáticos', image=image1).pack (pady=20)
+CTkButton (frame, text='Registro de equipos informáticos', image=image1).pack (pady=15)
 
-CTkButton (frame, text='Vista de registros guardados', image=image2).pack (pady=20)
+CTkButton (frame, text='Asignación de los equipos', image=image1).pack (pady=15)
 
-CTkButton (frame, text='Administrador de usuarios', image=image3).pack (pady=20)
+CTkButton (frame, text='Vista de registros guardados', image=image2).pack (pady=15)
 
-CTkButton (frame, text='Salir', image=image4).pack (pady=20)
+CTkButton (frame, text='Administrador de usuarios', image=image3).pack (pady=15)
+
+CTkButton (frame, text='Salir', image=image4).pack (pady=15)
 
 main.mainloop ()

@@ -17,7 +17,7 @@ def insert_pc(id, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa
   db.commit ()
   db.close ()
 
-# IDs checker to avoid duplication
+# ID checker to avoid computer duplication
 def id_exist_pc (id):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
@@ -46,3 +46,24 @@ def search_pmo (val, stat):
 ## Search for data about printers
 def search_pp (val, stat):
   cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+
+## Search for data about users
+def search_users ():
+  cur.execute ('SELECT * FROM UsersSys')
+
+# Add user data to the UserSys table
+def insert_users(id, name, model, serial, color, colormb):
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('INSERT INTO UsersSys (idus, users, psw, firstnameperson, lastnameperson, idcardperson) VALUES(?, ? ,? ,? ,? ,?)', (id, name, model, serial, color, colormb))
+  db.commit ()
+  db.close ()
+
+# ID checker to avoid duplication in users
+def id_exist_users (id):
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT COUNT(*) FROM UsersSys WHERE idus=?', [id])
+  result = cur.fetchone ()
+  db.close ()
+  return result [0] > 0

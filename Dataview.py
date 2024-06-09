@@ -20,7 +20,7 @@ menu_bar_colour = '#383838'
 # Format of the window interface
 app = customtkinter.CTk ()
 app.title ('Datos de los ordenadores')
-app.geometry ('850x650')
+app.geometry ('1000x650')
 
 # Icons
 pc_icon = CTkImage (Image.open('Resources\\Img\\Computer.png'), size=(20, 20))
@@ -83,12 +83,12 @@ def pc_page ():
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=30, y=515, width=789, height=20)
+    scrollbarx.place (x=5, y=462, width=779, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
-    scrollbary.place (x=820, y=50, width=20, height=485)
+    scrollbary.place (x=782, y=5, width=20, height=477)
 
     trv.place (x=5, y=5, width=775, height=455)
 
@@ -148,7 +148,7 @@ def pk_page ():
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=30, y=515, width=789, height=20)
+    scrollbarx.place (x=5, y=100, width=789, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
@@ -383,7 +383,7 @@ def switch_indication (lb, page):
 menu_bar_frame = tk.Frame (app, bg=menu_bar_colour)
 
 ## Menu buttons
-### For the separation of the buttons you should always add 60 from where "Y" starts for example 130 + 60 = 190 + 60 = 250 and so on
+## For the separation of the buttons you should always add 60 from where "Y" starts for example 130 + 60 = 190 + 60 = 250 and so on
 pc_btn = CTkButton (menu_bar_frame, text='', image=pc_icon, width=10, height=10, command=lambda: switch_indication (pc_btn_indicator, pc_page))
 pc_btn.place (x=9, y=130)
 
@@ -424,7 +424,7 @@ menu_bar_frame.configure (width=45)
 main_frame = CTkFrame (app)
 main_frame.pack (side=tk.LEFT)
 main_frame.pack_propagate (False)
-main_frame.configure (height=465, width=789)
+main_frame.configure (width=800, height=500)
 
 # Point to create the framework that works in the app
 frame = tk.Frame(app)
