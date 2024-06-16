@@ -24,12 +24,13 @@ set_default_color_theme ('blue')
 
 # Format of the window interface
 main = CTk ()
-main.title ('Inicio de sesión a el SIEI')
-main.geometry ('500x500')
+main.iconbitmap ('Resources\\Img\\Ico.ico')
+main.title ('Inicio de sesión al sistema SIEI')
+main.geometry ('400x400')
 main.resizable (False, False)
 
 # Format to create the background of the application
-bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 500))
+bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(400, 400))
 bg_image_label = CTkLabel (main, text='', image=bg_image)
 bg_image_label.place (x=0, y=0)
 
@@ -38,16 +39,16 @@ frame = CTkFrame (main)
 frame.pack (expand=True, fill='both', padx=50, pady=60)
 
 # Title
-CTkLabel (frame, text='Inicio de sesión', font=('Roboto', 26)).pack (pady=20)
+CTkLabel (frame, text='SIEI', font=('Roboto', 26)).pack (pady=20)
 
 # Data entry for the login
-name = CTkEntry (frame, placeholder_text='Nombre', width=250)
-name.pack ()
+name = CTkEntry (frame, placeholder_text='Usuario', show='*', width=250, height=40)
+name.pack (pady=5)
 
-password = CTkEntry (frame, placeholder_text='Contraseña', width=250)
+password = CTkEntry (frame, placeholder_text='Contraseña', show='*', width=250, height=40)
 password.pack (pady=15)
 
 # login button
-CTkButton (frame, text='Acceder', command=login).pack ()
+CTkButton (frame, text='Acceder', command=login, corner_radius=15).pack (pady=20)
 
 main.mainloop ()
