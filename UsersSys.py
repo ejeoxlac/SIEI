@@ -25,7 +25,6 @@ main.geometry ('860x580')
 main.resizable (False, False)
 
 # Icons
-
 exit_icon = CTkImage (Image.open('Resources\\Img\\ExitWhite.png'), size=(20, 20))
 reg_icon = CTkImage (Image.open('Resources\\Img\\User.png'), size=(20, 20))
 view_icon = CTkImage (Image.open('Resources\\Img\\Userdetail.png'), size=(20, 20))
@@ -214,7 +213,6 @@ class CustomHovertip (Hovertip):
 menu_bar_frame = tk.Frame (main, bg=menu_bar_colour)
 
 ## Menu buttons
-
 exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, delete_pages))
 exit_btn.place (x=9, y=20)
 CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
