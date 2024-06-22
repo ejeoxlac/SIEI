@@ -35,7 +35,7 @@ def reg_page ():
 
     ### Database manipulators
     #### Input re-initiator for data logging
-    def new_dt():
+    def new_dt ():
         idus_entry.delete (0, END)
         user_entry.delete (0, END)
         psw_entry.delete (0, END)
@@ -168,16 +168,119 @@ def view_page ():
 
     ### Function to delete users
     def button_del ():
+
         selected = trv.selection ()
         if selected:
             rowid = selected [0]
             Resources.Connection.del_user (rowid)
             trv.delete (rowid)
         else:
-            messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
+            messagebox.showerror ('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
 
+    ### Function to edit users
+    def button_dem ():
+
+        #### Format of the window interface
+        data_editing_menu = customtkinter.CTkToplevel ()
+        data_editing_menu.title ('Menu de edición de datos')
+        data_editing_menu.geometry ('800x500')
+        data_editing_menu.resizable (False, False)
+
+        #### Fonts for the letters
+        font1 = ('Roboto', 30, 'bold')
+        font2 = ('Roboto', 18, 'bold')
+
+        #### User interface objects
+        title_label = CTkLabel (data_editing_menu, font=font1, text='Datos del usuario', text_color='#fff')
+        title_label.place (x=25, y=0)
+
+        ##### Objects to register the users that is inside the frame
+        ###### Front row
+        idus_label = CTkLabel (data_editing_menu, font=font2, text='ID del usuario:', text_color='#fff')
+        idus_label.place (x=50, y=60)
+
+        idus_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        idus_entry.place (x=50, y=90)
+
+        user_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de usuario:', text_color='#fff')
+        user_label.place (x=280, y=60)
+
+        user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        user_entry.place (x=280, y=90)
+
+        psw_label = CTkLabel (data_editing_menu, font=font2, text='Contraseña del usuario:', text_color='#fff')
+        psw_label.place (x=520, y=60)
+
+        psw_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        psw_entry.place (x=520, y=90)
+
+        ###### Second row
+        firstnameperson_label = CTkLabel (data_editing_menu, font=font2, text='Nombre real del usuario:', text_color='#fff')
+        firstnameperson_label.place (x=50, y=140)
+
+        firstnameperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        firstnameperson_entry.place (x=50, y=170)
+
+        lastnameperson_label = CTkLabel (data_editing_menu, font=font2, text='Apellido del usuario:', text_color='#fff')
+        lastnameperson_label.place (x=280, y=140)
+
+        lastnameperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        lastnameperson_entry.place (x=280, y=170)
+
+        idcardperson_label = CTkLabel (data_editing_menu, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
+        idcardperson_label.place (x=520, y=140)
+
+        idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        idcardperson_entry.place (x=520, y=170)
+        ##### The end of the frame objects
+
+        #### Data verification input
+        def check_input ():
+            selected = trv.focus ()
+            rowid = selected [0]
+            idus = idus_entry.get ()
+            user = user_entry.get ()
+            psw = psw_entry.get ()
+            firstnameperson = firstnameperson_entry.get ()
+            lastnameperson = lastnameperson_entry.get ()
+            idcardperson = idcardperson_entry.get ()
+            if not (idus and user and psw and firstnameperson and lastnameperson and idcardperson):
+                messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
+            else:
+                Resources.Connection.edit_user (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson)
+                for item in trv.get_children ():
+                    trv.delete (item)
+                Resources.Connection.search_users ()
+                users = Resources.Connection.cur.fetchall ()
+                for row in users:
+                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                data_editing_menu.destroy ()
+                messagebox.showinfo ('Elemento editado correctamente', 'El usuario fue editado correctamente')
+
+        #### Button area
+        button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
+        button_dem.place (x=300, y=450)
+
+        #### Returns selected item for editing
+        try:
+            selected = trv.focus ()
+            values = trv.item (selected, 'values')
+            idus_entry.insert (0, values[0])
+            user_entry.insert (0, values[1])
+            psw_entry.insert (0, values[2])
+            firstnameperson_entry.insert (0, values[3])
+            lastnameperson_entry.insert (0, values[4])
+            idcardperson_entry.insert (0, values[5])
+        except IndexError:
+            data_editing_menu.destroy ()
+            messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+    ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-    button_del.place (x=350, y=450)
+    button_del.place (x=240, y=450)
+    
+    button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+    button_edi.place (x=420, y=450)
 
     ### Function to display the data automatically after opening the window
     find ()
