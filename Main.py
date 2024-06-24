@@ -202,7 +202,7 @@ def pk_page ():
     try:
       if not (idpk and name and model and serial and color and stat and dfa):
         messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-      elif Resources.Connection.id_exist_pc (idpk):
+      elif Resources.Connection.id_exist_pk (idpk):
         messagebox.showerror ('Error', 'El ID ya existe')
       else:
         Resources.Connection.insert_pk (idpk, name, model, serial, color, stat, dfa, dtd)
@@ -313,10 +313,10 @@ def pm_page ():
     try:
       if not (idpm and name and model and serial and color and stat and dfa):
         messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-      elif Resources.Connection.id_exist_pc (idpm):
+      elif Resources.Connection.id_exist_pm (idpm):
         messagebox.showerror ('Error', 'El ID ya existe')
       else:
-        Resources.Connection.insert_pk (idpm, name, model, serial, color, stat, dfa, dtd)
+        Resources.Connection.insert_pm (idpm, name, model, serial, color, stat, dfa, dtd)
         messagebox.showinfo ('Éxito', 'La información fue registrada')
     except:
       messagebox.showerror ('Error', 'A ocurrido un error')
@@ -424,10 +424,10 @@ def pmo_page ():
     try:
       if not (idpmo and name and model and serial and color and stat and dfa):
         messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-      elif Resources.Connection.id_exist_pc (idpmo):
+      elif Resources.Connection.id_exist_pmo (idpmo):
         messagebox.showerror ('Error', 'El ID ya existe')
       else:
-        Resources.Connection.insert_pk (idpmo, name, model, serial, color, stat, dfa, dtd)
+        Resources.Connection.insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd)
         messagebox.showinfo ('Éxito', 'La información fue registrada')
     except:
       messagebox.showerror ('Error', 'A ocurrido un error')
@@ -535,10 +535,10 @@ def pp_page ():
     try:
       if not (idpp and name and model and serial and color and stat and dfa):
         messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-      elif Resources.Connection.id_exist_pc (idpp):
+      elif Resources.Connection.id_exist_pp (idpp):
         messagebox.showerror ('Error', 'El ID ya existe')
       else:
-        Resources.Connection.insert_pk (idpp, name, model, serial, color, stat, dfa, dtd)
+        Resources.Connection.insert_pp (idpp, name, model, serial, color, stat, dfa, dtd)
         messagebox.showinfo ('Éxito', 'La información fue registrada')
     except:
       messagebox.showerror ('Error', 'A ocurrido un error')

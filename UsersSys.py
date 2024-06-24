@@ -172,7 +172,7 @@ def view_page ():
         selected = trv.selection ()
         if selected:
             rowid = selected [0]
-            Resources.Connection.del_user (rowid)
+            Resources.Connection.del_users (rowid)
             trv.delete (rowid)
         else:
             messagebox.showerror ('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -247,7 +247,7 @@ def view_page ():
             if not (idus and user and psw and firstnameperson and lastnameperson and idcardperson):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_user (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson)
+                Resources.Connection.edit_users (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson)
                 for item in trv.get_children ():
                     trv.delete (item)
                 Resources.Connection.search_users ()
