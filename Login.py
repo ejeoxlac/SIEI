@@ -2,6 +2,7 @@
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image
+import subprocess
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
@@ -13,6 +14,8 @@ def login():
   Resources.Connection.loginv (user, psw)
   if Resources.Connection.cur.fetchall ():
     messagebox.showinfo ('Login', 'Acceso permitido')
+    main.destroy ()
+    subprocess.run (['python', 'Menu.py'])
   elif not (user and psw):
     messagebox.showerror ('Error', 'Debes llenar las celdas')
   else:

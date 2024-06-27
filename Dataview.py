@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+import subprocess
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
@@ -1107,6 +1108,12 @@ def delete_pages ():
     for frame in main_frame.winfo_children ():
         frame.destroy ()
 
+# Function to return to the menu window
+def menu_page ():
+    if messagebox.askyesno ('Confirmación', '¿Está seguro que desea salir?'):
+        main.destroy ()
+        subprocess.run (['python', 'Menu.py'])
+
 # Function to show which button and window is being selected
 def hide_indicator ():
 
@@ -1142,7 +1149,7 @@ title_label_area = tk.Label (main, font=font1, fg='#fff', background="#242424")
 title_label_area.place (x=60, y=10)
 
 ## Menu buttons
-exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, delete_pages))
+exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, menu_page))
 exit_btn.place (x=9, y=20)
 CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
 
