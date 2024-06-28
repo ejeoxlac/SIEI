@@ -213,7 +213,7 @@ def id_exist_users (idus):
 def insert_users (idus, user, psw, firstnameperson, lastnameperson, idcardperson):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO UsersSys (idus, user, psw, firstnameperson, lastnameperson, idcardperson) VALUES(?, ?, ? ,? ,? ,?)', (idus, user, psw, firstnameperson, lastnameperson, idcardperson))
+  cur.execute ('INSERT INTO UsersSys (idus, users, psw, firstnameperson, lastnameperson, idcardperson) VALUES(?, ?, ? ,? ,? ,?)', (idus, user, psw, firstnameperson, lastnameperson, idcardperson))
   db.commit ()
   db.close ()
 
