@@ -47,7 +47,7 @@ def pc_page ():
         Resources.Connection.search_pc (val, stat)
         PC = Resources.Connection.cur.fetchall ()
         for row in PC:
-            trv.insert ('', END, values=row)
+            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -236,10 +236,7 @@ def pc_page ():
                 Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd)
                 for item in trv.get_children ():
                     trv.delete (item)
-                Resources.Connection.search_pc ()
-                PC = Resources.Connection.cur.fetchall ()
-                for row in PC:
-                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                find ()
                 data_editing_menu.destroy ()
                 messagebox.showinfo ('Elemento editado correctamente', 'El computador fue editado correctamente')
 
@@ -292,7 +289,7 @@ def pk_page ():
         Resources.Connection.search_pk (val, stat)
         PK = Resources.Connection.cur.fetchall ()
         for row in PK:
-            trv.insert ('', END, values=row)
+            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -446,10 +443,7 @@ def pk_page ():
                 Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd)
                 for item in trv.get_children ():
                     trv.delete (item)
-                Resources.Connection.search_pk ()
-                PK = Resources.Connection.cur.fetchall ()
-                for row in PK:
-                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                find ()
                 data_editing_menu.destroy ()
                 messagebox.showinfo ('Elemento editado correctamente', 'El teclado fue editado correctamente')
 
@@ -498,7 +492,7 @@ def pm_page ():
         Resources.Connection.search_pm (val, stat)
         PM = Resources.Connection.cur.fetchall ()
         for row in PM:
-            trv.insert ('', END, values=row)
+            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -652,10 +646,7 @@ def pm_page ():
                 Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd)
                 for item in trv.get_children ():
                     trv.delete (item)
-                Resources.Connection.search_pm ()
-                PM = Resources.Connection.cur.fetchall ()
-                for row in PM:
-                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                find ()
                 data_editing_menu.destroy ()
                 messagebox.showinfo ('Elemento editado correctamente', 'El usuario fue editado correctamente')
 
@@ -679,10 +670,10 @@ def pm_page ():
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
     ### Button area
-    button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+    button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
-    button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+    button_edi = CTkButton (main_frame, font=font1, text='Editar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
     ### Function to display the data automatically after opening the window
@@ -704,7 +695,7 @@ def pmo_page ():
         Resources.Connection.search_pmo (val, stat)
         PMO = Resources.Connection.cur.fetchall ()
         for row in PMO:
-            trv.insert ('', END, values=row)
+            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -858,10 +849,7 @@ def pmo_page ():
                 Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd)
                 for item in trv.get_children ():
                     trv.delete (item)
-                Resources.Connection.search_pmo ()
-                PMO = Resources.Connection.cur.fetchall ()
-                for row in PMO:
-                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                find ()
                 data_editing_menu.destroy ()
                 messagebox.showinfo ('Elemento editado correctamente', 'El usuario fue editado correctamente')
 
@@ -885,10 +873,10 @@ def pmo_page ():
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
     ### Button area
-    button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+    button_del = CTkButton (main_frame, font=font1, text='Borrar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
-    button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+    button_edi = CTkButton (main_frame, font=font1, text='Editar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
     ### Function to display the data automatically after opening the window
@@ -910,7 +898,7 @@ def pp_page ():
         Resources.Connection.search_pp (val, stat)
         PP = Resources.Connection.cur.fetchall ()
         for row in PP:
-            trv.insert ('', END, values=row)
+            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -1064,10 +1052,7 @@ def pp_page ():
                 Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd)
                 for item in trv.get_children ():
                     trv.delete (item)
-                Resources.Connection.search_pp ()
-                PP = Resources.Connection.cur.fetchall ()
-                for row in PP:
-                    trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+                find ()
                 data_editing_menu.destroy ()
                 messagebox.showinfo ('Elemento editado correctamente', 'El usuario fue editado correctamente')
 
@@ -1091,10 +1076,10 @@ def pp_page ():
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
     ### Button area
-    button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+    button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
-    button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+    button_edi = CTkButton (main_frame, font=font1, text='Editar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
     ### Function to display the data automatically after opening the window
