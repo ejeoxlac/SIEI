@@ -24,6 +24,21 @@ main.title ('Datos de los equipos')
 main.geometry ('860x580')
 main.resizable (False, False)
 
+# Setting the table and scrollbar style
+trv_style = ttk.Style ()
+trv_style.theme_use ('default')
+
+trv_style.configure ('Treeview', background='#2a2d2e', foreground='white', rowheight=25, fieldbackground='#343638', bordercolor='#343638', borderwidth=0)
+trv_style.map ('Treeview', background=[('selected', '#22559b')])
+
+trv_style.configure ('Treeview.Heading', background='#565b5e', foreground='white', relief='flat')
+trv_style.map ('Treeview.Heading', background=[('active', '#3484F0')])
+
+trv_style.configure('Horizontal.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.configure('Vertical.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.map('Horizontal.TScrollbar', background=[('disabled', '#343638')])
+trv_style.map('Vertical.TScrollbar', background=[('disabled', '#343638')])
+
 # Icons
 exit_icon = CTkImage (Image.open('Resources\\Img\\ExitWhite.png'), size=(20, 20))
 pc_icon = CTkImage (Image.open('Resources\\Img\\Computer.png'), size=(20, 20))
@@ -42,12 +57,19 @@ def pc_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pc (val, stat)
         PC = Resources.Connection.cur.fetchall ()
         for row in PC:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -65,18 +87,18 @@ def pc_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
-    trv.column (9, stretch=NO, width=100)
-    trv.column (10, stretch=NO, width=100)
-    trv.column (11, stretch=NO, width=100)
-    trv.column (12, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (12, stretch=NO, width=100, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -91,18 +113,22 @@ def pc_page ():
     trv.heading (11, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (12, text='Fecha de salida de la entidad', anchor=tk.CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function of deleting data
     def button_del ():
@@ -284,12 +310,19 @@ def pk_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pk (val, stat)
         PK = Resources.Connection.cur.fetchall ()
         for row in PK:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -307,14 +340,14 @@ def pk_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -325,18 +358,22 @@ def pk_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function of deleting data
     def button_del ():
@@ -487,12 +524,19 @@ def pm_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pm (val, stat)
         PM = Resources.Connection.cur.fetchall ()
         for row in PM:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -510,14 +554,14 @@ def pm_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -528,18 +572,22 @@ def pm_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -690,12 +738,19 @@ def pmo_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pmo (val, stat)
         PMO = Resources.Connection.cur.fetchall ()
         for row in PMO:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -713,14 +768,14 @@ def pmo_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -731,18 +786,22 @@ def pmo_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -893,12 +952,19 @@ def pp_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pp (val, stat)
         PP = Resources.Connection.cur.fetchall ()
         for row in PP:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -916,14 +982,14 @@ def pp_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -934,18 +1000,22 @@ def pp_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
