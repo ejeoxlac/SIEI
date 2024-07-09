@@ -289,12 +289,19 @@ def pc_page ():
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pc ():
+        Resources.Connection.graph_pc ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=220, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pc)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -503,12 +510,19 @@ def pk_page ():
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pk ():
+        Resources.Connection.graph_pk ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
     button_edi = CTkButton (main_frame, font=font1, text='Editar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pk)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -717,12 +731,19 @@ def pm_page ():
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pm ():
+        Resources.Connection.graph_pm ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
     button_edi = CTkButton (main_frame, font=font1, text='Editar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pm)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -931,12 +952,19 @@ def pmo_page ():
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pmo ():
+        Resources.Connection.graph_pmo ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pmo)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -1145,12 +1173,19 @@ def pp_page ():
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pp ():
+        Resources.Connection.graph_pp ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
     
     button_edi = CTkButton (main_frame, font=font1, text='Editar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pp)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find

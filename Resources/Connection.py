@@ -1,5 +1,5 @@
 # Libraries
-import sqlite3
+import sqlite3, pandas, matplotlib.pyplot as plt
 
 # Connector to the database and to execute the SQL statements the database cursor was created
 db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -47,6 +47,23 @@ def del_pc (rowid):
   db.commit ()
   db.close ()
 
+## Statistical graph showing which computers are operational or not
+def graph_pc ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = '''SELECT COUNT(idpc) sum_idpc, status FROM PC GROUP BY status HAVING sum_idpc > 0 UNION SELECT COUNT(idpc) AS total, 'Total General' FROM PC ORDER BY sum_idpc DESC LIMIT 5'''
+  
+  data = pandas.read_sql (cur, db)
+
+  plt.figure (num='Registro de las PC')
+  colors = ['blue', 'green', 'red']
+  plt.bar (data.status, data.sum_idpc, color=colors)
+  for i in range (len(data.status)):
+      plt.bar (0, 0, color=colors[i], label=data.status[i])
+  plt.legend ()
+  plt.ylabel ('Cantidad')
+  plt.title ('PC operativas')
+  plt.show ()
+
 # Functions to work with the data of the keyboards that are registered
 ## Check if the ID is already registered
 def id_exist_pk (idpk):
@@ -84,6 +101,23 @@ def del_pk (rowid):
   cur.execute (f'DELETE FROM PK WHERE rowid = {rowid}')
   db.commit ()
   db.close ()
+
+## Statistical graph showing which keyboards are operational or not
+def graph_pk ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = '''SELECT COUNT(idpk) sum_idpk, status FROM PK GROUP BY status HAVING sum_idpk > 0 UNION SELECT COUNT(idpk) AS total, 'Total General' FROM PK ORDER BY sum_idpk DESC LIMIT 5'''
+
+  data = pandas.read_sql (cur, db)
+
+  plt.figure (num='Registro de los teclados')
+  colors = ['blue', 'green', 'red']
+  plt.bar (data.status, data.sum_idpk, color=colors)
+  for i in range (len(data.status)):
+      plt.bar (0, 0, color=colors[i], label=data.status[i])
+  plt.legend ()
+  plt.ylabel ('Cantidad')
+  plt.title ('Teclados operativos')
+  plt.show ()
 
 # Functions to work with the data of the monitors that are registered
 ## Check if the ID is already registered
@@ -123,6 +157,23 @@ def del_pm (rowid):
   db.commit ()
   db.close ()
 
+## Statistical graph showing which monitors are operational or not
+def graph_pm ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = '''SELECT COUNT(idpm) sum_idpm, status FROM PM GROUP BY status HAVING sum_idpm > 0 UNION SELECT COUNT(idpm) AS total, 'Total General' FROM PM ORDER BY sum_idpm DESC LIMIT 5'''
+  
+  data = pandas.read_sql (cur, db)
+
+  plt.figure (num='Registro de los monitores')
+  colors = ['blue', 'green', 'red']
+  plt.bar (data.status, data.sum_idpm, color=colors)
+  for i in range (len(data.status)):
+      plt.bar (0, 0, color=colors[i], label=data.status[i])
+  plt.legend ()
+  plt.ylabel ('Cantidad')
+  plt.title ('Monitores operativos')
+  plt.show ()
+
 # Functions to work with the data of the mouses that are registered
 ## Check if the ID is already registered
 def id_exist_pmo (idpmo):
@@ -161,6 +212,23 @@ def del_pmo (rowid):
   db.commit ()
   db.close ()
 
+## Statistical graph showing which monitors are operational or not
+def graph_pmo ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = '''SELECT COUNT(idpmo) sum_idpmo, status FROM PMO GROUP BY status HAVING sum_idpmo > 0 UNION SELECT COUNT(idpmo) AS total, 'Total General' FROM PMO ORDER BY sum_idpmo DESC LIMIT 5'''
+  
+  data = pandas.read_sql (cur, db)
+
+  plt.figure (num='Registro de los mouses')
+  colors = ['blue', 'green', 'red']
+  plt.bar (data.status, data.sum_idpmo, color=colors)
+  for i in range (len(data.status)):
+      plt.bar (0, 0, color=colors[i], label=data.status[i])
+  plt.legend ()
+  plt.ylabel ('Cantidad')
+  plt.title ('Mouses operativos')
+  plt.show ()
+
 # Functions to work with the data from the printers that are registered
 ## Check if the ID is already registered
 def id_exist_pp (idpp):
@@ -198,6 +266,23 @@ def del_pp (rowid):
   cur.execute (f'DELETE FROM PP WHERE rowid = {rowid}')
   db.commit ()
   db.close ()
+
+## Statistical graph showing which printers are operational or not
+def graph_pp ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = '''SELECT COUNT(idpp) sum_idpp, status FROM PP GROUP BY status HAVING sum_idpp > 0 UNION SELECT COUNT(idpp) AS total, 'Total General' FROM PP ORDER BY sum_idpp DESC LIMIT 5'''
+  
+  data = pandas.read_sql (cur, db)
+
+  plt.figure (num='Registro de las impresoras')
+  colors = ['blue', 'green', 'red']
+  plt.bar (data.status, data.sum_idpp, color=colors)
+  for i in range (len(data.status)):
+      plt.bar (0, 0, color=colors[i], label=data.status[i])
+  plt.legend ()
+  plt.ylabel ('Cantidad')
+  plt.title ('Impresoras operativas')
+  plt.show ()
 
 # Functions to work with the data of users who are registered
 ## Check if the ID is already registered
