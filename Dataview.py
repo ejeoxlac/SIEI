@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
@@ -85,7 +86,7 @@ def pc_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -97,8 +98,9 @@ def pc_page ():
     trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (9, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (10, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (11, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (12, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (12, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -112,6 +114,7 @@ def pc_page ():
     trv.heading (10, text='Estado', anchor=tk.CENTER)
     trv.heading (11, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (12, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (13, text='Fecha de modificación', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -256,10 +259,11 @@ def pc_page ():
             stat = status.get ()
             dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
+            dom = datetime.now().strftime("%d-%m-%Y")
             if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd)
+                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -345,7 +349,7 @@ def pk_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -353,8 +357,9 @@ def pk_page ():
     trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -364,6 +369,7 @@ def pk_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -481,10 +487,11 @@ def pk_page ():
             stat = status.get ()
             dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
+            dom = datetime.now().strftime("%d-%m-%Y")
             if not (idpk and name and model and serial and color and stat and dfa):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -566,7 +573,7 @@ def pm_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -574,8 +581,9 @@ def pm_page ():
     trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -585,6 +593,7 @@ def pm_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -702,10 +711,11 @@ def pm_page ():
             stat = status.get ()
             dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
+            dom = datetime.now().strftime("%d-%m-%Y")
             if not (idpm and name and model and serial and color and stat and dfa):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -787,7 +797,7 @@ def pmo_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -795,8 +805,9 @@ def pmo_page ():
     trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -806,6 +817,7 @@ def pmo_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -923,10 +935,11 @@ def pmo_page ():
             stat = status.get ()
             dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
+            dom = datetime.now().strftime("%d-%m-%Y")
             if not (idpmo and name and model and serial and color and stat and dfa):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -1008,7 +1021,7 @@ def pp_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -1016,8 +1029,9 @@ def pp_page ():
     trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
-    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1027,6 +1041,7 @@ def pp_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -1144,10 +1159,11 @@ def pp_page ():
             stat = status.get ()
             dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
+            dom = datetime.now().strftime("%d-%m-%Y")
             if not (idpp and name and model and serial and color and stat and dfa):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
