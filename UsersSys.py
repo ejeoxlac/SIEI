@@ -77,6 +77,12 @@ def reg_page ():
         except:
             messagebox.showerror ('Error', 'A ocurrido un error')
 
+    def validate_numbers_entry(char):
+        if char.isdigit() or char == '.':
+            return True
+        else:
+            return False
+
     ### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -121,7 +127,7 @@ def reg_page ():
     idcardperson_label = CTkLabel (main_frame, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
     idcardperson_label.place (x=520, y=140)
 
-    idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     idcardperson_entry.place (x=520, y=170)
 
     ##### Button area
@@ -212,6 +218,12 @@ def view_page ():
         data_editing_menu.geometry ('800x500')
         data_editing_menu.resizable (False, False)
 
+        def validate_numbers_entry(char):
+            if char.isdigit() or char == '.':
+                return True
+            else:
+                return False
+
         #### Fonts for the letters
         font1 = ('Roboto', 30, 'bold')
         font2 = ('Roboto', 18, 'bold')
@@ -256,7 +268,7 @@ def view_page ():
         idcardperson_label = CTkLabel (data_editing_menu, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
         idcardperson_label.place (x=520, y=140)
 
-        idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
         idcardperson_entry.place (x=520, y=170)
         ##### The end of the frame objects
 
