@@ -25,6 +25,21 @@ main.title ('Datos de los usuarios')
 main.geometry ('860x580')
 main.resizable (False, False)
 
+# Setting the table and scrollbar style
+trv_style = ttk.Style ()
+trv_style.theme_use ('default')
+
+trv_style.configure ('Treeview', background='#2a2d2e', foreground='white', rowheight=25, fieldbackground='#343638', bordercolor='#343638', borderwidth=0)
+trv_style.map ('Treeview', background=[('selected', '#22559b')])
+
+trv_style.configure ('Treeview.Heading', background='#565b5e', foreground='white', relief='flat')
+trv_style.map ('Treeview.Heading', background=[('active', '#3484F0')])
+
+trv_style.configure('Horizontal.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.configure('Vertical.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.map('Horizontal.TScrollbar', background=[('disabled', '#343638')])
+trv_style.map('Vertical.TScrollbar', background=[('disabled', '#343638')])
+
 # Icons
 exit_icon = CTkImage (Image.open('Resources\\Img\\ExitWhite.png'), size=(20, 20))
 reg_icon = CTkImage (Image.open('Resources\\Img\\User.png'), size=(20, 20))
@@ -62,6 +77,12 @@ def reg_page ():
                 messagebox.showinfo ('Éxito', 'La información fue registrada')
         except:
             messagebox.showerror ('Error', 'A ocurrido un error')
+
+    def validate_numbers_entry(char):
+        if char.isdigit() or char == '.':
+            return True
+        else:
+            return False
 
     ### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -107,7 +128,7 @@ def reg_page ():
     idcardperson_label = CTkLabel (main_frame, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
     idcardperson_label.place (x=520, y=140)
 
-    idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     idcardperson_entry.place (x=520, y=170)
 
     ##### Button area
@@ -127,10 +148,17 @@ def view_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         Resources.Connection.search_users ()
         users = Resources.Connection.cur.fetchall ()
         for row in users:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -140,12 +168,12 @@ def view_page ():
 
     trv.configure (columns=(1, 2, 3, 4, 5, 6))
 
-    trv.column (1, stretch=NO, minwidth=20,width=20)
-    trv.column (2, stretch=NO, minwidth=100,width=100)
-    trv.column (3, stretch=NO, minwidth=100,width=100)
-    trv.column (4, stretch=NO, minwidth=150,width=150)
-    trv.column (5, stretch=NO, minwidth=150,width=150)
-    trv.column (6, stretch=NO, minwidth=200,width=200)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=200, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=CENTER)
     trv.heading (2, text='Usuario', anchor=CENTER)
@@ -154,18 +182,22 @@ def view_page ():
     trv.heading (5, text='Apellido del usuario', anchor=CENTER)
     trv.heading (6, text='Cedula de identidad del usuario', anchor=CENTER)
 
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
+
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=778, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -186,6 +218,12 @@ def view_page ():
         data_editing_menu.title ('Menu de edición de datos')
         data_editing_menu.geometry ('800x500')
         data_editing_menu.resizable (False, False)
+
+        def validate_numbers_entry(char):
+            if char.isdigit() or char == '.':
+                return True
+            else:
+                return False
 
         #### Fonts for the letters
         font1 = ('Roboto', 30, 'bold')
@@ -231,7 +269,7 @@ def view_page ():
         idcardperson_label = CTkLabel (data_editing_menu, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
         idcardperson_label.place (x=520, y=140)
 
-        idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+        idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
         idcardperson_entry.place (x=520, y=170)
         ##### The end of the frame objects
 

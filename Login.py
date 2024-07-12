@@ -45,10 +45,10 @@ frame.pack (expand=True, fill='both', padx=50, pady=60)
 CTkLabel (frame, text='SIEI', font=('Roboto', 26)).pack (pady=20)
 
 # Data entry for the login
-name = CTkEntry (frame, placeholder_text='Usuario', show='*', width=250, height=40)
+name = CTkEntry (frame, placeholder_text='Usuario 👤', show='*', width=250, height=40)
 name.pack (pady=5)
 
-password = CTkEntry (frame, placeholder_text='Contraseña', show='*', width=250, height=40)
+password = CTkEntry (frame, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
 password.pack (pady=15)
 
 # login button

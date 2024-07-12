@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+from datetime import datetime
 import subprocess
 
 # Communicating with SQLite3 to get the login data from the database
@@ -25,6 +26,21 @@ main.title ('Datos de los equipos')
 main.geometry ('860x580')
 main.resizable (False, False)
 
+# Setting the table and scrollbar style
+trv_style = ttk.Style ()
+trv_style.theme_use ('default')
+
+trv_style.configure ('Treeview', background='#2a2d2e', foreground='white', rowheight=25, fieldbackground='#343638', bordercolor='#343638', borderwidth=0)
+trv_style.map ('Treeview', background=[('selected', '#22559b')])
+
+trv_style.configure ('Treeview.Heading', background='#565b5e', foreground='white', relief='flat')
+trv_style.map ('Treeview.Heading', background=[('active', '#3484F0')])
+
+trv_style.configure('Horizontal.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.configure('Vertical.TScrollbar', gripcount=0, background='#343638', troughcolor='#202020', arrowcolor='#E8E8E8')
+trv_style.map('Horizontal.TScrollbar', background=[('disabled', '#343638')])
+trv_style.map('Vertical.TScrollbar', background=[('disabled', '#343638')])
+
 # Icons
 exit_icon = CTkImage (Image.open('Resources\\Img\\ExitWhite.png'), size=(20, 20))
 pc_icon = CTkImage (Image.open('Resources\\Img\\Computer.png'), size=(20, 20))
@@ -43,12 +59,19 @@ def pc_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pc (val, stat)
         PC = Resources.Connection.cur.fetchall ()
         for row in PC:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -64,20 +87,21 @@ def pc_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
-    trv.column (9, stretch=NO, width=100)
-    trv.column (10, stretch=NO, width=100)
-    trv.column (11, stretch=NO, width=100)
-    trv.column (12, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (12, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -91,19 +115,24 @@ def pc_page ():
     trv.heading (10, text='Estado', anchor=tk.CENTER)
     trv.heading (11, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (12, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (13, text='Fecha de modificación', anchor=tk.CENTER)
+
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
 
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function of deleting data
     def button_del ():
@@ -201,12 +230,6 @@ def pc_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -229,12 +252,12 @@ def pc_page ():
             ram = ram_entry.get ()
             disk = HDDorSDD_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
-            if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
+            dom = datetime.now().strftime("%d-%m-%Y")
+            if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd)
+                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -258,18 +281,24 @@ def pc_page ():
             cpu_entry.insert (0, values[6])
             ram_entry.insert (0, values[7])
             HDDorSDD_entry.insert (0, values[8])
-            dateofarrival_entry.insert (0, values[10])
             departuredate_entry.insert (0, values[11])
         except IndexError:
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pc ():
+        Resources.Connection.graph_pc ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=220, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pc)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -285,12 +314,19 @@ def pk_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pk (val, stat)
         PK = Resources.Connection.cur.fetchall ()
         for row in PK:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -306,16 +342,17 @@ def pk_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -325,19 +362,24 @@ def pk_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
 
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function of deleting data
     def button_del ():
@@ -412,12 +454,6 @@ def pk_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -436,12 +472,12 @@ def pk_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
-            if not (idpk and name and model and serial and color and stat and dfa):
+            dom = datetime.now().strftime("%d-%m-%Y")
+            if not (idpk and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -461,18 +497,24 @@ def pk_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pk ():
+        Resources.Connection.graph_pk ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pk)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -488,12 +530,19 @@ def pm_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pm (val, stat)
         PM = Resources.Connection.cur.fetchall ()
         for row in PM:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -509,16 +558,17 @@ def pm_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -528,19 +578,24 @@ def pm_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
 
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -615,12 +670,6 @@ def pm_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -639,12 +688,12 @@ def pm_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
-            if not (idpm and name and model and serial and color and stat and dfa):
+            dom = datetime.now().strftime("%d-%m-%Y")
+            if not (idpm and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -664,18 +713,24 @@ def pm_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pm ():
+        Resources.Connection.graph_pm ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pm)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -691,12 +746,19 @@ def pmo_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pmo (val, stat)
         PMO = Resources.Connection.cur.fetchall ()
         for row in PMO:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -712,16 +774,17 @@ def pmo_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -731,19 +794,24 @@ def pmo_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
 
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -818,12 +886,6 @@ def pmo_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -842,12 +904,12 @@ def pmo_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
-            if not (idpmo and name and model and serial and color and stat and dfa):
+            dom = datetime.now().strftime("%d-%m-%Y")
+            if not (idpmo and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -867,18 +929,24 @@ def pmo_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pmo ():
+        Resources.Connection.graph_pmo ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pmo)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
@@ -894,12 +962,19 @@ def pp_page ():
         #### Clear treeview
         for item in trv.get_children ():
             trv.delete (item)
+        global count
+        count = 0
         stat = status.get ()
         val = entry_search.get ()
         Resources.Connection.search_pp (val, stat)
         PP = Resources.Connection.cur.fetchall ()
         for row in PP:
-            trv.insert (parent='', index='end', iid=row[0], text='', values=row)
+            ##### Format so that the divisions of the data can be created within the table
+            if count % 2 == 0:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='evenrow')
+            else:
+                trv.insert (parent='', index='end', iid=row[0], text='', values=row, tags='oddrow')
+            count += 1
 
     ### Fonts for the letters
     font1 = ('Roboto', 18, 'bold')
@@ -915,16 +990,17 @@ def pp_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
 
-    trv.column (1, stretch=NO, width=20)
-    trv.column (2, stretch=NO, width=100)
-    trv.column (3, stretch=NO, width=100)
-    trv.column (4, stretch=NO, width=100)
-    trv.column (5, stretch=NO, width=100)
-    trv.column (6, stretch=NO, width=100)
-    trv.column (7, stretch=NO, width=100)
-    trv.column (8, stretch=NO, width=100)
+    trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (6, stretch=NO, width=100, anchor=tk.CENTER)
+    trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
+    trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -934,19 +1010,24 @@ def pp_page ():
     trv.heading (6, text='Estado', anchor=tk.CENTER)
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
+    trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+
+    #### Format that creates the divisions within the table
+    trv.tag_configure ('oddrow', background= '#4a5052')
+    trv.tag_configure ('evenrow', background= '#2a2d2e')
 
     #### Format to move the data table both horizontally and vertically
     scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
     trv.configure (xscroll=scrollbarx.set)
     trv.configure (selectmode='extended')
-    scrollbarx.place (x=5, y=405, width=789, height=20)
+    scrollbarx.place (x=5, y=408, width=778, height=20)
 
     scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
     trv.configure (yscroll=scrollbary.set)
     trv.configure (selectmode='extended')
     scrollbary.place (x=782, y=5, width=20, height=420)
 
-    trv.place (x=5, y=5, width=777, height=400)
+    trv.place (x=5, y=5, width=774, height=400)
 
     ### Function to delete users
     def button_del ():
@@ -1021,12 +1102,6 @@ def pp_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -1045,12 +1120,12 @@ def pp_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
-            if not (idpp and name and model and serial and color and stat and dfa):
+            dom = datetime.now().strftime("%d-%m-%Y")
+            if not (idpp and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd)
+                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -1070,18 +1145,24 @@ def pp_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
             messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
 
+    ### Function to display a statistical graph on the operability of computer goods
+    def graph_pp ():
+        Resources.Connection.graph_pp ()
+
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
+
+    button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pp)
+    button_graph.place (x=650, y=450)
 
     ### Function to display the data automatically after opening the window
     button_search ['command'] = find
