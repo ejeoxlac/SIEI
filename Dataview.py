@@ -229,12 +229,6 @@ def pc_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -257,13 +251,12 @@ def pc_page ():
             ram = ram_entry.get ()
             disk = HDDorSDD_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
             dom = datetime.now().strftime("%d-%m-%Y")
-            if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
+            if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dom)
+                Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -287,7 +280,6 @@ def pc_page ():
             cpu_entry.insert (0, values[6])
             ram_entry.insert (0, values[7])
             HDDorSDD_entry.insert (0, values[8])
-            dateofarrival_entry.insert (0, values[10])
             departuredate_entry.insert (0, values[11])
         except IndexError:
             data_editing_menu.destroy ()
@@ -461,12 +453,6 @@ def pk_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -485,13 +471,12 @@ def pk_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
             dom = datetime.now().strftime("%d-%m-%Y")
-            if not (idpk and name and model and serial and color and stat and dfa):
+            if not (idpk and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom)
+                Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -511,7 +496,6 @@ def pk_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
@@ -685,12 +669,6 @@ def pm_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -709,13 +687,12 @@ def pm_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
             dom = datetime.now().strftime("%d-%m-%Y")
-            if not (idpm and name and model and serial and color and stat and dfa):
+            if not (idpm and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom)
+                Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -735,7 +712,6 @@ def pm_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
@@ -909,12 +885,6 @@ def pmo_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -933,13 +903,12 @@ def pmo_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
             dom = datetime.now().strftime("%d-%m-%Y")
-            if not (idpmo and name and model and serial and color and stat and dfa):
+            if not (idpmo and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom)
+                Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -959,7 +928,6 @@ def pmo_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
@@ -1133,12 +1101,6 @@ def pp_page ():
         stat_options.set ('Operativo')
         stat_options.place (x=445, y=330)
 
-        dateofarrival_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-        dateofarrival_label.place (x=50, y=300)
-
-        dateofarrival_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        dateofarrival_entry.place (x=50, y=330)
-
         ###### Fifth row
         departuredate_label = CTkLabel (data_editing_menu, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
         departuredate_label.place (x=50, y=380)
@@ -1157,13 +1119,12 @@ def pp_page ():
             serial = serial_entry.get ()
             color = color_entry.get ()
             stat = status.get ()
-            dfa = dateofarrival_entry.get ()
             dtd = departuredate_entry.get ()
             dom = datetime.now().strftime("%d-%m-%Y")
-            if not (idpp and name and model and serial and color and stat and dfa):
+            if not (idpp and name and model and serial and color and stat):
                 messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
             else:
-                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd, dom)
+                Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom)
                 for item in trv.get_children ():
                     trv.delete (item)
                 find ()
@@ -1183,7 +1144,6 @@ def pp_page ():
             model_entry.insert (0, values[2])
             serial_entry.insert (0, values[3])
             color_entry.insert (0, values[4])
-            dateofarrival_entry.insert (0, values[6])
             departuredate_entry.insert (0, values[7])
         except IndexError:
             data_editing_menu.destroy ()
