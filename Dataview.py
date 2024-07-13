@@ -86,7 +86,7 @@ def pc_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -101,6 +101,8 @@ def pc_page ():
     trv.column (11, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (12, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (14, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (15, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -115,6 +117,8 @@ def pc_page ():
     trv.heading (11, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (12, text='Fecha de salida de la entidad', anchor=tk.CENTER)
     trv.heading (13, text='Fecha de modificación', anchor=tk.CENTER)
+    trv.heading (14, text='Departamentos', anchor=tk.CENTER)
+    trv.heading (15, text='Usuarios', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -341,7 +345,7 @@ def pk_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -352,6 +356,8 @@ def pk_page ():
     trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -362,6 +368,8 @@ def pk_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
     trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+    trv.heading (10, text='Departamentos', anchor=tk.CENTER)
+    trv.heading (11, text='Usuarios', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -557,7 +565,7 @@ def pm_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -568,6 +576,8 @@ def pm_page ():
     trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -578,6 +588,8 @@ def pm_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
     trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+    trv.heading (10, text='Departamentos', anchor=tk.CENTER)
+    trv.heading (11, text='Usuarios', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -773,7 +785,7 @@ def pmo_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -784,6 +796,8 @@ def pmo_page ():
     trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -794,6 +808,8 @@ def pmo_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
     trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+    trv.heading (10, text='Departamentos', anchor=tk.CENTER)
+    trv.heading (11, text='Usuarios', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
@@ -989,7 +1005,7 @@ def pp_page ():
     ### Table where the data that is being searched will be displayed
     trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9))
+    trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
 
     trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
     trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -1000,6 +1016,8 @@ def pp_page ():
     trv.column (7, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (8, stretch=NO, width=160, anchor=tk.CENTER)
     trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
+    trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
 
     trv.heading (1, text='ID', anchor=tk.CENTER)
     trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1010,6 +1028,8 @@ def pp_page ():
     trv.heading (7, text='Fecha de ingreso a la entidad', anchor=tk.CENTER)
     trv.heading (8, text='Fecha de salida de la entidad', anchor=tk.CENTER)
     trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
+    trv.heading (10, text='Departamentos', anchor=tk.CENTER)
+    trv.heading (11, text='Usuarios', anchor=tk.CENTER)
 
     #### Format that creates the divisions within the table
     trv.tag_configure ('oddrow', background= '#4a5052')
