@@ -516,7 +516,7 @@ def pk_page ():
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
@@ -736,7 +736,7 @@ def pm_page ():
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
@@ -1176,7 +1176,7 @@ def pp_page ():
     ### Button area
     button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
     button_del.place (x=240, y=450)
-    
+
     button_edi = CTkButton (main_frame, font=font1, text='Editar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
     button_edi.place (x=420, y=450)
 
