@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
@@ -48,7 +49,6 @@ def pc_page ():
     ram_entry.delete (0, END)
     HDDorSDD_entry.delete (0, END)
     status.set ('Operativo')
-    dateofarrival_entry.delete (0, END)
     departuredate_entry.delete (0, END)
 
   #### Entry that records the data in the database
@@ -63,7 +63,7 @@ def pc_page ():
     ram = ram_entry.get ()
     disk = HDDorSDD_entry.get ()
     stat = status.get ()
-    dfa = dateofarrival_entry.get ()
+    dfa = datetime.now().strftime("%d-%m-%Y")
     dtd = departuredate_entry.get ()
     try:
       if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
@@ -153,12 +153,6 @@ def pc_page ():
   stat_options.set ('Operativo')
   stat_options.place (x=445, y=330)
 
-  dateofarrival_label = CTkLabel (main_frame, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-  dateofarrival_label.place (x=50, y=300)
-
-  dateofarrival_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-  dateofarrival_entry.place (x=50, y=330)
-
   ##### Fifth row
   departuredate_label = CTkLabel (main_frame, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
   departuredate_label.place (x=50, y=380)
@@ -186,7 +180,6 @@ def pk_page ():
     serial_entry.delete (0, END)
     color_entry.delete (0, END)
     status.set ('Operativo')
-    dateofarrival_entry.delete (0, END)
     departuredate_entry.delete (0, END)
 
   #### Entry that records the data in the database
@@ -197,7 +190,7 @@ def pk_page ():
     serial = serial_entry.get ()
     color = color_entry.get ()
     stat = status.get ()
-    dfa = dateofarrival_entry.get ()
+    dfa = dfa = datetime.now().strftime("%d-%m-%Y")
     dtd = departuredate_entry.get ()
     try:
       if not (idpk and name and model and serial and color and stat and dfa):
@@ -264,12 +257,6 @@ def pk_page ():
   stat_options.set ('Operativo')
   stat_options.place (x=445, y=330)
 
-  dateofarrival_label = CTkLabel (main_frame, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-  dateofarrival_label.place (x=50, y=300)
-
-  dateofarrival_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-  dateofarrival_entry.place (x=50, y=330)
-
   ##### Fifth row
   departuredate_label = CTkLabel (main_frame, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
   departuredate_label.place (x=50, y=380)
@@ -297,7 +284,6 @@ def pm_page ():
     serial_entry.delete (0, END)
     color_entry.delete (0, END)
     status.set ('Operativo')
-    dateofarrival_entry.delete (0, END)
     departuredate_entry.delete (0, END)
 
   #### Entry that records the data in the database
@@ -308,7 +294,7 @@ def pm_page ():
     serial = serial_entry.get ()
     color = color_entry.get ()
     stat = status.get ()
-    dfa = dateofarrival_entry.get ()
+    dfa = datetime.now().strftime("%d-%m-%Y")
     dtd = departuredate_entry.get ()
     try:
       if not (idpm and name and model and serial and color and stat and dfa):
@@ -375,12 +361,6 @@ def pm_page ():
   stat_options.set ('Operativo')
   stat_options.place (x=445, y=330)
 
-  dateofarrival_label = CTkLabel (main_frame, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-  dateofarrival_label.place (x=50, y=300)
-
-  dateofarrival_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-  dateofarrival_entry.place (x=50, y=330)
-
   ##### Fifth row
   departuredate_label = CTkLabel (main_frame, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
   departuredate_label.place (x=50, y=380)
@@ -408,7 +388,6 @@ def pmo_page ():
     serial_entry.delete (0, END)
     color_entry.delete (0, END)
     status.set ('Operativo')
-    dateofarrival_entry.delete (0, END)
     departuredate_entry.delete (0, END)
 
   #### Entry that records the data in the database
@@ -419,7 +398,7 @@ def pmo_page ():
     serial = serial_entry.get ()
     color = color_entry.get ()
     stat = status.get ()
-    dfa = dateofarrival_entry.get ()
+    dfa = datetime.now().strftime("%d-%m-%Y")
     dtd = departuredate_entry.get ()
     try:
       if not (idpmo and name and model and serial and color and stat and dfa):
@@ -486,12 +465,6 @@ def pmo_page ():
   stat_options.set ('Operativo')
   stat_options.place (x=445, y=330)
 
-  dateofarrival_label = CTkLabel (main_frame, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-  dateofarrival_label.place (x=50, y=300)
-
-  dateofarrival_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-  dateofarrival_entry.place (x=50, y=330)
-
   ##### Fifth row
   departuredate_label = CTkLabel (main_frame, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
   departuredate_label.place (x=50, y=380)
@@ -519,7 +492,6 @@ def pp_page ():
     serial_entry.delete (0, END)
     color_entry.delete (0, END)
     status.set ('Operativo')
-    dateofarrival_entry.delete (0, END)
     departuredate_entry.delete (0, END)
 
   #### Entry that records the data in the database
@@ -530,7 +502,7 @@ def pp_page ():
     serial = serial_entry.get ()
     color = color_entry.get ()
     stat = status.get ()
-    dfa = dateofarrival_entry.get ()
+    dfa = datetime.now().strftime("%d-%m-%Y")
     dtd = departuredate_entry.get ()
     try:
       if not (idpp and name and model and serial and color and stat and dfa):
@@ -596,12 +568,6 @@ def pp_page ():
   stat_options = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
   stat_options.set ('Operativo')
   stat_options.place (x=445, y=330)
-
-  dateofarrival_label = CTkLabel (main_frame, font=font2, text='Fecha de entrada a la entidad:', text_color='#fff')
-  dateofarrival_label.place (x=50, y=300)
-
-  dateofarrival_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-  dateofarrival_entry.place (x=50, y=330)
 
   ##### Fifth row
   departuredate_label = CTkLabel (main_frame, font=font2, text='Fecha de salidad de la entidad:', text_color='#fff')
