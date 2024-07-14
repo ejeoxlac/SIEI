@@ -213,8 +213,12 @@ def pc_page ():
         ram_label = CTkLabel (data_editing_menu, font=font2, text='RAM:', text_color='#fff')
         ram_label.place (x=250, y=220)
 
-        ram_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        ram_entry.place (x=250, y=250)
+        memory = StringVar ()
+        options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3']
+
+        ram_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=memory, values=options, state='readonly')
+        ram_options.set ('1 GB DDR2')
+        ram_options.place (x=250, y=250)
 
         HDDorSDD_label = CTkLabel (data_editing_menu, font=font2, text='Unidad de almacenamiento:', text_color='#fff')
         HDDorSDD_label.place (x=445, y=220)
@@ -252,7 +256,7 @@ def pc_page ():
             color = color_entry.get ()
             colormb = colormb_entry.get ()
             cpu = cpu_entry.get ()
-            ram = ram_entry.get ()
+            ram = memory.get ()
             disk = HDDorSDD_entry.get ()
             stat = status.get ()
             dtd = departuredate_entry.get ()
@@ -282,7 +286,6 @@ def pc_page ():
             color_entry.insert (0, values[4])
             colormb_entry.insert (0, values[5])
             cpu_entry.insert (0, values[6])
-            ram_entry.insert (0, values[7])
             HDDorSDD_entry.insert (0, values[8])
             departuredate_entry.insert (0, values[11])
         except IndexError:
