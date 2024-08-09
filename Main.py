@@ -68,13 +68,16 @@ def mainview (mainmenu):
       stat = status.get ()
       dfa = datetime.now().strftime("%d-%m-%Y")
       dtd = departuredate_entry.get ()
+      dp = department_entry.get ()
+      user = user_entry.get ()
+      obs = observation_entry. get ()
       try:
         if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
         elif Resources.Connection.id_exist_pc (idpc):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd)
+          Resources.Connection.insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -150,6 +153,18 @@ def mainview (mainmenu):
     HDDorSDD_entry.place (x=445, y=250)
 
     ###### Fourth row
+    department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
+    department_label.place (x=50, y=300)
+
+    department_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    department_entry.place (x=50, y=330)
+
+    user_label = CTkLabel (main_frame, font=font2, text='Usuario:', text_color='#fff')
+    user_label.place (x=250, y=300)
+
+    user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    user_entry.place (x=250, y=330)
+
     stat_label = CTkLabel (main_frame, font=font2, text='Estado:', text_color='#fff')
     stat_label.place (x=445, y=300)
 
@@ -166,6 +181,12 @@ def mainview (mainmenu):
 
     departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
     departuredate_entry.place (x=50, y=410)
+
+    observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
+    observation_label.place (x=445, y=380)
+
+    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry.place (x=445, y=410)
 
     ###### Button area
     submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
@@ -199,13 +220,16 @@ def mainview (mainmenu):
       stat = status.get ()
       dfa = dfa = datetime.now().strftime("%d-%m-%Y")
       dtd = departuredate_entry.get ()
+      dp = department_entry.get ()
+      user = user_entry.get ()
+      obs = observation_entry. get ()
       try:
         if not (idpk and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
         elif Resources.Connection.id_exist_pk (idpk):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pk (idpk, name, model, serial, color, stat, dfa, dtd)
+          Resources.Connection.insert_pk (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -254,6 +278,18 @@ def mainview (mainmenu):
     ###### Third row
 
     ###### Fourth row
+    department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
+    department_label.place (x=50, y=300)
+
+    department_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    department_entry.place (x=50, y=330)
+
+    user_label = CTkLabel (main_frame, font=font2, text='Usuario:', text_color='#fff')
+    user_label.place (x=250, y=300)
+
+    user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    user_entry.place (x=250, y=330)
+
     stat_label = CTkLabel (main_frame, font=font2, text='Estado:', text_color='#fff')
     stat_label.place (x=445, y=300)
 
@@ -270,6 +306,12 @@ def mainview (mainmenu):
 
     departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
     departuredate_entry.place (x=50, y=410)
+
+    observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
+    observation_label.place (x=445, y=380)
+
+    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry.place (x=445, y=410)
 
     ###### Button area
     submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
@@ -303,13 +345,16 @@ def mainview (mainmenu):
       stat = status.get ()
       dfa = datetime.now().strftime("%d-%m-%Y")
       dtd = departuredate_entry.get ()
+      dp = department_entry.get ()
+      user = user_entry.get ()
+      obs = observation_entry. get ()
       try:
         if not (idpm and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
         elif Resources.Connection.id_exist_pm (idpm):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pm (idpm, name, model, serial, color, stat, dfa, dtd)
+          Resources.Connection.insert_pm (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -358,6 +403,18 @@ def mainview (mainmenu):
     ###### Third row
 
     ###### Fourth row
+    department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
+    department_label.place (x=50, y=300)
+
+    department_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    department_entry.place (x=50, y=330)
+
+    user_label = CTkLabel (main_frame, font=font2, text='Usuario:', text_color='#fff')
+    user_label.place (x=250, y=300)
+
+    user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    user_entry.place (x=250, y=330)
+
     stat_label = CTkLabel (main_frame, font=font2, text='Estado:', text_color='#fff')
     stat_label.place (x=445, y=300)
 
@@ -374,6 +431,12 @@ def mainview (mainmenu):
 
     departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
     departuredate_entry.place (x=50, y=410)
+
+    observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
+    observation_label.place (x=445, y=380)
+
+    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry.place (x=445, y=410)
 
     ###### Button area
     submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
@@ -407,13 +470,16 @@ def mainview (mainmenu):
       stat = status.get ()
       dfa = datetime.now().strftime("%d-%m-%Y")
       dtd = departuredate_entry.get ()
+      dp = department_entry.get ()
+      user = user_entry.get ()
+      obs = observation_entry. get ()
       try:
         if not (idpmo and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
         elif Resources.Connection.id_exist_pmo (idpmo):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd)
+          Resources.Connection.insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -462,6 +528,18 @@ def mainview (mainmenu):
     ###### Third row
 
     ###### Fourth row
+    department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
+    department_label.place (x=50, y=300)
+
+    department_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    department_entry.place (x=50, y=330)
+
+    user_label = CTkLabel (main_frame, font=font2, text='Usuario:', text_color='#fff')
+    user_label.place (x=250, y=300)
+
+    user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    user_entry.place (x=250, y=330)
+
     stat_label = CTkLabel (main_frame, font=font2, text='Estado:', text_color='#fff')
     stat_label.place (x=445, y=300)
 
@@ -478,6 +556,12 @@ def mainview (mainmenu):
 
     departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
     departuredate_entry.place (x=50, y=410)
+
+    observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
+    observation_label.place (x=445, y=380)
+
+    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry.place (x=445, y=410)
 
     ###### Button area
     submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
@@ -511,13 +595,16 @@ def mainview (mainmenu):
       stat = status.get ()
       dfa = datetime.now().strftime("%d-%m-%Y")
       dtd = departuredate_entry.get ()
+      dp = department_entry.get ()
+      user = user_entry.get ()
+      obs = observation_entry. get ()
       try:
         if not (idpp and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
         elif Resources.Connection.id_exist_pp (idpp):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pp (idpp, name, model, serial, color, stat, dfa, dtd)
+          Resources.Connection.insert_pp (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -566,6 +653,18 @@ def mainview (mainmenu):
     ###### Third row
 
     ###### Fourth row
+    department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
+    department_label.place (x=50, y=300)
+
+    department_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    department_entry.place (x=50, y=330)
+
+    user_label = CTkLabel (main_frame, font=font2, text='Usuario:', text_color='#fff')
+    user_label.place (x=250, y=300)
+
+    user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    user_entry.place (x=250, y=330)
+
     stat_label = CTkLabel (main_frame, font=font2, text='Estado:', text_color='#fff')
     stat_label.place (x=445, y=300)
 
@@ -582,6 +681,12 @@ def mainview (mainmenu):
 
     departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
     departuredate_entry.place (x=50, y=410)
+
+    observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
+    observation_label.place (x=445, y=380)
+
+    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry.place (x=445, y=410)
 
     ###### Button area
     submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)

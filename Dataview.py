@@ -230,6 +230,18 @@ def dataviewview (mainmenu):
             HDDorSDD_entry.place (x=445, y=250)
 
             ####### Fourth row
+            department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
+            department_label.place (x=50, y=300)
+
+            department_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            department_entry.place (x=50, y=330)
+
+            user_label = CTkLabel (data_editing_menu, font=font2, text='Usuario:', text_color='#fff')
+            user_label.place (x=250, y=300)
+
+            user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            user_entry.place (x=250, y=330)
+
             stat_label = CTkLabel (data_editing_menu, font=font2, text='Estado:', text_color='#fff')
             stat_label.place (x=445, y=300)
 
@@ -246,6 +258,13 @@ def dataviewview (mainmenu):
 
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
+
+            observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
+            observation_label.place (x=445, y=380)
+
+            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry.place (x=445, y=410)
+
             ###### The end of the frame objects
 
             ##### Data verification input
@@ -264,10 +283,13 @@ def dataviewview (mainmenu):
                 stat = status.get ()
                 dtd = departuredate_entry.get ()
                 dom = datetime.now().strftime("%d-%m-%Y")
+                dp = department_entry.get ()
+                user = user_entry.get ()
+                obs = observation_entry. get ()
                 if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom)
+                    Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -457,6 +479,18 @@ def dataviewview (mainmenu):
             ####### Third row
 
             ####### Fourth row
+            department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
+            department_label.place (x=50, y=300)
+
+            department_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            department_entry.place (x=50, y=330)
+
+            user_label = CTkLabel (data_editing_menu, font=font2, text='Usuario:', text_color='#fff')
+            user_label.place (x=250, y=300)
+
+            user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            user_entry.place (x=250, y=330)
+
             stat_label = CTkLabel (data_editing_menu, font=font2, text='Estado:', text_color='#fff')
             stat_label.place (x=445, y=300)
 
@@ -473,6 +507,13 @@ def dataviewview (mainmenu):
 
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
+
+            observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
+            observation_label.place (x=445, y=380)
+
+            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry.place (x=445, y=410)
+
             ###### The end of the frame objects
 
             ##### Data verification input
@@ -487,10 +528,13 @@ def dataviewview (mainmenu):
                 stat = status.get ()
                 dtd = departuredate_entry.get ()
                 dom = datetime.now().strftime("%d-%m-%Y")
+                dp = department_entry.get ()
+                user = user_entry.get ()
+                obs = observation_entry. get ()
                 if not (idpk and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom)
+                    Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -520,6 +564,9 @@ def dataviewview (mainmenu):
             Resources.Connection.graph_pk ()
 
         #### Button area
+        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pk)
+        button_docx.place (x=50, y=450)
+
         button_del = CTkButton (main_frame, font=font1, text='Borrar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.place (x=240, y=450)
 
@@ -677,6 +724,18 @@ def dataviewview (mainmenu):
             ####### Third row
 
             ####### Fourth row
+            department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
+            department_label.place (x=50, y=300)
+
+            department_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            department_entry.place (x=50, y=330)
+
+            user_label = CTkLabel (data_editing_menu, font=font2, text='Usuario:', text_color='#fff')
+            user_label.place (x=250, y=300)
+
+            user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            user_entry.place (x=250, y=330)
+
             stat_label = CTkLabel (data_editing_menu, font=font2, text='Estado:', text_color='#fff')
             stat_label.place (x=445, y=300)
 
@@ -693,6 +752,13 @@ def dataviewview (mainmenu):
 
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
+
+            observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
+            observation_label.place (x=445, y=380)
+
+            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry.place (x=445, y=410)
+
             ###### The end of the frame objects
 
             ##### Data verification input
@@ -707,10 +773,13 @@ def dataviewview (mainmenu):
                 stat = status.get ()
                 dtd = departuredate_entry.get ()
                 dom = datetime.now().strftime("%d-%m-%Y")
+                dp = department_entry.get ()
+                user = user_entry.get ()
+                obs = observation_entry. get ()
                 if not (idpm and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom)
+                    Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -897,6 +966,18 @@ def dataviewview (mainmenu):
             ####### Third row
 
             ####### Fourth row
+            department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
+            department_label.place (x=50, y=300)
+
+            department_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            department_entry.place (x=50, y=330)
+
+            user_label = CTkLabel (data_editing_menu, font=font2, text='Usuario:', text_color='#fff')
+            user_label.place (x=250, y=300)
+
+            user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            user_entry.place (x=250, y=330)
+
             stat_label = CTkLabel (data_editing_menu, font=font2, text='Estado:', text_color='#fff')
             stat_label.place (x=445, y=300)
 
@@ -913,6 +994,13 @@ def dataviewview (mainmenu):
 
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
+
+            observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
+            observation_label.place (x=445, y=380)
+
+            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry.place (x=445, y=410)
+
             ###### The end of the frame objects
 
             ##### Data verification input
@@ -927,10 +1015,13 @@ def dataviewview (mainmenu):
                 stat = status.get ()
                 dtd = departuredate_entry.get ()
                 dom = datetime.now().strftime("%d-%m-%Y")
+                dp = department_entry.get ()
+                user = user_entry.get ()
+                obs = observation_entry. get ()
                 if not (idpmo and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom)
+                    Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1117,6 +1208,18 @@ def dataviewview (mainmenu):
             ####### Third row
 
             ####### Fourth row
+            department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
+            department_label.place (x=50, y=300)
+
+            department_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            department_entry.place (x=50, y=330)
+
+            user_label = CTkLabel (data_editing_menu, font=font2, text='Usuario:', text_color='#fff')
+            user_label.place (x=250, y=300)
+
+            user_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            user_entry.place (x=250, y=330)
+
             stat_label = CTkLabel (data_editing_menu, font=font2, text='Estado:', text_color='#fff')
             stat_label.place (x=445, y=300)
 
@@ -1133,6 +1236,13 @@ def dataviewview (mainmenu):
 
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
+
+            observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
+            observation_label.place (x=445, y=380)
+
+            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry.place (x=445, y=410)
+
             ###### The end of the frame objects
 
             ##### Data verification input
@@ -1147,10 +1257,13 @@ def dataviewview (mainmenu):
                 stat = status.get ()
                 dtd = departuredate_entry.get ()
                 dom = datetime.now().strftime("%d-%m-%Y")
+                dp = department_entry.get ()
+                user = user_entry.get ()
+                obs = observation_entry. get ()
                 if not (idpp and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom)
+                    Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
