@@ -220,7 +220,6 @@ def dataviewview (mainmenu):
             options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3']
 
             ram_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=memory, values=options, state='readonly')
-            ram_options.set ('1 GB DDR2')
             ram_options.place (x=250, y=250)
 
             HDDorSDD_label = CTkLabel (data_editing_menu, font=font2, text='Unidad de almacenamiento:', text_color='#fff')
@@ -249,7 +248,6 @@ def dataviewview (mainmenu):
             options = ['Operativo', 'Inoperativo']
 
             stat_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
-            stat_options.set ('Operativo')
             stat_options.place (x=445, y=330)
 
             ####### Fifth row
@@ -311,7 +309,9 @@ def dataviewview (mainmenu):
                 color_entry.insert (0, values[4])
                 colormb_entry.insert (0, values[5])
                 cpu_entry.insert (0, values[6])
+                ram_options.set (values[7])
                 HDDorSDD_entry.insert (0, values[8])
+                stat_options.set (values[9])
                 departuredate_entry.insert (0, values[11])
             except IndexError:
                 data_editing_menu.destroy ()
@@ -498,7 +498,6 @@ def dataviewview (mainmenu):
             options = ['Operativo', 'Inoperativo']
 
             stat_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
-            stat_options.set ('Operativo')
             stat_options.place (x=445, y=330)
 
             ####### Fifth row
@@ -554,6 +553,7 @@ def dataviewview (mainmenu):
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
+                stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
             except IndexError:
                 data_editing_menu.destroy ()
@@ -743,7 +743,6 @@ def dataviewview (mainmenu):
             options = ['Operativo', 'Inoperativo']
 
             stat_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
-            stat_options.set ('Operativo')
             stat_options.place (x=445, y=330)
 
             ####### Fifth row
@@ -799,6 +798,7 @@ def dataviewview (mainmenu):
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
+                stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
             except IndexError:
                 data_editing_menu.destroy ()
@@ -985,7 +985,6 @@ def dataviewview (mainmenu):
             options = ['Operativo', 'Inoperativo']
 
             stat_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
-            stat_options.set ('Operativo')
             stat_options.place (x=445, y=330)
 
             ####### Fifth row
@@ -1041,6 +1040,7 @@ def dataviewview (mainmenu):
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
+                stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
             except IndexError:
                 data_editing_menu.destroy ()
@@ -1227,7 +1227,6 @@ def dataviewview (mainmenu):
             options = ['Operativo', 'Inoperativo']
 
             stat_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=status, values=options, state='readonly')
-            stat_options.set ('Operativo')
             stat_options.place (x=445, y=330)
 
             ####### Fifth row
@@ -1283,6 +1282,7 @@ def dataviewview (mainmenu):
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
+                stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
             except IndexError:
                 data_editing_menu.destroy ()
