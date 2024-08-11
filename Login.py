@@ -49,6 +49,10 @@ def loginview ():
   # logo_image1_label = CTkLabel (frame, text='', image=logo_image1, fg_color=None, bg_color='transparent')
   # logo_image1_label.place (x=50, y=5)
 
+  logo_image_central = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
+  logo_image_central_label = CTkLabel (frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
+  logo_image_central_label.place (x=133, y=5)
+
   # logo_image2 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
   # logo_image2_label = CTkLabel (frame, text='', image=logo_image2, fg_color=None, bg_color='transparent')
   # logo_image2_label.place (x=212, y=5)
