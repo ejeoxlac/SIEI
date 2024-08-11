@@ -50,6 +50,46 @@ def del_pc (rowid):
   db.commit ()
   db.close ()
 
+## Printing a word document with data obtained from the database
+def docx_pc ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT * FROM PC')
+  data = cur.fetchall ()
+
+  ### Creation of the Word document and placement of the data
+  docx = Document()
+  section = docx.sections [-1]
+  new_width, new_height = section.page_height, section.page_width
+  section.orientation = WD_ORIENT.LANDSCAPE
+  section.page_width = new_width
+  section.page_height = new_height
+  table = docx.add_table (rows=1, cols=len(data[0]))
+  ### Apply a table style
+  table.style = 'Table Grid'
+
+  ### Column headings
+  headings = [descripcion[0] for descripcion in cur.description]
+  for i, heading in enumerate (headings):
+      cell = table.cell (0, i)
+      cell.text = heading
+
+  ### Add rows of data
+  for row in data:
+      new_row = table.add_row().cells
+      for i, column in enumerate (row):
+          new_row[i].text = str (column)
+
+  ### Adjusts the width of the table columns
+  for column in table.columns:
+    width = Inches (1.5)
+    column.width = width
+
+  ### Saves the document in the current folder
+  docx.save ('Datos de las computadoras.docx')
+
+  db.close ()
+
 ## Statistical graph showing which computers are operational or not
 def graph_pc ():
   db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -200,6 +240,46 @@ def del_pm (rowid):
   db.commit ()
   db.close ()
 
+## Printing a word document with data obtained from the database
+def docx_pm ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT * FROM PM')
+  data = cur.fetchall ()
+
+  ### Creation of the Word document and placement of the data
+  docx = Document()
+  section = docx.sections [-1]
+  new_width, new_height = section.page_height, section.page_width
+  section.orientation = WD_ORIENT.LANDSCAPE
+  section.page_width = new_width
+  section.page_height = new_height
+  table = docx.add_table (rows=1, cols=len(data[0]))
+  ### Apply a table style
+  table.style = 'Table Grid'
+
+  ### Column headings
+  headings = [descripcion[0] for descripcion in cur.description]
+  for i, heading in enumerate (headings):
+      cell = table.cell (0, i)
+      cell.text = heading
+
+  ### Add rows of data
+  for row in data:
+      new_row = table.add_row().cells
+      for i, column in enumerate (row):
+          new_row[i].text = str (column)
+
+  ### Adjusts the width of the table columns
+  for column in table.columns:
+    width = Inches (1.5)
+    column.width = width
+
+  ### Saves the document in the current folder
+  docx.save ('Datos de los monitores.docx')
+
+  db.close ()
+
 ## Statistical graph showing which monitors are operational or not
 def graph_pm ():
   db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -255,6 +335,46 @@ def del_pmo (rowid):
   db.commit ()
   db.close ()
 
+## Printing a word document with data obtained from the database
+def docx_pmo ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT * FROM PMO')
+  data = cur.fetchall ()
+
+  ### Creation of the Word document and placement of the data
+  docx = Document()
+  section = docx.sections [-1]
+  new_width, new_height = section.page_height, section.page_width
+  section.orientation = WD_ORIENT.LANDSCAPE
+  section.page_width = new_width
+  section.page_height = new_height
+  table = docx.add_table (rows=1, cols=len(data[0]))
+  ### Apply a table style
+  table.style = 'Table Grid'
+
+  ### Column headings
+  headings = [descripcion[0] for descripcion in cur.description]
+  for i, heading in enumerate (headings):
+      cell = table.cell (0, i)
+      cell.text = heading
+
+  ### Add rows of data
+  for row in data:
+      new_row = table.add_row().cells
+      for i, column in enumerate (row):
+          new_row[i].text = str (column)
+
+  ### Adjusts the width of the table columns
+  for column in table.columns:
+    width = Inches (1.5)
+    column.width = width
+
+  ### Saves the document in the current folder
+  docx.save ('Datos de los mouses.docx')
+
+  db.close ()
+
 ## Statistical graph showing which monitors are operational or not
 def graph_pmo ():
   db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -308,6 +428,46 @@ def del_pp (rowid):
   cur = db.cursor ()
   cur.execute (f'DELETE FROM PP WHERE rowid = {rowid}')
   db.commit ()
+  db.close ()
+
+## Printing a word document with data obtained from the database
+def docx_pp ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT * FROM PP')
+  data = cur.fetchall ()
+
+  ### Creation of the Word document and placement of the data
+  docx = Document()
+  section = docx.sections [-1]
+  new_width, new_height = section.page_height, section.page_width
+  section.orientation = WD_ORIENT.LANDSCAPE
+  section.page_width = new_width
+  section.page_height = new_height
+  table = docx.add_table (rows=1, cols=len(data[0]))
+  ### Apply a table style
+  table.style = 'Table Grid'
+
+  ### Column headings
+  headings = [descripcion[0] for descripcion in cur.description]
+  for i, heading in enumerate (headings):
+      cell = table.cell (0, i)
+      cell.text = heading
+
+  ### Add rows of data
+  for row in data:
+      new_row = table.add_row().cells
+      for i, column in enumerate (row):
+          new_row[i].text = str (column)
+
+  ### Adjusts the width of the table columns
+  for column in table.columns:
+    width = Inches (1.5)
+    column.width = width
+
+  ### Saves the document in the current folder
+  docx.save ('Datos de las impresoras.docx')
+
   db.close ()
 
 ## Statistical graph showing which printers are operational or not
