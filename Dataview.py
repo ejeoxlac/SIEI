@@ -322,6 +322,9 @@ def dataviewview (mainmenu):
             Resources.Connection.graph_pc ()
 
         #### Button area
+        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pc)
+        button_docx.place (x=50, y=450)
+
         button_del = CTkButton (main_frame, font=font1, text='Borrar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.place (x=220, y=450)
 
@@ -809,6 +812,9 @@ def dataviewview (mainmenu):
             Resources.Connection.graph_pm ()
 
         #### Button area
+        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pm)
+        button_docx.place (x=50, y=450)
+
         button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.place (x=240, y=450)
 
@@ -1051,6 +1057,9 @@ def dataviewview (mainmenu):
             Resources.Connection.graph_pmo ()
 
         #### Button area
+        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pmo)
+        button_docx.place (x=50, y=450)
+
         button_del = CTkButton (main_frame, font=font1, text='Borrar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.place (x=240, y=450)
 
@@ -1293,6 +1302,9 @@ def dataviewview (mainmenu):
             Resources.Connection.graph_pp ()
 
         #### Button area
+        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pp)
+        button_docx.place (x=50, y=450)
+
         button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.place (x=240, y=450)
 
