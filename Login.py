@@ -2,53 +2,70 @@
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image
+import Menu
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
 
-# User validator to enter the system
-def login():
-  user = name.get ()
-  psw = password.get ()
-  Resources.Connection.loginv (user, psw)
-  if Resources.Connection.cur.fetchall ():
-    messagebox.showinfo ('Login', 'Acceso permitido')
-  elif not (user and psw):
-    messagebox.showerror ('Error', 'Debes llenar las celdas')
-  else:
-    messagebox.showerror ('Error','Acceso denegado')
+# I define the view so I can call it
+def loginview ():
 
-# Defined appearance
-set_appearance_mode ('dark')
-set_default_color_theme ('blue')
+  ## User validator to enter the system
+  def login():
+    user = name.get ()
+    psw = password.get ()
+    Resources.Connection.loginv (user, psw)
+    if Resources.Connection.cur.fetchall ():
+      messagebox.showinfo ('Login', 'Acceso permitido')
+      mainlogin.withdraw ()
+      Menu.menuview (mainlogin)
+    elif not (user and psw):
+      messagebox.showerror ('Error', 'Debes llenar las celdas')
+    else:
+      messagebox.showerror ('Error','Acceso denegado')
 
-# Format of the window interface
-main = CTk ()
-main.iconbitmap ('Resources\\Img\\Ico.ico')
-main.title ('Inicio de sesión al sistema SIEI')
-main.geometry ('400x400')
-main.resizable (False, False)
+  ## Defined appearance
+  set_appearance_mode ('dark')
+  set_default_color_theme ('blue')
 
-# Format to create the background of the application
-bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(400, 400))
-bg_image_label = CTkLabel (main, text='', image=bg_image)
-bg_image_label.place (x=0, y=0)
+  ## Format of the window interface
+  mainlogin = CTk ()
+  mainlogin.iconbitmap ('Resources\\Img\\Ico.ico')
+  mainlogin.title ('Inicio de sesión al sistema SIEI')
+  mainlogin.geometry ('400x400')
+  mainlogin.resizable (False, False)
 
-# Format of the frame that forms the main body of the window
-frame = CTkFrame (main)
-frame.pack (expand=True, fill='both', padx=50, pady=60)
+  ## Format to create the background of the application
+  bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(400, 400))
+  bg_image_label = CTkLabel (mainlogin, text='', image=bg_image)
+  bg_image_label.place (x=0, y=0)
 
-# Title
-CTkLabel (frame, text='SIEI', font=('Roboto', 26)).pack (pady=20)
+  ## Format of the frame that forms the main body of the window
+  frame = CTkFrame (mainlogin)
+  frame.pack (expand=True, fill='both', padx=40, pady=30)
 
-# Data entry for the login
-name = CTkEntry (frame, placeholder_text='Usuario 👤', show='*', width=250, height=40)
-name.pack (pady=5)
+  # ## Logos
+  # logo_image1 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
+  # logo_image1_label = CTkLabel (frame, text='', image=logo_image1, fg_color=None, bg_color='transparent')
+  # logo_image1_label.place (x=50, y=5)
 
-password = CTkEntry (frame, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
-password.pack (pady=15)
+  # logo_image2 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
+  # logo_image2_label = CTkLabel (frame, text='', image=logo_image2, fg_color=None, bg_color='transparent')
+  # logo_image2_label.place (x=212, y=5)
 
-# login button
-CTkButton (frame, text='Acceder', command=login, corner_radius=15).pack (pady=20)
+  ### Title
+  CTkLabel (frame, text='Sistema de inventario', font=('Roboto', 22)).pack (pady=(80, 0))
+  CTkLabel (frame, text='para', font=('Roboto', 22)).pack (pady=2)
+  CTkLabel (frame, text='equipos informáticos', font=('Roboto', 21)).pack (pady=2)
 
-main.mainloop ()
+  ### Data entry for the login
+  name = CTkEntry (frame, placeholder_text='Usuario 👤', show='*', width=250, height=40)
+  name.pack (pady=5)
+
+  password = CTkEntry (frame, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
+  password.pack (pady=10)
+
+  ### login button
+  CTkButton (frame, text='Acceder', command=login, corner_radius=15).pack (pady=5)
+
+  mainlogin.mainloop ()

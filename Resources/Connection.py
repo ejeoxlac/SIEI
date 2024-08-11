@@ -1,5 +1,8 @@
 # Libraries
 import sqlite3, pandas, matplotlib.pyplot as plt
+from docx import Document
+from docx.shared import Inches
+from docx.enum.section import WD_ORIENT
 
 # Connector to the database and to execute the SQL statements the database cursor was created
 db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -20,10 +23,10 @@ def id_exist_pc (idpc):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd):
+def insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, colormb, cpu, ram, HDDorSDD, status, dateofarrival, departuredate) VALUES(?, ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)', (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd))
+  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, colormb, cpu, ram, HDDorSDD, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs))
   db.commit ()
   db.close ()
 
@@ -32,10 +35,10 @@ def search_pc (val, stat):
   cur.execute ('SELECT * FROM PC WHERE idpc=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom):
+def edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PC SET idpc=:idpc, name=:name, model=:model, serial=:serial, color=:color, colormb=:colormb, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, status=:status, departuredate=:departuredate, dateofmodification=:dateofmodification WHERE rowid = {rowid}', {'idpc':idpc, 'name':name, 'model':model, 'serial':serial, 'color':color, 'colormb':colormb, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'status':stat, 'departuredate':dtd, 'dateofmodification':dom})
+  cur.execute (f'UPDATE PC SET idpc=:idpc, name=:name, model=:model, serial=:serial, color=:color, colormb=:colormb, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, status=:status, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpc':idpc, 'name':name, 'model':model, 'serial':serial, 'color':color, 'colormb':colormb, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'status':stat, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -75,10 +78,10 @@ def id_exist_pk (idpk):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pk (idpk, name, model, serial, color, stat, dfa, dtd):
+def insert_pk (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, status, dateofarrival, departuredate) VALUES(?, ? ,? ,? ,? ,? ,? ,?)', (idpk, name, model, serial, color, stat, dfa, dtd))
+  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
   db.commit ()
   db.close ()
 
@@ -87,10 +90,10 @@ def search_pk (val, stat):
   cur.execute ('SELECT * FROM PK WHERE idpk=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom):
+def edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PK SET idpk=:idpk, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification WHERE rowid = {rowid}', {'idpk':idpk, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom})
+  cur.execute (f'UPDATE PK SET idpk=:idpk, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpk':idpk, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -100,6 +103,46 @@ def del_pk (rowid):
   cur = db.cursor ()
   cur.execute (f'DELETE FROM PK WHERE rowid = {rowid}')
   db.commit ()
+  db.close ()
+
+## Printing a word document with data obtained from the database
+def docx_pk ():
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT * FROM PK')
+  data = cur.fetchall ()
+
+  ### Creation of the Word document and placement of the data
+  docx = Document()
+  section = docx.sections [-1]
+  new_width, new_height = section.page_height, section.page_width
+  section.orientation = WD_ORIENT.LANDSCAPE
+  section.page_width = new_width
+  section.page_height = new_height
+  table = docx.add_table (rows=1, cols=len(data[0]))
+  ### Apply a table style
+  table.style = 'Table Grid'
+
+  ### Column headings
+  headings = [descripcion[0] for descripcion in cur.description]
+  for i, heading in enumerate (headings):
+      cell = table.cell (0, i)
+      cell.text = heading
+
+  ### Add rows of data
+  for row in data:
+      new_row = table.add_row().cells
+      for i, column in enumerate (row):
+          new_row[i].text = str (column)
+
+  ### Adjusts the width of the table columns
+  for column in table.columns:
+    width = Inches (1.5)
+    column.width = width
+
+  ### Saves the document in the current folder
+  docx.save ('Datos de los teclados.docx')
+
   db.close ()
 
 ## Statistical graph showing which keyboards are operational or not
@@ -130,10 +173,10 @@ def id_exist_pm (idpm):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pm (idpm, name, model, serial, color, stat, dfa, dtd):
+def insert_pm (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, status, dateofarrival, departuredate) VALUES(?, ? ,? ,? ,? ,? ,? ,?)', (idpm, name, model, serial, color, stat, dfa, dtd))
+  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
   db.commit ()
   db.close ()
 
@@ -142,10 +185,10 @@ def search_pm (val, stat):
   cur.execute ('SELECT * FROM PM WHERE idpm=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom):
+def edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PM SET idpm=:idpm, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification WHERE rowid = {rowid}', {'idpm':idpm, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom})
+  cur.execute (f'UPDATE PM SET idpm=:idpm, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpm':idpm, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -185,10 +228,10 @@ def id_exist_pmo (idpmo):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd):
+def insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, status, dateofarrival, departuredate) VALUES(?, ? ,? ,? ,? ,? ,? ,?)', (idpmo, name, model, serial, color, stat, dfa, dtd))
+  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
   db.commit ()
   db.close ()
 
@@ -197,10 +240,10 @@ def search_pmo (val, stat):
   cur.execute ('SELECT * FROM PMO WHERE idpmo=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom):
+def edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PMO SET idpmo=:idpmo, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification WHERE rowid = {rowid}', {'idpmo':idpmo, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom})
+  cur.execute (f'UPDATE PMO SET idpmo=:idpmo, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpmo':idpmo, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -240,10 +283,10 @@ def id_exist_pp (idpp):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pp (idpp, name, model, serial, color, stat, dfa, dtd):
+def insert_pp (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, status, dateofarrival, departuredate) VALUES(?, ? ,? ,? ,? ,? ,? ,?)', (idpp, name, model, serial, color, stat, dfa, dtd))
+  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
   db.commit ()
   db.close ()
 
@@ -252,10 +295,10 @@ def search_pp (val, stat):
   cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd, dom):
+def edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification WHERE rowid = {rowid}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom})
+  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -298,7 +341,7 @@ def id_exist_users (idus):
 def insert_users (idus, user, psw, firstnameperson, lastnameperson, idcardperson):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO UsersSys (idus, users, psw, firstnameperson, lastnameperson, idcardperson) VALUES(?, ?, ?, ?, ?, ?)', (idus, user, psw, firstnameperson, lastnameperson, idcardperson))
+  cur.execute ('INSERT INTO UsersSys (idus, users, psw, firstnameperson, lastnameperson, idcardperson) VALUES(?, ?, ? ,? ,? ,?)', (idus, user, psw, firstnameperson, lastnameperson, idcardperson))
   db.commit ()
   db.close ()
 
