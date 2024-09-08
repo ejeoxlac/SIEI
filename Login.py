@@ -42,7 +42,7 @@ def loginview ():
 
   ## Format of the frame that forms the main body of the window
   frame = CTkFrame (mainlogin)
-  frame.pack (expand=True, fill='both', padx=40, pady=30)
+  frame.pack (side=RIGHT, expand=True, fill='both', padx=(100, 0), pady=30)
 
   # ## Logos
   # logo_image1 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
@@ -51,11 +51,15 @@ def loginview ():
 
   logo_image_central = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
   logo_image_central_label = CTkLabel (frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
-  logo_image_central_label.place (x=133, y=5)
+  logo_image_central_label.place (x=120, y=5)
 
   # logo_image2 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
   # logo_image2_label = CTkLabel (frame, text='', image=logo_image2, fg_color=None, bg_color='transparent')
   # logo_image2_label.place (x=212, y=5)
+
+  # login_image = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 400))
+  # login_image_label = CTkLabel (mainlogin, text='', image=login_image)
+  # login_image_label.place (x=0, y=0)
 
   ### Title
   CTkLabel (frame, text='Sistema de inventario', font=('Roboto', 22)).pack (pady=(80, 0))
