@@ -185,7 +185,7 @@ def mainview (mainmenu):
     observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
     observation_label.place (x=445, y=380)
 
-    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry = CTkTextbox (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
     observation_entry.place (x=445, y=410)
 
     ###### Button area
@@ -310,7 +310,7 @@ def mainview (mainmenu):
     observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
     observation_label.place (x=445, y=380)
 
-    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry = CTkTextbox (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10)
     observation_entry.place (x=445, y=410)
 
     ###### Button area
@@ -435,7 +435,7 @@ def mainview (mainmenu):
     observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
     observation_label.place (x=445, y=380)
 
-    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry = CTkTextbox (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10)
     observation_entry.place (x=445, y=410)
 
     ###### Button area
@@ -560,7 +560,7 @@ def mainview (mainmenu):
     observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
     observation_label.place (x=445, y=380)
 
-    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry = CTkTextbox (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10)
     observation_entry.place (x=445, y=410)
 
     ###### Button area
@@ -685,7 +685,7 @@ def mainview (mainmenu):
     observation_label = CTkLabel (main_frame, font=font2, text='Observación:', text_color='#fff')
     observation_label.place (x=445, y=380)
 
-    observation_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    observation_entry = CTkTextbox (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10)
     observation_entry.place (x=445, y=410)
 
     ###### Button area

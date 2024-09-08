@@ -169,12 +169,6 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
-            idpc_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
-            idpc_label.place (x=50, y=60)
-
-            idpc_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            idpc_entry.place (x=50, y=90)
-
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -269,7 +263,6 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
-                idpc = idpc_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -284,10 +277,10 @@ def dataviewview (mainmenu):
                 dp = department_entry.get ()
                 user = user_entry.get ()
                 obs = observation_entry. get ()
-                if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat):
+                if not (name and model and serial and color and colormb and cpu and ram and disk and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pc (rowid, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -302,7 +295,6 @@ def dataviewview (mainmenu):
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
-                idpc_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
@@ -448,12 +440,6 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
-            idpk_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
-            idpk_label.place (x=50, y=60)
-
-            idpk_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            idpk_entry.place (x=50, y=90)
-
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -522,7 +508,6 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
-                idpk = idpk_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -533,10 +518,10 @@ def dataviewview (mainmenu):
                 dp = department_entry.get ()
                 user = user_entry.get ()
                 obs = observation_entry. get ()
-                if not (idpk and name and model and serial and color and stat):
+                if not (name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pk (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -551,7 +536,6 @@ def dataviewview (mainmenu):
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
-                idpk_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
@@ -693,12 +677,6 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
-            idpm_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
-            idpm_label.place (x=50, y=60)
-
-            idpm_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            idpm_entry.place (x=50, y=90)
-
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -767,7 +745,6 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
-                idpm = idpm_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -778,10 +755,10 @@ def dataviewview (mainmenu):
                 dp = department_entry.get ()
                 user = user_entry.get ()
                 obs = observation_entry. get ()
-                if not (idpm and name and model and serial and color and stat):
+                if not (name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pm (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -796,7 +773,6 @@ def dataviewview (mainmenu):
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
-                idpm_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
@@ -938,12 +914,6 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
-            idpmo_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
-            idpmo_label.place (x=50, y=60)
-
-            idpmo_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            idpmo_entry.place (x=50, y=90)
-
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -1012,7 +982,6 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
-                idpmo = idpmo_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -1023,10 +992,10 @@ def dataviewview (mainmenu):
                 dp = department_entry.get ()
                 user = user_entry.get ()
                 obs = observation_entry. get ()
-                if not (idpmo and name and model and serial and color and stat):
+                if not (name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pmo (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1041,7 +1010,6 @@ def dataviewview (mainmenu):
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
-                idpmo_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
@@ -1183,12 +1151,6 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
-            idpp_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
-            idpp_label.place (x=50, y=60)
-
-            idpp_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            idpp_entry.place (x=50, y=90)
-
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -1257,7 +1219,6 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
-                idpp = idpp_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -1268,10 +1229,10 @@ def dataviewview (mainmenu):
                 dp = department_entry.get ()
                 user = user_entry.get ()
                 obs = observation_entry. get ()
-                if not (idpp and name and model and serial and color and stat):
+                if not (name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pp (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1286,7 +1247,6 @@ def dataviewview (mainmenu):
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
-                idpp_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
