@@ -6,6 +6,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+from tkcalendar import *
 from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
@@ -89,7 +90,7 @@ def dataviewview (mainmenu):
         #### Table where the data that is being searched will be displayed
         trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15))
+        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16))
 
         trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
         trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -106,6 +107,7 @@ def dataviewview (mainmenu):
         trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (14, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (15, stretch=NO, width=150, anchor=tk.CENTER)
+        trv.column (16, stretch=NO, width=150, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -122,6 +124,7 @@ def dataviewview (mainmenu):
         trv.heading (13, text='Fecha de modificación', anchor=tk.CENTER)
         trv.heading (14, text='Departamentos', anchor=tk.CENTER)
         trv.heading (15, text='Usuarios', anchor=tk.CENTER)
+        trv.heading (16, text='Observaciones', anchor=tk.CENTER)
 
         ##### Format that creates the divisions within the table
         trv.tag_configure ('oddrow', background='#4a5052')
@@ -156,7 +159,7 @@ def dataviewview (mainmenu):
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
             data_editing_menu.title ('Menu de edición de datos del computador')
-            data_editing_menu.geometry ('700x500')
+            data_editing_menu.geometry ('700x560')
             data_editing_menu.resizable (False, False)
 
             ##### Fonts for the letters
@@ -169,6 +172,12 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
+            idpc_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
+            idpc_label.place (x=50, y=60)
+
+            idpc_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            idpc_entry.place (x=50, y=90)
+
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -251,10 +260,32 @@ def dataviewview (mainmenu):
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
 
+            def calendar():
+                ######## Create a new window for the calendar
+                window_callendary = tk.Toplevel (data_editing_menu)
+                window_callendary.title ('Calendario seleccionable')
+
+                ######## Create a calendar widget
+                calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+                calendar.pack (pady=20)
+
+                ######## Function to show the selected date in the Entry of the main window
+                def show_calendar_date():
+                    date_selected = calendar.get_date ()
+                    departuredate_entry.delete (0, tk.END)
+                    departuredate_entry.insert (0, date_selected)
+
+                ######## button to show the selected date
+                date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+                date_button.pack (pady=10)
+
+            calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
+            calendar_button.place (x=50, y=460)
+
             observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
             observation_label.place (x=445, y=380)
 
-            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry = CTkTextbox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
             observation_entry.place (x=445, y=410)
 
             ###### The end of the frame objects
@@ -263,6 +294,7 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
+                idpc = idpc_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -276,11 +308,11 @@ def dataviewview (mainmenu):
                 dom = datetime.now().strftime("%d-%m-%Y")
                 dp = department_entry.get ()
                 user = user_entry.get ()
-                obs = observation_entry. get ()
-                if not (name and model and serial and color and colormb and cpu and ram and disk and stat):
+                obs = observation_entry. get ('1.0', 'end-1c')
+                if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pc (rowid, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -289,12 +321,13 @@ def dataviewview (mainmenu):
 
             ##### Button area
             button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
-            button_dem.place (x=300, y=450)
+            button_dem.place (x=300, y=520)
 
             ##### Returns selected item for editing
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
+                idpc_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
@@ -305,9 +338,15 @@ def dataviewview (mainmenu):
                 HDDorSDD_entry.insert (0, values[8])
                 stat_options.set (values[9])
                 departuredate_entry.insert (0, values[11])
+                department_entry.insert (0, values[13])
+                user_entry.insert (0, values[14])
+                observation_entry.insert (1.0, values[15])
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idpc_entry.configure (state='readonly')
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pc ():
@@ -368,7 +407,7 @@ def dataviewview (mainmenu):
         #### Table where the data that is being searched will be displayed
         trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
         trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
         trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -381,6 +420,7 @@ def dataviewview (mainmenu):
         trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
+        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -393,6 +433,7 @@ def dataviewview (mainmenu):
         trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
         trv.heading (10, text='Departamentos', anchor=tk.CENTER)
         trv.heading (11, text='Usuarios', anchor=tk.CENTER)
+        trv.heading (12, text='Observaciones', anchor=tk.CENTER)
 
         ##### Format that creates the divisions within the table
         trv.tag_configure ('oddrow', background='#4a5052')
@@ -427,7 +468,7 @@ def dataviewview (mainmenu):
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
             data_editing_menu.title ('Menu de edición de datos del teclado')
-            data_editing_menu.geometry ('700x500')
+            data_editing_menu.geometry ('700x560')
             data_editing_menu.resizable (False, False)
 
             ##### Fonts for the letters
@@ -440,6 +481,12 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
+            idpk_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
+            idpk_label.place (x=50, y=60)
+
+            idpk_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            idpk_entry.place (x=50, y=90)
+
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -496,10 +543,32 @@ def dataviewview (mainmenu):
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
 
+            def calendar():
+                ######## Create a new window for the calendar
+                window_callendary = tk.Toplevel (data_editing_menu)
+                window_callendary.title ('Calendario seleccionable')
+
+                ######## Create a calendar widget
+                calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+                calendar.pack (pady=20)
+
+                ######## Function to show the selected date in the Entry of the main window
+                def show_calendar_date():
+                    date_selected = calendar.get_date ()
+                    departuredate_entry.delete (0, tk.END)
+                    departuredate_entry.insert (0, date_selected)
+
+                ######## button to show the selected date
+                date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+                date_button.pack (pady=10)
+
+            calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
+            calendar_button.place (x=50, y=460)
+
             observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
             observation_label.place (x=445, y=380)
 
-            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry = CTkTextbox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
             observation_entry.place (x=445, y=410)
 
             ###### The end of the frame objects
@@ -508,6 +577,7 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
+                idpk = idpk_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -517,11 +587,11 @@ def dataviewview (mainmenu):
                 dom = datetime.now().strftime("%d-%m-%Y")
                 dp = department_entry.get ()
                 user = user_entry.get ()
-                obs = observation_entry. get ()
-                if not (name and model and serial and color and stat):
+                obs = observation_entry. get ('1.0', 'end-1c')
+                if not (idpk and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pk (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -530,21 +600,28 @@ def dataviewview (mainmenu):
 
             ##### Button area
             button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
-            button_dem.place (x=300, y=450)
+            button_dem.place (x=300, y=520)
 
             ##### Returns selected item for editing
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
+                idpk_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
                 stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
+                department_entry.insert (0, values[9])
+                user_entry.insert (0, values[10])
+                observation_entry.insert (1.0, values[11])
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idpk_entry.configure (state='readonly')
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pk ():
@@ -605,7 +682,7 @@ def dataviewview (mainmenu):
         #### Table where the data that is being searched will be displayed
         trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
         trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
         trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -618,6 +695,7 @@ def dataviewview (mainmenu):
         trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
+        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -630,6 +708,7 @@ def dataviewview (mainmenu):
         trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
         trv.heading (10, text='Departamentos', anchor=tk.CENTER)
         trv.heading (11, text='Usuarios', anchor=tk.CENTER)
+        trv.heading (12, text='Observaciones', anchor=tk.CENTER)
 
         ##### Format that creates the divisions within the table
         trv.tag_configure ('oddrow', background= '#4a5052')
@@ -664,7 +743,7 @@ def dataviewview (mainmenu):
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
             data_editing_menu.title ('Menu de edición de datos del monitor')
-            data_editing_menu.geometry ('800x500')
+            data_editing_menu.geometry ('700x560')
             data_editing_menu.resizable (False, False)
 
             ##### Fonts for the letters
@@ -677,6 +756,12 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
+            idpm_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
+            idpm_label.place (x=50, y=60)
+
+            idpm_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            idpm_entry.place (x=50, y=90)
+
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -733,10 +818,32 @@ def dataviewview (mainmenu):
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
 
+            def calendar():
+                ######## Create a new window for the calendar
+                window_callendary = tk.Toplevel (data_editing_menu)
+                window_callendary.title ('Calendario seleccionable')
+
+                ######## Create a calendar widget
+                calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+                calendar.pack (pady=20)
+
+                ######## Function to show the selected date in the Entry of the main window
+                def show_calendar_date():
+                    date_selected = calendar.get_date ()
+                    departuredate_entry.delete (0, tk.END)
+                    departuredate_entry.insert (0, date_selected)
+
+                ######## button to show the selected date
+                date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+                date_button.pack (pady=10)
+
+            calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
+            calendar_button.place (x=50, y=460)
+
             observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
             observation_label.place (x=445, y=380)
 
-            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry = CTkTextbox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
             observation_entry.place (x=445, y=410)
 
             ###### The end of the frame objects
@@ -745,6 +852,7 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
+                idpm = idpm_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -754,11 +862,11 @@ def dataviewview (mainmenu):
                 dom = datetime.now().strftime("%d-%m-%Y")
                 dp = department_entry.get ()
                 user = user_entry.get ()
-                obs = observation_entry. get ()
-                if not (name and model and serial and color and stat):
+                obs = observation_entry. get ('1.0', 'end-1c')
+                if not (idpm and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pm (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -767,21 +875,28 @@ def dataviewview (mainmenu):
 
             ##### Button area
             button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
-            button_dem.place (x=300, y=450)
+            button_dem.place (x=300, y=520)
 
             ##### Returns selected item for editing
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
+                idpm_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
                 stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
+                department_entry.insert (0, values[9])
+                user_entry.insert (0, values[10])
+                observation_entry.insert (1.0, values[11])
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idpm_entry.configure (state='readonly')
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pm ():
@@ -842,7 +957,7 @@ def dataviewview (mainmenu):
         #### Table where the data that is being searched will be displayed
         trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
         trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
         trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -855,6 +970,7 @@ def dataviewview (mainmenu):
         trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
+        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -867,6 +983,7 @@ def dataviewview (mainmenu):
         trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
         trv.heading (10, text='Departamentos', anchor=tk.CENTER)
         trv.heading (11, text='Usuarios', anchor=tk.CENTER)
+        trv.heading (12, text='Observaciones', anchor=tk.CENTER)
 
         ##### Format that creates the divisions within the table
         trv.tag_configure ('oddrow', background='#4a5052')
@@ -901,7 +1018,7 @@ def dataviewview (mainmenu):
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
             data_editing_menu.title ('Menu de edición de datos del mouse')
-            data_editing_menu.geometry ('800x500')
+            data_editing_menu.geometry ('700x560')
             data_editing_menu.resizable (False, False)
 
             ##### Fonts for the letters
@@ -914,6 +1031,12 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
+            idpmo_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
+            idpmo_label.place (x=50, y=60)
+
+            idpmo_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            idpmo_entry.place (x=50, y=90)
+
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -970,10 +1093,32 @@ def dataviewview (mainmenu):
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
 
+            def calendar():
+                ######## Create a new window for the calendar
+                window_callendary = tk.Toplevel (data_editing_menu)
+                window_callendary.title ('Calendario seleccionable')
+
+                ######## Create a calendar widget
+                calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+                calendar.pack (pady=20)
+
+                ######## Function to show the selected date in the Entry of the main window
+                def show_calendar_date():
+                    date_selected = calendar.get_date ()
+                    departuredate_entry.delete (0, tk.END)
+                    departuredate_entry.insert (0, date_selected)
+
+                ######## button to show the selected date
+                date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+                date_button.pack (pady=10)
+
+            calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
+            calendar_button.place (x=50, y=460)
+
             observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
             observation_label.place (x=445, y=380)
 
-            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry = CTkTextbox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
             observation_entry.place (x=445, y=410)
 
             ###### The end of the frame objects
@@ -982,6 +1127,7 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
+                idpmo = idpmo_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -991,11 +1137,11 @@ def dataviewview (mainmenu):
                 dom = datetime.now().strftime("%d-%m-%Y")
                 dp = department_entry.get ()
                 user = user_entry.get ()
-                obs = observation_entry. get ()
-                if not (name and model and serial and color and stat):
+                obs = observation_entry. get ('1.0', 'end-1c')
+                if not (idpmo and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pmo (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1004,21 +1150,28 @@ def dataviewview (mainmenu):
 
             ##### Button area
             button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
-            button_dem.place (x=300, y=450)
+            button_dem.place (x=300, y=520)
 
             ##### Returns selected item for editing
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
+                idpmo_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
                 stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
+                department_entry.insert (0, values[9])
+                user_entry.insert (0, values[10])
+                observation_entry.insert (1.0, values[11])
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idpmo_entry.configure (state='readonly')
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pmo ():
@@ -1079,7 +1232,7 @@ def dataviewview (mainmenu):
         #### Table where the data that is being searched will be displayed
         trv = ttk.Treeview (main_frame, height=17, selectmode='browse', show='headings')
 
-        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11))
+        trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
         trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
         trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
@@ -1092,6 +1245,7 @@ def dataviewview (mainmenu):
         trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
         trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
+        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1104,6 +1258,7 @@ def dataviewview (mainmenu):
         trv.heading (9, text='Fecha de modificación', anchor=tk.CENTER)
         trv.heading (10, text='Departamentos', anchor=tk.CENTER)
         trv.heading (11, text='Usuarios', anchor=tk.CENTER)
+        trv.heading (12, text='Observaciones', anchor=tk.CENTER)
 
         ##### Format that creates the divisions within the table
         trv.tag_configure ('oddrow', background='#4a5052')
@@ -1138,7 +1293,7 @@ def dataviewview (mainmenu):
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
             data_editing_menu.title ('Menu de edición de datos de la impresora')
-            data_editing_menu.geometry ('800x500')
+            data_editing_menu.geometry ('700x560')
             data_editing_menu.resizable (False, False)
 
             ##### Fonts for the letters
@@ -1151,6 +1306,12 @@ def dataviewview (mainmenu):
 
             ###### Objects within the frame
             ####### Front row
+            idpp_label = CTkLabel (data_editing_menu, font=font2, text='ID:', text_color='#fff')
+            idpp_label.place (x=50, y=60)
+
+            idpp_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            idpp_entry.place (x=50, y=90)
+
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre:', text_color='#fff')
             name_label.place (x=250, y=60)
 
@@ -1207,10 +1368,32 @@ def dataviewview (mainmenu):
             departuredate_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
             departuredate_entry.place (x=50, y=410)
 
+            def calendar():
+                ######## Create a new window for the calendar
+                window_callendary = tk.Toplevel (data_editing_menu)
+                window_callendary.title ('Calendario seleccionable')
+
+                ######## Create a calendar widget
+                calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+                calendar.pack (pady=20)
+
+                ######## Function to show the selected date in the Entry of the main window
+                def show_calendar_date():
+                    date_selected = calendar.get_date ()
+                    departuredate_entry.delete (0, tk.END)
+                    departuredate_entry.insert (0, date_selected)
+
+                ######## button to show the selected date
+                date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+                date_button.pack (pady=10)
+
+            calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
+            calendar_button.place (x=50, y=460)
+
             observation_label = CTkLabel (data_editing_menu, font=font2, text='Observación:', text_color='#fff')
             observation_label.place (x=445, y=380)
 
-            observation_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            observation_entry = CTkTextbox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=200, height=100, corner_radius=10, wrap=WORD)
             observation_entry.place (x=445, y=410)
 
             ###### The end of the frame objects
@@ -1219,6 +1402,7 @@ def dataviewview (mainmenu):
             def check_input ():
                 selected = trv.focus ()
                 rowid = selected [0]
+                idpp = idpp_entry.get ()
                 name = name_entry.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
@@ -1228,11 +1412,11 @@ def dataviewview (mainmenu):
                 dom = datetime.now().strftime("%d-%m-%Y")
                 dp = department_entry.get ()
                 user = user_entry.get ()
-                obs = observation_entry. get ()
-                if not (name and model and serial and color and stat):
+                obs = observation_entry. get ('1.0', 'end-1c')
+                if not (idpp and name and model and serial and color and stat):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pp (rowid, name, model, serial, color, stat, dtd, dom, dp, user, obs)
+                    Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, stat, dtd, dom, dp, user, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1241,21 +1425,28 @@ def dataviewview (mainmenu):
 
             ##### Button area
             button_dem = CTkButton (data_editing_menu, font=font2, text='Editar', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=check_input)
-            button_dem.place (x=300, y=450)
+            button_dem.place (x=300, y=520)
 
             ##### Returns selected item for editing
             try:
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
+                idpp_entry.insert (0, values[0])
                 name_entry.insert (0, values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
                 color_entry.insert (0, values[4])
                 stat_options.set (values[5])
                 departuredate_entry.insert (0, values[7])
+                department_entry.insert (0, values[9])
+                user_entry.insert (0, values[10])
+                observation_entry.insert (1.0, values[11])
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idpp_entry.configure (state='readonly')
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pp ():

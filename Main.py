@@ -70,7 +70,7 @@ def mainview (mainmenu):
       dtd = departuredate_entry.get ()
       dp = department_entry.get ()
       user = user_entry.get ()
-      obs = observation_entry. get ()
+      obs = observation_entry.get ('1.0', 'end-1c')
       try:
         if not (idpc and name and model and serial and color and colormb and cpu and ram and disk and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
@@ -222,7 +222,7 @@ def mainview (mainmenu):
       dtd = departuredate_entry.get ()
       dp = department_entry.get ()
       user = user_entry.get ()
-      obs = observation_entry. get ()
+      obs = observation_entry.get ('1.0', 'end-1c')
       try:
         if not (idpk and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
@@ -347,7 +347,7 @@ def mainview (mainmenu):
       dtd = departuredate_entry.get ()
       dp = department_entry.get ()
       user = user_entry.get ()
-      obs = observation_entry. get ()
+      obs = observation_entry.get ('1.0', 'end-1c')
       try:
         if not (idpm and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
@@ -472,7 +472,7 @@ def mainview (mainmenu):
       dtd = departuredate_entry.get ()
       dp = department_entry.get ()
       user = user_entry.get ()
-      obs = observation_entry. get ()
+      obs = observation_entry.get ('1.0', 'end-1c')
       try:
         if not (idpmo and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
@@ -597,7 +597,7 @@ def mainview (mainmenu):
       dtd = departuredate_entry.get ()
       dp = department_entry.get ()
       user = user_entry.get ()
-      obs = observation_entry. get ()
+      obs = observation_entry.get ('1.0', 'end-1c')
       try:
         if not (idpp and name and model and serial and color and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')

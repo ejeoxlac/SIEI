@@ -35,10 +35,10 @@ def search_pc (val, stat):
   cur.execute ('SELECT * FROM PC WHERE idpc=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pc (rowid, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs):
+def edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PC SET name=:name, model=:model, serial=:serial, color=:color, colormb=:colormb, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, status=:status, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'name':name, 'model':model, 'serial':serial, 'color':color, 'colormb':colormb, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'status':stat, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PC SET idpc=:idpc, name=:name, model=:model, serial=:serial, color=:color, colormb=:colormb, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, status=:status, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpc = {idpc}', {'idpc':idpc, 'name':name, 'model':model, 'serial':serial, 'color':color, 'colormb':colormb, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'status':stat, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -130,10 +130,10 @@ def search_pk (val, stat):
   cur.execute ('SELECT * FROM PK WHERE idpk=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pk (rowid, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PK SET name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PK SET idpk=:idpk, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpk = {idpk}', {'idpk':idpk, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -225,10 +225,10 @@ def search_pm (val, stat):
   cur.execute ('SELECT * FROM PM WHERE idpm=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pm (rowid, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PM SET name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PM SET idpm=:idpm, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpm = {idpm}', {'idpm':idpm, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -320,10 +320,10 @@ def search_pmo (val, stat):
   cur.execute ('SELECT * FROM PMO WHERE idpmo=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pmo (rowid, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PMO SET name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PMO SET idpmo=:idpmo, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpmo = {idpmo}', {'idpmo':idpmo, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -415,10 +415,10 @@ def search_pp (val, stat):
   cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pp (rowid, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pp (rowid, idpp,  name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PP SET name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpp = {idpp}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -513,7 +513,7 @@ def search_users ():
 def edit_users (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE UsersSys SET idus=:idus, users=:user, psw=:psw, firstnameperson=:firstnameperson, lastnameperson=:lastnameperson, idcardperson=:idcardperson WHERE rowid = {rowid}', {'idus':idus, 'user':user, 'psw':psw, 'firstnameperson':firstnameperson, 'lastnameperson':lastnameperson, 'idcardperson':idcardperson})
+  cur.execute (f'UPDATE UsersSys SET idus=:idus, users=:user, psw=:psw, firstnameperson=:firstnameperson, lastnameperson=:lastnameperson, idcardperson=:idcardperson WHERE idus = {idus}', {'idus':idus, 'user':user, 'psw':psw, 'firstnameperson':firstnameperson, 'lastnameperson':lastnameperson, 'idcardperson':idcardperson})
   db.commit ()
   db.close ()
 
