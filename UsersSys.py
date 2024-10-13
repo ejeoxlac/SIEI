@@ -27,6 +27,21 @@ def userssysview (mainmenu):
     mainuserssys.geometry ('860x580')
     mainuserssys.resizable (False, False)
 
+    ## Code to center the application window
+    ### Refresh the window to make sure the size of it
+    mainuserssys.update_idletasks ()
+    ### Get the screen size
+    screen_width = mainuserssys.winfo_screenwidth ()
+    screen_height = mainuserssys.winfo_screenheight ()
+    ### Get the size of the window
+    win_width = mainuserssys.winfo_width ()
+    win_height = mainuserssys.winfo_height ()
+    ### Calculate the centered position
+    x = (screen_width // 2) - (win_width // 2)
+    y = (screen_height // 2) - (win_height // 2)
+    ### Set the new position
+    mainuserssys.geometry(f"+{x}+{y}")
+
     ## Setting the table and scrollbar style
     trv_style = ttk.Style ()
     trv_style.theme_use ('default')
@@ -93,7 +108,7 @@ def userssysview (mainmenu):
 
         #### User interface objects
         title_label = CTkLabel (main_frame, font=font1, text='Datos de registro del usuario', text_color='#fff')
-        title_label.place (x=25, y=0)
+        title_label.place (x=25, y=5)
 
         ##### Objects to register the users that is inside the frame
         ###### Front row
