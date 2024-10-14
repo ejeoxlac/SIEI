@@ -855,9 +855,9 @@ def mainview (mainmenu):
     CTkLabel (main_frame, text='Sistema de inventario', font=('Roboto', 22)).pack (pady=(80, 0))
     CTkLabel (main_frame, text='para', font=('Roboto', 22)).pack (pady=2)
     CTkLabel (main_frame, text='equipos informáticos', font=('Roboto', 21)).pack (pady=2)
-    logo_image_central = CTkImage (Image.open('Resources\\Img\\LogoLogin.png'), size=(100, 100))
+    logo_image_central = CTkImage (Image.open('Resources\\Img\\LogoLogin.png'), size=(150, 150))
     logo_image_central_label = CTkLabel (main_frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
-    logo_image_central_label.place (x=3300, y=300)
+    logo_image_central_label.place (x=380, y=280)
 
     #### Departure confirmation message
     if messagebox.askyesno ('Confirmación', '¿Está seguro que desea salir?'):
