@@ -23,10 +23,10 @@ def id_exist_pc (idpc):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs):
+def insert_pc (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, colormb, cpu, ram, HDDorSDD, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, modelmb, colormb, graphicscardname, graphicscardmodel, cpu, ram, HDDorSDD, so, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -118,10 +118,10 @@ def id_exist_pk (idpk):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pk (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, dp, users status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -213,10 +213,10 @@ def id_exist_pm (idpm):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pm (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, typescreeninch, typeconnectorport, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -308,10 +308,10 @@ def id_exist_pmo (idpmo):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pmo (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -403,10 +403,10 @@ def id_exist_pp (idpp):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pp (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pp (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, typeprinting, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
