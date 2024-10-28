@@ -19,6 +19,21 @@ def menuview (mainlogin):
   mainmenu.geometry ('500x400')
   mainmenu.resizable (False, False)
 
+  ## Code to center the application window
+  ### Refresh the window to make sure the size of it
+  mainmenu.update_idletasks ()
+  ### Get the screen size
+  screen_width = mainmenu.winfo_screenwidth ()
+  screen_height = mainmenu.winfo_screenheight ()
+  ### Get the size of the window
+  win_width = mainmenu.winfo_width ()
+  win_height = mainmenu.winfo_height ()
+  ### Calculate the centered position
+  x = (screen_width // 2) - (win_width // 2)
+  y = (screen_height // 2) - (win_height // 2)
+  ### Set the new position
+  mainmenu.geometry(f"+{x}+{y}")
+
   ## Format to create the background of the application
   bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 400))
   bg_image_label = CTkLabel (mainmenu, text='', image=bg_image)

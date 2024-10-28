@@ -1,5 +1,6 @@
 # Libraries
 import sqlite3, pandas, matplotlib.pyplot as plt
+from matplotlib.widgets import Button
 from docx import Document
 from docx.shared import Inches
 from docx.enum.section import WD_ORIENT
@@ -23,10 +24,10 @@ def id_exist_pc (idpc):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pc (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs):
+def insert_pc (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, colormb, cpu, ram, HDDorSDD, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PC (idpc, name, model, serial, color, modelmb, colormb, graphicscardname, graphicscardmodel, cpu, ram, HDDorSDD, so, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -35,10 +36,10 @@ def search_pc (val, stat):
   cur.execute ('SELECT * FROM PC WHERE idpc=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pc (rowid, idpc, name, model, serial, color, colormb, cpu, ram, disk, stat, dtd, dom, dp, user, obs):
+def edit_pc (rowid, idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PC SET idpc=:idpc, name=:name, model=:model, serial=:serial, color=:color, colormb=:colormb, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, status=:status, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpc':idpc, 'name':name, 'model':model, 'serial':serial, 'color':color, 'colormb':colormb, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'status':stat, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PC SET idpc=:idpc, name=:name, model=:model, serial=:serial, color=:color, modelmb=:modelmb, colormb=:colormb, graphicscardname=:graphicscardname, graphicscardmodel=:graphicscardmodel, cpu=:cpu, ram=:ram, HDDorSDD=:HDDorSDD, so=:so, dp=:dp, users=:users, status=:status, dateofmodification=:dateofmodification, departuredate=:departuredate, observation=:observation WHERE idpc = {idpc}', {'idpc':idpc, 'name':name, 'model':model, 'serial':serial, 'color':color, 'modelmb':modelmb, 'colormb':colormb, 'graphicscardname':gcn, 'graphicscardmodel':gcm, 'cpu':cpu, 'ram':ram, 'HDDorSDD':disk, 'so':pcso, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -90,22 +91,84 @@ def docx_pc ():
 
   db.close ()
 
-## Statistical graph showing which computers are operational or not
+## Statistical graph about computers
 def graph_pc ():
+  ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = '''SELECT COUNT(idpc) sum_idpc, status FROM PC GROUP BY status HAVING sum_idpc > 0 UNION SELECT COUNT(idpc) AS total, 'Total General' FROM PC ORDER BY sum_idpc DESC LIMIT 5'''
-  
-  data = pandas.read_sql (cur, db)
 
-  plt.figure (num='Registro de las PC')
-  colors = ['blue', 'green', 'red']
-  plt.bar (data.status, data.sum_idpc, color=colors)
-  for i in range (len(data.status)):
-      plt.bar (0, 0, color=colors[i], label=data.status[i])
-  plt.legend ()
-  plt.ylabel ('Cantidad')
-  plt.title ('PC operativas')
-  plt.show ()
+  ### Query SQL to get data
+  cur1 = '''SELECT sum_idpc, status FROM (SELECT COUNT(idpc) AS sum_idpc, status FROM PC GROUP BY status HAVING sum_idpc > 0 UNION SELECT COUNT(idpc) AS total, 'Total General' FROM PC) AS combined_results ORDER BY CASE WHEN status = 'Total General' THEN 0 ELSE 1 END, sum_idpc DESC LIMIT 5'''
+  datast = pandas.read_sql (cur1, db)
+  cur2 = '''SELECT sum_idpc, dp FROM (SELECT COUNT(idpc) AS sum_idpc, dp FROM PC GROUP BY dp HAVING sum_idpc > 0 UNION SELECT COUNT(idpc) AS total, 'Total General' FROM PC) AS combined_results ORDER BY CASE WHEN dp = 'Total General' THEN 0 ELSE 1 END, sum_idpc DESC LIMIT 5'''
+  datadp = pandas.read_sql (cur2, db)
+
+  ### Create a figure and an axis
+  fig, ax = plt.subplots ()
+  plt.subplots_adjust (bottom=0.2)
+  fig.canvas.manager.set_window_title ('Estadistiscas')
+
+  ### Colors
+  colors = ['blue', 'green', 'red', 'yellow']
+
+  ### Function to draw the graph
+  def draw_graphst (data, title):
+    ax.clear ()
+    bars = ax.bar (data.status, data.sum_idpc, color=colors[:len(data.status)], label=data.status)
+    for bar, label in zip (bars, data.status):
+        yval = bar.get_height ()
+        ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+        bar.set_label (label)
+    ax.legend (title='Estados')
+    ax.set_ylabel ('Cantidad')
+    ax.set_title (title)
+    plt.draw ()
+
+  def draw_graphdp (data, title):
+      ax.clear ()
+      bars = ax.bar (data.dp, data.sum_idpc, color=colors[:len(data.dp)], label=data.dp)
+      for bar, label in zip (bars, data.dp):
+          yval = bar.get_height ()
+          ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+          bar.set_label (label)
+      ax.legend (title='Departamentos')
+      ax.set_ylabel ('Cantidad')
+      ax.set_title (title)
+      plt.draw ()
+
+  ### Initialize the graph
+  global current_graph
+  current_graph = 1
+  draw_graphst (datast, 'PC operativas')
+
+  ### Function to update the graph
+  def update_graph (event):
+      global current_graph
+      if event.inaxes == ax_button_next:
+          if current_graph == 1:
+              draw_graphdp (datadp, 'PC operativas')
+              current_graph = 2
+          else:
+              draw_graphst (datast, 'PC operativas por departamento')
+              current_graph = 1
+      elif event.inaxes == ax_button_prev:
+          if current_graph == 2:
+              draw_graphst (datast, 'PC operativas')
+              current_graph = 1
+          else:
+              draw_graphdp (datadp, 'PC operativas por departamento')
+              current_graph = 2
+
+  ### Buttons
+  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+
+  ### Assign the update function to the buttons
+  button_next.on_clicked (update_graph)
+  button_prev.on_clicked (update_graph)
+
+  plt.show()
 
 # Functions to work with the data of the keyboards that are registered
 ## Check if the ID is already registered
@@ -118,10 +181,10 @@ def id_exist_pk (idpk):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pk (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, dp, users status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -130,10 +193,10 @@ def search_pk (val, stat):
   cur.execute ('SELECT * FROM PK WHERE idpk=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pk (rowid, idpk, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pk (rowid, idpk, name, model, serial, color, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PK SET idpk=:idpk, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpk':idpk, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PK SET idpk=:idpk, name=:name, model=:model, serial=:serial, color=:color, dp=:dp, users=:users, status=:status, dateofmodification=:dateofmodification, departuredate=:departuredate, observation=:observation WHERE idpk = {idpk}', {'idpk':idpk, 'name':name, 'model':model, 'serial':serial, 'color':color, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -185,38 +248,90 @@ def docx_pk ():
 
   db.close ()
 
-## Statistical graph showing which keyboards are operational or not
+## Statistical graph about the keyboards
 def graph_pk ():
+  ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = '''SELECT COUNT(idpk) sum_idpk, status FROM PK GROUP BY status HAVING sum_idpk > 0 UNION SELECT COUNT(idpk) AS total, 'Total General' FROM PK ORDER BY sum_idpk DESC LIMIT 5'''
 
-  data = pandas.read_sql (cur, db)
+  ### Query SQL to get data
+  cur1 = '''SELECT sum_idpk, status FROM (SELECT COUNT(idpk) AS sum_idpk, status FROM PK GROUP BY status HAVING sum_idpk > 0 UNION SELECT COUNT(idpk) AS total, 'Total General' FROM PK) AS combined_results ORDER BY CASE WHEN status = 'Total General' THEN 0 ELSE 1 END, sum_idpk DESC LIMIT 5'''
+  datast = pandas.read_sql (cur1, db)
+  cur2 = '''SELECT sum_idpk, dp FROM (SELECT COUNT(idpk) AS sum_idpk, dp FROM PK GROUP BY dp HAVING sum_idpk > 0 UNION SELECT COUNT(idpk) AS total, 'Total General' FROM PK) AS combined_results ORDER BY CASE WHEN dp = 'Total General' THEN 0 ELSE 1 END, sum_idpk DESC LIMIT 5'''
+  datadp = pandas.read_sql (cur2, db)
 
-  plt.figure (num='Registro de los teclados')
-  colors = ['blue', 'green', 'red']
-  plt.bar (data.status, data.sum_idpk, color=colors)
-  for i in range (len(data.status)):
-      plt.bar (0, 0, color=colors[i], label=data.status[i])
-  plt.legend ()
-  plt.ylabel ('Cantidad')
-  plt.title ('Teclados operativos')
-  plt.show ()
+  ### Create a figure and an axis
+  fig, ax = plt.subplots ()
+  plt.subplots_adjust (bottom=0.2)
+  fig.canvas.manager.set_window_title ('Estadistiscas')
 
-# Functions to work with the data of the monitors that are registered
-## Check if the ID is already registered
-def id_exist_pm (idpm):
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT COUNT(*) FROM PM WHERE idpm=?', [idpm])
-  result = cur.fetchone ()
-  db.close ()
-  return result [0] > 0
+  ### Colors
+  colors = ['blue', 'green', 'red', 'yellow']
+
+  ### Function to draw the graph
+  def draw_graphst (data, title):
+    ax.clear ()
+    bars = ax.bar (data.status, data.sum_idpk, color=colors[:len(data.status)], label=data.status)
+    for bar, label in zip (bars, data.status):
+        yval = bar.get_height ()
+        ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+        bar.set_label (label)
+    ax.legend (title='Estados')
+    ax.set_ylabel ('Cantidad')
+    ax.set_title (title)
+    plt.draw ()
+
+  def draw_graphdp (data, title):
+      ax.clear ()
+      bars = ax.bar (data.dp, data.sum_idpk, color=colors[:len(data.dp)], label=data.dp)
+      for bar, label in zip (bars, data.dp):
+          yval = bar.get_height ()
+          ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+          bar.set_label (label)
+      ax.legend (title='Departamentos')
+      ax.set_ylabel ('Cantidad')
+      ax.set_title (title)
+      plt.draw ()
+
+  ### Initialize the graph
+  global current_graph
+  current_graph = 1
+  draw_graphst (datast, 'Teclados operativos')
+
+  ### Function to update the graph
+  def update_graph (event):
+      global current_graph
+      if event.inaxes == ax_button_next:
+          if current_graph == 1:
+              draw_graphdp (datadp, 'Teclados operativos')
+              current_graph = 2
+          else:
+              draw_graphst (datast, 'Teclados operativos por departamento')
+              current_graph = 1
+      elif event.inaxes == ax_button_prev:
+          if current_graph == 2:
+              draw_graphst (datast, 'Teclados operativos')
+              current_graph = 1
+          else:
+              draw_graphdp (datadp, 'Teclados operativos por departamento')
+              current_graph = 2
+
+  ### Buttons
+  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+
+  ### Assign the update function to the buttons
+  button_next.on_clicked (update_graph)
+  button_prev.on_clicked (update_graph)
+
+  plt.show()
 
 ## Inserting data to the database
-def insert_pm (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpm, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PM (idpm, name, model, serial, color, typescreeninch, typeconnectorport, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -225,10 +340,10 @@ def search_pm (val, stat):
   cur.execute ('SELECT * FROM PM WHERE idpm=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pm (rowid, idpm, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pm (rowid, idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PM SET idpm=:idpm, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpm':idpm, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PM SET idpm=:idpm, name=:name, model=:model, serial=:serial, color=:color, typescreeninch=:typescreeninch, typeconnectorport=:typeconnectorport, dp=:dp, users=:users, status=:status, dateofmodification=:dateofmodification, departuredate=:departuredate, observation=:observation WHERE idpm = {idpm}', {'idpm':idpm, 'name':name, 'model':model, 'serial':serial, 'color':color, 'typescreeninch':tsi, 'typeconnectorport':tcp, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -280,22 +395,84 @@ def docx_pm ():
 
   db.close ()
 
-## Statistical graph showing which monitors are operational or not
+## Statistical graph about the monitors
 def graph_pm ():
+  ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = '''SELECT COUNT(idpm) sum_idpm, status FROM PM GROUP BY status HAVING sum_idpm > 0 UNION SELECT COUNT(idpm) AS total, 'Total General' FROM PM ORDER BY sum_idpm DESC LIMIT 5'''
-  
-  data = pandas.read_sql (cur, db)
 
-  plt.figure (num='Registro de los monitores')
-  colors = ['blue', 'green', 'red']
-  plt.bar (data.status, data.sum_idpm, color=colors)
-  for i in range (len(data.status)):
-      plt.bar (0, 0, color=colors[i], label=data.status[i])
-  plt.legend ()
-  plt.ylabel ('Cantidad')
-  plt.title ('Monitores operativos')
-  plt.show ()
+  ### Query SQL to get data
+  cur1 = '''SELECT sum_idpm, status FROM (SELECT COUNT(idpm) AS sum_idpm, status FROM PM GROUP BY status HAVING sum_idpm > 0 UNION SELECT COUNT(idpm) AS total, 'Total General' FROM PM) AS combined_results ORDER BY CASE WHEN status = 'Total General' THEN 0 ELSE 1 END, sum_idpm DESC LIMIT 5'''
+  datast = pandas.read_sql (cur1, db)
+  cur2 = '''SELECT sum_idpm, dp FROM (SELECT COUNT(idpm) AS sum_idpm, dp FROM PM GROUP BY dp HAVING sum_idpm > 0 UNION SELECT COUNT(idpm) AS total, 'Total General' FROM PM) AS combined_results ORDER BY CASE WHEN dp = 'Total General' THEN 0 ELSE 1 END, sum_idpm DESC LIMIT 5'''
+  datadp = pandas.read_sql (cur2, db)
+
+  ### Create a figure and an axis
+  fig, ax = plt.subplots ()
+  plt.subplots_adjust (bottom=0.2)
+  fig.canvas.manager.set_window_title ('Estadistiscas')
+
+  ### Colors
+  colors = ['blue', 'green', 'red', 'yellow']
+
+  ### Function to draw the graph
+  def draw_graphst (data, title):
+    ax.clear ()
+    bars = ax.bar (data.status, data.sum_idpm, color=colors[:len(data.status)], label=data.status)
+    for bar, label in zip (bars, data.status):
+        yval = bar.get_height ()
+        ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+        bar.set_label (label)
+    ax.legend (title='Estados')
+    ax.set_ylabel ('Cantidad')
+    ax.set_title (title)
+    plt.draw ()
+
+  def draw_graphdp (data, title):
+      ax.clear ()
+      bars = ax.bar (data.dp, data.sum_idpm, color=colors[:len(data.dp)], label=data.dp)
+      for bar, label in zip (bars, data.dp):
+          yval = bar.get_height ()
+          ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+          bar.set_label (label)
+      ax.legend (title='Departamentos')
+      ax.set_ylabel ('Cantidad')
+      ax.set_title (title)
+      plt.draw ()
+
+  ### Initialize the graph
+  global current_graph
+  current_graph = 1
+  draw_graphst (datast, 'Monitores operativos')
+
+  ### Function to update the graph
+  def update_graph (event):
+      global current_graph
+      if event.inaxes == ax_button_next:
+          if current_graph == 1:
+              draw_graphdp (datadp, 'Monitores operativos')
+              current_graph = 2
+          else:
+              draw_graphst (datast, 'Monitores operativos por departamento')
+              current_graph = 1
+      elif event.inaxes == ax_button_prev:
+          if current_graph == 2:
+              draw_graphst (datast, 'Monitores operativos')
+              current_graph = 1
+          else:
+              draw_graphdp (datadp, 'Monitores operativos por departamento')
+              current_graph = 2
+
+  ### Buttons
+  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+
+  ### Assign the update function to the buttons
+  button_next.on_clicked (update_graph)
+  button_prev.on_clicked (update_graph)
+
+  plt.show()
 
 # Functions to work with the data of the mouses that are registered
 ## Check if the ID is already registered
@@ -308,10 +485,10 @@ def id_exist_pmo (idpmo):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pmo (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pmo (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpmo, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PMO (idpmo, name, model, serial, color, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -320,10 +497,10 @@ def search_pmo (val, stat):
   cur.execute ('SELECT * FROM PMO WHERE idpmo=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pmo (rowid, idpmo, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pmo (rowid, idpmo, name, model, serial, color, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PMO SET idpmo=:idpmo, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpmo':idpmo, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PMO SET idpmo=:idpmo, name=:name, model=:model, serial=:serial, color=:color, dp=:dp, users=:users, status=:status, dateofmodification=:dateofmodification, departuredate=:departuredate, observation=:observation WHERE idpmo = {idpmo}', {'idpmo':idpmo, 'name':name, 'model':model, 'serial':serial, 'color':color, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -375,22 +552,84 @@ def docx_pmo ():
 
   db.close ()
 
-## Statistical graph showing which monitors are operational or not
+## Statistical graph about mouses
 def graph_pmo ():
+  ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = '''SELECT COUNT(idpmo) sum_idpmo, status FROM PMO GROUP BY status HAVING sum_idpmo > 0 UNION SELECT COUNT(idpmo) AS total, 'Total General' FROM PMO ORDER BY sum_idpmo DESC LIMIT 5'''
-  
-  data = pandas.read_sql (cur, db)
 
-  plt.figure (num='Registro de los mouses')
-  colors = ['blue', 'green', 'red']
-  plt.bar (data.status, data.sum_idpmo, color=colors)
-  for i in range (len(data.status)):
-      plt.bar (0, 0, color=colors[i], label=data.status[i])
-  plt.legend ()
-  plt.ylabel ('Cantidad')
-  plt.title ('Mouses operativos')
-  plt.show ()
+  ### Query SQL to get data
+  cur1 = '''SELECT sum_idpmo, status FROM (SELECT COUNT(idpmo) AS sum_idpmo, status FROM PMO GROUP BY status HAVING sum_idpmo > 0 UNION SELECT COUNT(idpmo) AS total, 'Total General' FROM PMO) AS combined_results ORDER BY CASE WHEN status = 'Total General' THEN 0 ELSE 1 END, sum_idpmo DESC LIMIT 5'''
+  datast = pandas.read_sql (cur1, db)
+  cur2 = '''SELECT sum_idpmo, dp FROM (SELECT COUNT(idpmo) AS sum_idpmo, dp FROM PMO GROUP BY dp HAVING sum_idpmo > 0 UNION SELECT COUNT(idpmo) AS total, 'Total General' FROM PMO) AS combined_results ORDER BY CASE WHEN dp = 'Total General' THEN 0 ELSE 1 END, sum_idpmo DESC LIMIT 5'''
+  datadp = pandas.read_sql (cur2, db)
+
+  ### Create a figure and an axis
+  fig, ax = plt.subplots ()
+  plt.subplots_adjust (bottom=0.2)
+  fig.canvas.manager.set_window_title ('Estadistiscas')
+
+  ### Colors
+  colors = ['blue', 'green', 'red', 'yellow']
+
+  ### Function to draw the graph
+  def draw_graphst (data, title):
+    ax.clear ()
+    bars = ax.bar (data.status, data.sum_idpmo, color=colors[:len(data.status)], label=data.status)
+    for bar, label in zip (bars, data.status):
+        yval = bar.get_height ()
+        ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+        bar.set_label (label)
+    ax.legend (title='Estados')
+    ax.set_ylabel ('Cantidad')
+    ax.set_title (title)
+    plt.draw ()
+
+  def draw_graphdp (data, title):
+      ax.clear ()
+      bars = ax.bar (data.dp, data.sum_idpmo, color=colors[:len(data.dp)], label=data.dp)
+      for bar, label in zip (bars, data.dp):
+          yval = bar.get_height ()
+          ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+          bar.set_label (label)
+      ax.legend (title='Departamentos')
+      ax.set_ylabel ('Cantidad')
+      ax.set_title (title)
+      plt.draw ()
+
+  ### Initialize the graph
+  global current_graph
+  current_graph = 1
+  draw_graphst (datast, 'Mouses operativos')
+
+  ### Function to update the graph
+  def update_graph (event):
+      global current_graph
+      if event.inaxes == ax_button_next:
+          if current_graph == 1:
+              draw_graphdp (datadp, 'Mouses operativos')
+              current_graph = 2
+          else:
+              draw_graphst (datast, 'Mouses operativos por departamento')
+              current_graph = 1
+      elif event.inaxes == ax_button_prev:
+          if current_graph == 2:
+              draw_graphst (datast, 'Mouses operativos')
+              current_graph = 1
+          else:
+              draw_graphdp (datadp, 'Mouses operativos por departamento')
+              current_graph = 2
+
+  ### Buttons
+  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+
+  ### Assign the update function to the buttons
+  button_next.on_clicked (update_graph)
+  button_prev.on_clicked (update_graph)
+
+  plt.show()
 
 # Functions to work with the data from the printers that are registered
 ## Check if the ID is already registered
@@ -403,10 +642,10 @@ def id_exist_pp (idpp):
   return result [0] > 0
 
 ## Inserting data to the database
-def insert_pp (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs):
+def insert_pp (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, status, dateofarrival, departuredate, dp, users, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpp, name, model, serial, color, stat, dfa, dtd, dp, user, obs))
+  cur.execute ('INSERT INTO PP (idpp, name, model, serial, color, typeprinting, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -415,10 +654,10 @@ def search_pp (val, stat):
   cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
 
 ## Data editor in the database
-def edit_pp (rowid, idpp, name, model, serial, color, stat, dfa, dtd, dom, dp, user, obs):
+def edit_pp (rowid, idpp, name, model, serial, color, tp, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE rowid = {rowid}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'status':stat, 'dateofarrival':dfa, 'departuredate':dtd, 'dateofmodification':dom, 'dp':dp, 'users':user, 'observation':obs})
+  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpp = {idpp}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'typeprinting':tp, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
@@ -470,22 +709,84 @@ def docx_pp ():
 
   db.close ()
 
-## Statistical graph showing which printers are operational or not
+## Statistical graph about printers
 def graph_pp ():
+  ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = '''SELECT COUNT(idpp) sum_idpp, status FROM PP GROUP BY status HAVING sum_idpp > 0 UNION SELECT COUNT(idpp) AS total, 'Total General' FROM PP ORDER BY sum_idpp DESC LIMIT 5'''
-  
-  data = pandas.read_sql (cur, db)
 
-  plt.figure (num='Registro de las impresoras')
-  colors = ['blue', 'green', 'red']
-  plt.bar (data.status, data.sum_idpp, color=colors)
-  for i in range (len(data.status)):
-      plt.bar (0, 0, color=colors[i], label=data.status[i])
-  plt.legend ()
-  plt.ylabel ('Cantidad')
-  plt.title ('Impresoras operativas')
-  plt.show ()
+  ### Query SQL to get data
+  cur1 = '''SELECT sum_idpp, status FROM (SELECT COUNT(idpp) AS sum_idpp, status FROM PP GROUP BY status HAVING sum_idpp > 0 UNION SELECT COUNT(idpp) AS total, 'Total General' FROM PP) AS combined_results ORDER BY CASE WHEN status = 'Total General' THEN 0 ELSE 1 END, sum_idpp DESC LIMIT 5'''
+  datast = pandas.read_sql (cur1, db)
+  cur2 = '''SELECT sum_idpp, dp FROM (SELECT COUNT(idpp) AS sum_idpp, dp FROM PP GROUP BY dp HAVING sum_idpp > 0 UNION SELECT COUNT(idpp) AS total, 'Total General' FROM PP) AS combined_results ORDER BY CASE WHEN dp = 'Total General' THEN 0 ELSE 1 END, sum_idpp DESC LIMIT 5'''
+  datadp = pandas.read_sql (cur2, db)
+
+  ### Create a figure and an axis
+  fig, ax = plt.subplots ()
+  plt.subplots_adjust (bottom=0.2)
+  fig.canvas.manager.set_window_title ('Estadistiscas')
+
+  ### Colors
+  colors = ['blue', 'green', 'red', 'yellow']
+
+  ### Function to draw the graph
+  def draw_graphst (data, title):
+    ax.clear ()
+    bars = ax.bar (data.status, data.sum_idpp, color=colors[:len(data.status)], label=data.status)
+    for bar, label in zip (bars, data.status):
+        yval = bar.get_height ()
+        ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+        bar.set_label (label)
+    ax.legend (title='Estados')
+    ax.set_ylabel ('Cantidad')
+    ax.set_title (title)
+    plt.draw ()
+
+  def draw_graphdp (data, title):
+      ax.clear ()
+      bars = ax.bar (data.dp, data.sum_idpp, color=colors[:len(data.dp)], label=data.dp)
+      for bar, label in zip (bars, data.dp):
+          yval = bar.get_height ()
+          ax.annotate (yval, (bar.get_x() + bar.get_width() / 2, yval), ha='center', va='bottom')
+          bar.set_label (label)
+      ax.legend (title='Departamentos')
+      ax.set_ylabel ('Cantidad')
+      ax.set_title (title)
+      plt.draw ()
+
+  ### Initialize the graph
+  global current_graph
+  current_graph = 1
+  draw_graphst (datast, 'Impresoras operativas')
+
+  ### Function to update the graph
+  def update_graph (event):
+      global current_graph
+      if event.inaxes == ax_button_next:
+          if current_graph == 1:
+              draw_graphdp (datadp, 'Impresoras operativas')
+              current_graph = 2
+          else:
+              draw_graphst (datast, 'Impresoras operativas por departamento')
+              current_graph = 1
+      elif event.inaxes == ax_button_prev:
+          if current_graph == 2:
+              draw_graphst (datast, 'Impresoras operativas')
+              current_graph = 1
+          else:
+              draw_graphdp (datadp, 'Impresoras operativas por departamento')
+              current_graph = 2
+
+  ### Buttons
+  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+
+  ### Assign the update function to the buttons
+  button_next.on_clicked (update_graph)
+  button_prev.on_clicked (update_graph)
+
+  plt.show()
 
 # Functions to work with the data of users who are registered
 ## Check if the ID is already registered
@@ -513,7 +814,7 @@ def search_users ():
 def edit_users (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE UsersSys SET idus=:idus, users=:user, psw=:psw, firstnameperson=:firstnameperson, lastnameperson=:lastnameperson, idcardperson=:idcardperson WHERE rowid = {rowid}', {'idus':idus, 'user':user, 'psw':psw, 'firstnameperson':firstnameperson, 'lastnameperson':lastnameperson, 'idcardperson':idcardperson})
+  cur.execute (f'UPDATE UsersSys SET idus=:idus, users=:user, psw=:psw, firstnameperson=:firstnameperson, lastnameperson=:lastnameperson, idcardperson=:idcardperson WHERE idus = {idus}', {'idus':idus, 'user':user, 'psw':psw, 'firstnameperson':firstnameperson, 'lastnameperson':lastnameperson, 'idcardperson':idcardperson})
   db.commit ()
   db.close ()
 

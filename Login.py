@@ -23,6 +23,9 @@ def loginview ():
       messagebox.showerror ('Error', 'Debes llenar las celdas')
     else:
       messagebox.showerror ('Error','Acceso denegado')
+      ### This deletes the data entered when making a mistake
+      name.delete (0, END)
+      password.delete (0, END)
 
   ## Defined appearance
   set_appearance_mode ('dark')
@@ -34,6 +37,21 @@ def loginview ():
   mainlogin.title ('Inicio de sesión al sistema SIEI')
   mainlogin.geometry ('500x400')
   mainlogin.resizable (False, False)
+
+  ## Code to center the application window
+  ### Refresh the window to make sure the size of it
+  mainlogin.update_idletasks ()
+  ### Get the screen size
+  screen_width = mainlogin.winfo_screenwidth ()
+  screen_height = mainlogin.winfo_screenheight ()
+  ### Get the size of the window
+  win_width = mainlogin.winfo_width ()
+  win_height = mainlogin.winfo_height ()
+  ### Calculate the centered position
+  x = (screen_width // 2) - (win_width // 2)
+  y = (screen_height // 2) - (win_height // 2)
+  ### Set the new position
+  mainlogin.geometry(f"+{x}+{y}")
 
   ## Format to create the background of the application
   bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 400))

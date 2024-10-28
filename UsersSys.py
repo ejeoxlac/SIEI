@@ -27,6 +27,21 @@ def userssysview (mainmenu):
     mainuserssys.geometry ('860x580')
     mainuserssys.resizable (False, False)
 
+    ## Code to center the application window
+    ### Refresh the window to make sure the size of it
+    mainuserssys.update_idletasks ()
+    ### Get the screen size
+    screen_width = mainuserssys.winfo_screenwidth ()
+    screen_height = mainuserssys.winfo_screenheight ()
+    ### Get the size of the window
+    win_width = mainuserssys.winfo_width ()
+    win_height = mainuserssys.winfo_height ()
+    ### Calculate the centered position
+    x = (screen_width // 2) - (win_width // 2)
+    y = (screen_height // 2) - (win_height // 2)
+    ### Set the new position
+    mainuserssys.geometry(f"+{x}+{y}")
+
     ## Setting the table and scrollbar style
     trv_style = ttk.Style ()
     trv_style.theme_use ('default')
@@ -93,7 +108,7 @@ def userssysview (mainmenu):
 
         #### User interface objects
         title_label = CTkLabel (main_frame, font=font1, text='Datos de registro del usuario', text_color='#fff')
-        title_label.place (x=25, y=0)
+        title_label.place (x=25, y=5)
 
         ##### Objects to register the users that is inside the frame
         ###### Front row
@@ -122,13 +137,13 @@ def userssysview (mainmenu):
         firstnameperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
         firstnameperson_entry.place (x=50, y=170)
 
-        lastnameperson_label = CTkLabel (main_frame, font=font2, text='Apellido del usuario:', text_color='#fff')
+        lastnameperson_label = CTkLabel (main_frame, font=font2, text='Apellido real del usuario:', text_color='#fff')
         lastnameperson_label.place (x=280, y=140)
 
         lastnameperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
         lastnameperson_entry.place (x=280, y=170)
 
-        idcardperson_label = CTkLabel (main_frame, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
+        idcardperson_label = CTkLabel (main_frame, font=font2, text='C.I. real del usuario:', text_color='#fff')
         idcardperson_label.place (x=520, y=140)
 
         idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
@@ -223,8 +238,8 @@ def userssysview (mainmenu):
             data_editing_menu.resizable (False, False)
 
             ##### This function is to validate input of only numbers and omit letters
-            def validate_numbers_entry(char):
-                if char.isdigit() or char == '.':
+            def validate_numbers_entry (char):
+                if char == '' or all(c.isdigit() or c == '.' for c in char):
                     return True
                 else:
                     return False
@@ -273,7 +288,7 @@ def userssysview (mainmenu):
             idcardperson_label = CTkLabel (data_editing_menu, font=font2, text='Cedula de identidad del usuario:', text_color='#fff')
             idcardperson_label.place (x=520, y=140)
 
-            idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
+            idcardperson_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(data_editing_menu.register(validate_numbers_entry), '%S'))
             idcardperson_entry.place (x=520, y=170)
             ###### The end of the frame objects
 
@@ -317,6 +332,9 @@ def userssysview (mainmenu):
             except IndexError:
                 data_editing_menu.destroy ()
                 messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para editarlo de la base de datos')
+
+            ##### Settings to avoid modifying the ID of the registered computing device
+            idus_entry.configure (state='readonly')
 
         #### Button area
         button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
