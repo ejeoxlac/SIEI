@@ -32,34 +32,34 @@ def loginview ():
   mainlogin = CTk ()
   mainlogin.iconbitmap ('Resources\\Img\\Ico.ico')
   mainlogin.title ('Inicio de sesión al sistema SIEI')
-  mainlogin.geometry ('400x400')
+  mainlogin.geometry ('500x400')
   mainlogin.resizable (False, False)
 
   ## Format to create the background of the application
-  bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(400, 400))
+  bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 400))
   bg_image_label = CTkLabel (mainlogin, text='', image=bg_image)
   bg_image_label.place (x=0, y=0)
 
   ## Format of the frame that forms the main body of the window
   frame = CTkFrame (mainlogin)
-  frame.pack (side=RIGHT, expand=True, fill='both', padx=(100, 0), pady=30)
+  frame.pack (side=RIGHT, expand=True, fill='both', padx=(150, 0), pady=30)
 
   # ## Logos
   # logo_image1 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
   # logo_image1_label = CTkLabel (frame, text='', image=logo_image1, fg_color=None, bg_color='transparent')
   # logo_image1_label.place (x=50, y=5)
 
-  logo_image_central = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
+  logo_image_central = CTkImage (Image.open('Resources\\Img\\LogoLogin.png'), size=(60, 60))
   logo_image_central_label = CTkLabel (frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
-  logo_image_central_label.place (x=120, y=5)
+  logo_image_central_label.place (x=145, y=5)
 
   # logo_image2 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
   # logo_image2_label = CTkLabel (frame, text='', image=logo_image2, fg_color=None, bg_color='transparent')
   # logo_image2_label.place (x=212, y=5)
 
-  # login_image = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 400))
-  # login_image_label = CTkLabel (mainlogin, text='', image=login_image)
-  # login_image_label.place (x=0, y=0)
+  login_image3 = CTkImage (Image.open('Resources\\Img\\Inventario.jpg'), size=(150, 340))
+  login_image3_label = CTkLabel (mainlogin, text='', image=login_image3)
+  login_image3_label.place (x=0, y=30)
 
   ### Title
   CTkLabel (frame, text='Sistema de inventario', font=('Roboto', 22)).pack (pady=(80, 0))
