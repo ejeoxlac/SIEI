@@ -184,7 +184,7 @@ def id_exist_pk (idpk):
 def insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, dp, users status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
+  cur.execute ('INSERT INTO PK (idpk, name, model, serial, color, dp, users, status, dateofarrival, departuredate, observation) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs))
   db.commit ()
   db.close ()
 
@@ -326,6 +326,16 @@ def graph_pk ():
   button_prev.on_clicked (update_graph)
 
   plt.show()
+
+# Functions to work with the data of the monitors that are registered
+## Check if the ID is already registered
+def id_exist_pm (idpm):
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+  cur.execute ('SELECT COUNT(*) FROM PM WHERE idpm=?', [idpm])
+  result = cur.fetchone ()
+  db.close ()
+  return result [0] > 0
 
 ## Inserting data to the database
 def insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs):
@@ -657,7 +667,7 @@ def search_pp (val, stat):
 def edit_pp (rowid, idpp, name, model, serial, color, tp, dp, user, stat, dom, dtd, obs):
   db = sqlite3.connect ('Resources\\SIEIDB.db')
   cur = db.cursor ()
-  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, status=:status, dateofarrival=:dateofarrival, departuredate=:departuredate, dateofmodification=:dateofmodification, dp=:dp, users=:users, observation=:observation WHERE idpp = {idpp}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'typeprinting':tp, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
+  cur.execute (f'UPDATE PP SET idpp=:idpp, name=:name, model=:model, serial=:serial, color=:color, typeprinting=:typeprinting, dp=:dp, users=:users, status=:status, dateofmodification=:dateofmodification, departuredate=:departuredate, observation=:observation WHERE idpp = {idpp}', {'idpp':idpp, 'name':name, 'model':model, 'serial':serial, 'color':color, 'typeprinting':tp, 'dp':dp, 'users':user, 'status':stat, 'dateofmodification':dom, 'departuredate':dtd, 'observation':obs})
   db.commit ()
   db.close ()
 
