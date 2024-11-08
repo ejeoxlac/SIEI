@@ -58,13 +58,13 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpc_entry.delete (0, END)
-      name_entry.delete (0, END)
+      namepc.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      color_entry.delete (0, END)
+      colorpc.set ('Negro')
       modelmb_entry.delete (0, END)
-      colormb_entry.delete (0, END)
-      graphicscardname_entry.delete (0, END)
+      colormbpc.set ('Verde')
+      graphicscard.set ('NVIDIA')
       graphicscardmodel_entry.delete (0, END)
       cpu_entry.delete (0, END)
       memory.set ('1 GB DDR2')
@@ -79,13 +79,13 @@ def mainview (mainmenu):
     ##### Entry that records the data in the database
     def submit_dt ():
       idpc = idpc_entry.get ()
-      name = name_entry.get ()
+      name = namepc.get ()
       model = model_entry.get ()
       serial = serial_entry.get ()
-      color = color_entry.get ()
+      color = colorpc.get ()
       modelmb = modelmb_entry.get ()
-      colormb = colormb_entry.get ()
-      gcn = graphicscardname_entry.get ()
+      colormb = colormbpc.get ()
+      gcn = graphicscard.get ()
       gcm = graphicscardmodel_entry.get ()
       cpu = cpu_entry.get ()
       ram = memory.get ()
@@ -128,8 +128,12 @@ def mainview (mainmenu):
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
     name_label.place (x=280, y=60)
 
-    name_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    name_entry.place (x=280, y=90)
+    namepc = StringVar ()
+    options = ['Vit', 'Dell', 'Lenovo', 'Asus', 'Acer', 'Microsoft', 'Google', 'Apple']
+
+    name = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepc, values=options, state='readonly')
+    name.set ('Vit')
+    name.place (x=280, y=90)
 
     model_label = CTkLabel (main_frame, font=font2, text='Modelo:', text_color='#fff')
     model_label.place (x=485, y=60)
@@ -147,8 +151,12 @@ def mainview (mainmenu):
     color_label = CTkLabel (main_frame, font=font2, text='Color:', text_color='#fff')
     color_label.place (x=50, y=140)
 
-    color_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    color_entry.place (x=50, y=170)
+    colorpc = StringVar ()
+    options = ['Negro', 'Plata', 'Gris', 'Azul', 'Blanco']
+
+    color = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpc, values=options, state='readonly')
+    color.set ('Negro')
+    color.place (x=50, y=170)
 
     modelmb_label = CTkLabel (main_frame, font=font3, text='Modelo de la placa madre:', text_color='#fff')
     modelmb_label.place (x=280, y=140)
@@ -159,14 +167,22 @@ def mainview (mainmenu):
     colormb_label = CTkLabel (main_frame, font=font3, text='Color de la placa madre:', text_color='#fff')
     colormb_label.place (x=485, y=140)
 
-    colormb_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    colormb_entry.place (x=485, y=170)
+    colormbpc = StringVar ()
+    options = ['Verde', 'Negro', 'Azul', 'Rojo', 'Blanco']
+
+    colormb = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colormbpc, values=options, state='readonly')
+    colormb.set ('Verde')
+    colormb.place (x=485, y=170)
 
     graphicscardname_label = CTkLabel (main_frame, font=font3, text='Marca de la grafica:', text_color='#fff')
     graphicscardname_label.place (x=680, y=140)
 
-    graphicscardname_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    graphicscardname_entry.place (x=680, y=170)
+    graphicscard = StringVar ()
+    options = ['NVIDIA', 'AMD', 'Intel', 'ASUS', 'EVGA', 'MSI', 'Zotac']
+
+    graphicscardmodel = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=graphicscard, values=options, state='readonly')
+    graphicscardmodel.set ('NVIDIA')
+    graphicscardmodel.place (x=680, y=170)
 
     ###### Third row
     graphicscardmodel_label = CTkLabel (main_frame, font=font3, text='Modelo de la grafica:', text_color='#fff')
@@ -185,7 +201,7 @@ def mainview (mainmenu):
     ram_label.place (x=485, y=220)
 
     memory = StringVar ()
-    options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3']
+    options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '32 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3', '32 GB DDR3']
 
     ram_options = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=memory, values=options, state='readonly')
     ram_options.set ('1 GB DDR2')
@@ -202,7 +218,7 @@ def mainview (mainmenu):
     win_label.place (x=50, y=300)
 
     so = StringVar ()
-    options = ['Windows 11', 'Windows 10', 'Windows 8', 'Windows 7', 'Windows XP', 'GNU/Linux']
+    options = ['Windows 11', 'Windows 10', 'Windows 8', 'Windows 7', 'Windows XP', 'GNU/Linux', 'iOS']
 
     win_options = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=so, values=options, state='readonly')
     win_options.set ('Windows 11')
@@ -265,10 +281,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpk_entry.delete (0, END)
-      name_entry.delete (0, END)
+      namepk.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      color_entry.delete (0, END)
+      colorpk.set ('Negro')
       departments.set ('Informática')
       user_entry.delete (0, END)
       status.set ('Operativo')
@@ -278,10 +294,10 @@ def mainview (mainmenu):
     ##### Entry that records the data in the database
     def submit_dt ():
       idpk = idpk_entry.get ()
-      name = name_entry.get ()
+      name = namepk.get ()
       model = model_entry.get ()
       serial = serial_entry.get ()
-      color = color_entry.get ()
+      color = colorpk.get ()
       dp = departments.get ()
       user = user_entry.get ()
       stat = status.get ()
@@ -319,8 +335,12 @@ def mainview (mainmenu):
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
     name_label.place (x=280, y=60)
 
-    name_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    name_entry.place (x=280, y=90)
+    namepk = StringVar ()
+    options = ['Vit', 'Dell', 'Logitech', 'Corsair']
+
+    name = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepk, values=options, state='readonly')
+    name.set ('Vit')
+    name.place (x=280, y=90)
 
     model_label = CTkLabel (main_frame, font=font2, text='Modelo:', text_color='#fff')
     model_label.place (x=485, y=60)
@@ -338,8 +358,12 @@ def mainview (mainmenu):
     color_label = CTkLabel (main_frame, font=font2, text='Color:', text_color='#fff')
     color_label.place (x=50, y=140)
 
-    color_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    color_entry.place (x=50, y=170)
+    colorpk = StringVar ()
+    options = ['Negro', 'Plata', 'Gris', 'Blanco', 'Verde', 'Amarillo', 'Rojo']
+
+    color = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpk, values=options, state='readonly')
+    color.set ('Negro')
+    color.place (x=50, y=170)
 
     department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
     department_label.place (x=280, y=140)
@@ -401,10 +425,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpm_entry.delete (0, END)
-      name_entry.delete (0, END)
+      namepm.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      color_entry.delete (0, END)
+      colorpm.set ('Negro')
       typescreeninch.set ('18 pulgadas')
       typeconnectorport.set ('VGA')
       departments.set ('Informática')
@@ -416,10 +440,10 @@ def mainview (mainmenu):
     ##### Entry that records the data in the database
     def submit_dt ():
       idpm = idpm_entry.get ()
-      name = name_entry.get ()
+      name = namepm.get ()
       model = model_entry.get ()
       serial = serial_entry.get ()
-      color = color_entry.get ()
+      color = colorpm.get ()
       tsi = typescreeninch.get ()
       tcp = typeconnectorport.get ()
       dp = departments.get ()
@@ -459,8 +483,12 @@ def mainview (mainmenu):
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
     name_label.place (x=280, y=60)
 
-    name_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    name_entry.place (x=280, y=90)
+    namepm = StringVar ()
+    options = ['Vit', 'Dell', 'Samsung', 'Asus', 'LG', 'Acer', 'Dahua', 'BenQ', 'HP']
+
+    name = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepm, values=options, state='readonly')
+    name.set ('Vit')
+    name.place (x=280, y=90)
 
     model_label = CTkLabel (main_frame, font=font2, text='Modelo:', text_color='#fff')
     model_label.place (x=485, y=60)
@@ -478,8 +506,12 @@ def mainview (mainmenu):
     color_label = CTkLabel (main_frame, font=font2, text='Color:', text_color='#fff')
     color_label.place (x=50, y=140)
 
-    color_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    color_entry.place (x=50, y=170)
+    colorpm = StringVar ()
+    options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+    color = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpm, values=options, state='readonly')
+    color.set ('Negro')
+    color.place (x=50, y=170)
 
     typescreen_label = CTkLabel (main_frame, font=font2, text='Tipo de pantalla:', text_color='#fff')
     typescreen_label.place (x=280, y=140)
@@ -561,10 +593,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpmo_entry.delete (0, END)
-      name_entry.delete (0, END)
+      namepmo.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      color_entry.delete (0, END)
+      colorpmo.set ('Negro')
       departments.set ('Informática')
       user_entry.delete (0, END)
       status.set ('Operativo')
@@ -574,10 +606,10 @@ def mainview (mainmenu):
     ##### Entry that records the data in the database
     def submit_dt ():
       idpmo = idpmo_entry.get ()
-      name = name_entry.get ()
+      name = namepmo.get ()
       model = model_entry.get ()
       serial = serial_entry.get ()
-      color = color_entry.get ()
+      color = colorpmo.get ()
       dp = departments.get ()
       user = user_entry.get ()
       stat = status.get ()
@@ -615,8 +647,12 @@ def mainview (mainmenu):
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
     name_label.place (x=280, y=60)
 
-    name_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    name_entry.place (x=280, y=90)
+    namepmo = StringVar ()
+    options = ['Vit', 'Logitech', 'Corsair', 'Genius', 'Argom', 'Lenovo', 'HP']
+
+    name = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepmo, values=options, state='readonly')
+    name.set ('Vit')
+    name.place (x=280, y=90)
 
     model_label = CTkLabel (main_frame, font=font2, text='Modelo:', text_color='#fff')
     model_label.place (x=485, y=60)
@@ -634,8 +670,12 @@ def mainview (mainmenu):
     color_label = CTkLabel (main_frame, font=font2, text='Color:', text_color='#fff')
     color_label.place (x=50, y=140)
 
-    color_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    color_entry.place (x=50, y=170)
+    colorpmo = StringVar ()
+    options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+    color = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpmo, values=options, state='readonly')
+    color.set ('Negro')
+    color.place (x=50, y=170)
 
     department_label = CTkLabel (main_frame, font=font2, text='Departamento:', text_color='#fff')
     department_label.place (x=280, y=140)
@@ -697,10 +737,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpp_entry.delete (0, END)
-      name_entry.delete (0, END)
+      namepp.set ('HP')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      color_entry.delete (0, END)
+      colorpp.set ('Negro')
       typeprinting.set ('Tóner')
       departments.set ('Informática')
       user_entry.delete (0, END)
@@ -711,10 +751,10 @@ def mainview (mainmenu):
     ##### Entry that records the data in the database
     def submit_dt ():
       idpp = idpp_entry.get ()
-      name = name_entry.get ()
+      name = namepp.get ()
       model = model_entry.get ()
       serial = serial_entry.get ()
-      color = color_entry.get ()
+      color = colorpp.get ()
       tp = typeprinting.get ()
       dp = departments.get ()
       user = user_entry.get ()
@@ -753,8 +793,12 @@ def mainview (mainmenu):
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
     name_label.place (x=280, y=60)
 
-    name_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    name_entry.place (x=280, y=90)
+    namepp = StringVar ()
+    options = ['HP', 'Canon', 'Epson', 'Samsung', 'Brother', 'Lexmark', 'Xerox']
+
+    name = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepp, values=options, state='readonly')
+    name.set ('HP')
+    name.place (x=280, y=90)
 
     model_label = CTkLabel (main_frame, font=font2, text='Modelo:', text_color='#fff')
     model_label.place (x=485, y=60)
@@ -772,8 +816,12 @@ def mainview (mainmenu):
     color_label = CTkLabel (main_frame, font=font2, text='Color:', text_color='#fff')
     color_label.place (x=50, y=140)
 
-    color_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-    color_entry.place (x=50, y=170)
+    colorpp = StringVar ()
+    options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+    color = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpp, values=options, state='readonly')
+    color.set ('Negro')
+    color.place (x=50, y=170)
 
     type_label = CTkLabel (main_frame, font=font2, text='Tipo de impresión:', text_color='#fff')
     type_label.place (x=280, y=140)
