@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import messagebox
 from idlelib.tooltip import Hovertip
 from PIL import Image
+from tkcalendar import *
 from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
@@ -107,6 +108,13 @@ def mainview (mainmenu):
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
+
+    #### Validates if they are only numbers and dashes
+    def validate_numbers_entry (char):
+      if char == '' or all (c.isdigit() or c == '-' for c in char):
+        return True
+      else:
+        return False
 
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -254,8 +262,44 @@ def mainview (mainmenu):
     departuredate_label = CTkLabel (main_frame, font=font3, text='Fecha de salidad de la entidad:', text_color='#fff')
     departuredate_label.place (x=50, y=380)
 
-    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     departuredate_entry.place (x=50, y=410)
+
+    ####### Displays a calendar to facilitate the selection of the date
+    def calendar ():
+        ######## Create a new window for the calendar
+        window_callendary = tk.Toplevel (main_frame)
+        window_callendary.title ('Calendario seleccionable')
+
+        ######## Create a calendar widget
+        calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+        calendar.pack (pady=20)
+
+        ######## Function to show the selected date in the Entry of the main window
+        def show_calendar_date ():
+          date_selected = calendar.get_date ()
+          departuredate_entry.configure (state='normal')
+          departuredate_entry.delete (0, tk.END)
+          departuredate_entry.insert (0, date_selected)
+          departuredate_entry.configure (state='readonly')
+
+        ######## button to show the selected date
+        date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+        date_button.pack (pady=10)
+
+    calendar_button = CTkButton (main_frame, text='Abrir Calendario', command=calendar)
+    calendar_button.place (x=54, y=460)
+
+    def delete_date ():
+      departuredate_entry.configure (state='normal')
+      departuredate_entry.delete (0, tk.END)
+      departuredate_entry.configure (state='readonly')
+
+    date_delete_button = CTkButton (main_frame, text='Borrar Fecha', command=delete_date)
+    date_delete_button.place (x=54, y=510)
+
+    ####### Settings to avoid manually modifying the date
+    departuredate_entry.configure (state='readonly')
 
     ###### Sixth row
 
@@ -267,7 +311,7 @@ def mainview (mainmenu):
     observation_entry.place (x=485, y=410)
 
     ###### Button area
-    submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
+    submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
     submit_button.place (x=180, y=550)
 
     clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
@@ -314,6 +358,13 @@ def mainview (mainmenu):
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
+
+    #### Validates if they are only numbers and dashes
+    def validate_numbers_entry (char):
+      if char == '' or all (c.isdigit() or c == '-' for c in char):
+        return True
+      else:
+        return False
 
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -395,8 +446,45 @@ def mainview (mainmenu):
     departuredate_label = CTkLabel (main_frame, font=font3, text='Fecha de salidad de la entidad:', text_color='#fff')
     departuredate_label.place (x=50, y=220)
 
-    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     departuredate_entry.place (x=50, y=250)
+
+    ####### Displays a calendar to facilitate the selection of the date
+    def calendar ():
+        ######## Create a new window for the calendar
+        window_callendary = tk.Toplevel (main_frame)
+        window_callendary.title ('Calendario seleccionable')
+
+        ######## Create a calendar widget
+        calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+        calendar.pack (pady=20)
+
+        ######## Function to show the selected date in the Entry of the main window
+        def show_calendar_date ():
+          date_selected = calendar.get_date ()
+          departuredate_entry.configure (state='normal')
+          departuredate_entry.delete (0, tk.END)
+          departuredate_entry.insert (0, date_selected)
+          departuredate_entry.configure (state='readonly')
+
+        ######## button to show the selected date
+        date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+        date_button.pack (pady=10)
+
+    calendar_button = CTkButton (main_frame, text='Abrir Calendario', command=calendar)
+    calendar_button.place (x=54, y=300)
+
+    def delete_date ():
+      departuredate_entry.configure (state='normal')
+      departuredate_entry.delete (0, tk.END)
+      departuredate_entry.configure (state='readonly')
+
+    date_delete_button = CTkButton (main_frame, text='Borrar Fecha', command=delete_date)
+    date_delete_button.place (x=54, y=350)
+
+    ####### Settings to avoid manually modifying the date
+    departuredate_entry.configure (state='readonly')
+
     ###### Fourth row
 
     ###### Fifth row
@@ -411,7 +499,7 @@ def mainview (mainmenu):
     observation_entry.place (x=485, y=410)
 
     ###### Button area
-    submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
+    submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
     submit_button.place (x=180, y=550)
 
     clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
@@ -462,6 +550,13 @@ def mainview (mainmenu):
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
+
+    #### Validates if they are only numbers and dashes
+    def validate_numbers_entry (char):
+      if char == '' or all (c.isdigit() or c == '-' for c in char):
+        return True
+      else:
+        return False
 
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -564,8 +659,44 @@ def mainview (mainmenu):
     departuredate_label = CTkLabel (main_frame, font=font3, text='Fecha de salidad de la entidad:', text_color='#fff')
     departuredate_label.place (x=50, y=300)
 
-    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     departuredate_entry.place (x=50, y=330)
+
+    ####### Displays a calendar to facilitate the selection of the date
+    def calendar ():
+        ######## Create a new window for the calendar
+        window_callendary = tk.Toplevel (main_frame)
+        window_callendary.title ('Calendario seleccionable')
+
+        ######## Create a calendar widget
+        calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+        calendar.pack (pady=20)
+
+        ######## Function to show the selected date in the Entry of the main window
+        def show_calendar_date ():
+          date_selected = calendar.get_date ()
+          departuredate_entry.configure (state='normal')
+          departuredate_entry.delete (0, tk.END)
+          departuredate_entry.insert (0, date_selected)
+          departuredate_entry.configure (state='readonly')
+
+        ######## button to show the selected date
+        date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+        date_button.pack (pady=10)
+
+    calendar_button = CTkButton (main_frame, text='Abrir Calendario', command=calendar)
+    calendar_button.place (x=54, y=380)
+
+    def delete_date ():
+      departuredate_entry.configure (state='normal')
+      departuredate_entry.delete (0, tk.END)
+      departuredate_entry.configure (state='readonly')
+
+    date_delete_button = CTkButton (main_frame, text='Borrar Fecha', command=delete_date)
+    date_delete_button.place (x=54, y=430)
+
+    ####### Settings to avoid manually modifying the date
+    departuredate_entry.configure (state='readonly')
 
     ###### Fifth row
 
@@ -579,7 +710,7 @@ def mainview (mainmenu):
     observation_entry.place (x=485, y=410)
 
     ###### Button area
-    submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
+    submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
     submit_button.place (x=180, y=550)
 
     clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
@@ -626,6 +757,13 @@ def mainview (mainmenu):
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
+
+    #### Validates if they are only numbers and dashes
+    def validate_numbers_entry (char):
+      if char == '' or all (c.isdigit() or c == '-' for c in char):
+        return True
+      else:
+        return False
 
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -707,8 +845,45 @@ def mainview (mainmenu):
     departuredate_label = CTkLabel (main_frame, font=font3, text='Fecha de salidad de la entidad:', text_color='#fff')
     departuredate_label.place (x=50, y=220)
 
-    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     departuredate_entry.place (x=50, y=250)
+
+    ####### Displays a calendar to facilitate the selection of the date
+    def calendar ():
+        ######## Create a new window for the calendar
+        window_callendary = tk.Toplevel (main_frame)
+        window_callendary.title ('Calendario seleccionable')
+
+        ######## Create a calendar widget
+        calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+        calendar.pack (pady=20)
+
+        ######## Function to show the selected date in the Entry of the main window
+        def show_calendar_date ():
+          date_selected = calendar.get_date ()
+          departuredate_entry.configure (state='normal')
+          departuredate_entry.delete (0, tk.END)
+          departuredate_entry.insert (0, date_selected)
+          departuredate_entry.configure (state='readonly')
+
+        ######## button to show the selected date
+        date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+        date_button.pack (pady=10)
+
+    calendar_button = CTkButton (main_frame, text='Abrir Calendario', command=calendar)
+    calendar_button.place (x=54, y=300)
+
+    def delete_date ():
+      departuredate_entry.configure (state='normal')
+      departuredate_entry.delete (0, tk.END)
+      departuredate_entry.configure (state='readonly')
+
+    date_delete_button = CTkButton (main_frame, text='Borrar Fecha', command=delete_date)
+    date_delete_button.place (x=54, y=350)
+
+    ####### Settings to avoid manually modifying the date
+    departuredate_entry.configure (state='readonly')
+
     ###### Fourth row
 
     ###### Fifth row
@@ -723,7 +898,7 @@ def mainview (mainmenu):
     observation_entry.place (x=485, y=410)
 
     ###### Button area
-    submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
+    submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
     submit_button.place (x=180, y=550)
 
     clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
@@ -772,6 +947,13 @@ def mainview (mainmenu):
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
+
+    #### Validates if they are only numbers and dashes
+    def validate_numbers_entry (char):
+      if char == '' or all (c.isdigit() or c == '-' for c in char):
+        return True
+      else:
+        return False
 
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
@@ -864,8 +1046,44 @@ def mainview (mainmenu):
     departuredate_label = CTkLabel (main_frame, font=font3, text='Fecha de salidad de la entidad:', text_color='#fff')
     departuredate_label.place (x=50, y=300)
 
-    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    departuredate_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
     departuredate_entry.place (x=50, y=330)
+
+    ####### Displays a calendar to facilitate the selection of the date
+    def calendar ():
+        ######## Create a new window for the calendar
+        window_callendary = tk.Toplevel (main_frame)
+        window_callendary.title ('Calendario seleccionable')
+
+        ######## Create a calendar widget
+        calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
+        calendar.pack (pady=20)
+
+        ######## Function to show the selected date in the Entry of the main window
+        def show_calendar_date ():
+          date_selected = calendar.get_date ()
+          departuredate_entry.configure (state='normal')
+          departuredate_entry.delete (0, tk.END)
+          departuredate_entry.insert (0, date_selected)
+          departuredate_entry.configure (state='readonly')
+
+        ######## button to show the selected date
+        date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
+        date_button.pack (pady=10)
+
+    calendar_button = CTkButton (main_frame, text='Abrir Calendario', command=calendar)
+    calendar_button.place (x=54, y=380)
+
+    def delete_date ():
+      departuredate_entry.configure (state='normal')
+      departuredate_entry.delete (0, tk.END)
+      departuredate_entry.configure (state='readonly')
+
+    date_delete_button = CTkButton (main_frame, text='Borrar Fecha', command=delete_date)
+    date_delete_button.place (x=54, y=430)
+
+    ####### Settings to avoid manually modifying the date
+    departuredate_entry.configure (state='readonly')
 
     ###### Fifth row
 
@@ -879,7 +1097,7 @@ def mainview (mainmenu):
     observation_entry.place (x=485, y=410)
 
     ###### Button area
-    submit_button = CTkButton(main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
+    submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
     submit_button.place (x=180, y=550)
 
     clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
