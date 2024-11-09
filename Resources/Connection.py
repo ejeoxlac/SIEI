@@ -1,6 +1,7 @@
 # Libraries
 import sqlite3, pandas, matplotlib.pyplot as plt
 from matplotlib.widgets import Button
+from tkinter import messagebox
 from docx import Document
 from docx.shared import Inches
 from docx.enum.section import WD_ORIENT
@@ -92,7 +93,18 @@ def docx_pc ():
   db.close ()
 
 ## Statistical graph about computers
+### Global variable so that the window does not open more than one
+graph_shown = False
+
 def graph_pc ():
+  ### Specifying the global variable
+  global graph_shown
+
+  ### Conditional that tells me if there is already an open window
+  if graph_shown:
+    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+    return
+
   ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
 
@@ -139,34 +151,44 @@ def graph_pc ():
   global current_graph
   current_graph = 1
   draw_graphst (datast, 'PC operativas')
+  graph_shown = True
 
   ### Function to update the graph
   def update_graph (event):
-      global current_graph
-      if event.inaxes == ax_button_next:
-          if current_graph == 1:
-              draw_graphdp (datadp, 'PC operativas')
-              current_graph = 2
-          else:
-              draw_graphst (datast, 'PC operativas por departamento')
-              current_graph = 1
-      elif event.inaxes == ax_button_prev:
-          if current_graph == 2:
-              draw_graphst (datast, 'PC operativas')
-              current_graph = 1
-          else:
-              draw_graphdp (datadp, 'PC operativas por departamento')
-              current_graph = 2
+    global current_graph
+    if event.inaxes == ax_button_next:
+        if current_graph == 1:
+            draw_graphdp (datadp, 'PC operativas por departamento')
+            current_graph = 2
+        else:
+            draw_graphst (datast, 'PC operativas')
+            current_graph = 1
+    elif event.inaxes == ax_button_prev:
+        if current_graph == 2:
+            draw_graphst (datast, 'PC operativas')
+            current_graph = 1
+        else:
+            draw_graphdp (datadp, 'PC operativas por departamento')
+            current_graph = 2
 
   ### Buttons
-  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
-  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
-  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  ax_button_prev = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_next = plt.axes ([0.55, 0.05, 0.35, 0.075])
   button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
 
   ### Assign the update function to the buttons
-  button_next.on_clicked (update_graph)
   button_prev.on_clicked (update_graph)
+  button_next.on_clicked (update_graph)
+
+  ### Function to reset the variable for me so that I can reopen the window
+  def on_close (event):
+    global graph_shown
+    graph_shown = False
+    plt.close (event.canvas.figure)
+
+  ### Event that uses the function to reset the variable that allows only one window to open
+  fig.canvas.mpl_connect ('close_event', on_close)
 
   plt.show()
 
@@ -249,7 +271,18 @@ def docx_pk ():
   db.close ()
 
 ## Statistical graph about the keyboards
+### Global variable so that the window does not open more than one
+graph_shown = False
+
 def graph_pk ():
+  ### Specifying the global variable
+  global graph_shown
+
+  ### Conditional that tells me if there is already an open window
+  if graph_shown:
+    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+    return
+
   ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
 
@@ -296,34 +329,44 @@ def graph_pk ():
   global current_graph
   current_graph = 1
   draw_graphst (datast, 'Teclados operativos')
+  graph_shown = True
 
   ### Function to update the graph
   def update_graph (event):
-      global current_graph
-      if event.inaxes == ax_button_next:
-          if current_graph == 1:
-              draw_graphdp (datadp, 'Teclados operativos')
-              current_graph = 2
-          else:
-              draw_graphst (datast, 'Teclados operativos por departamento')
-              current_graph = 1
-      elif event.inaxes == ax_button_prev:
-          if current_graph == 2:
-              draw_graphst (datast, 'Teclados operativos')
-              current_graph = 1
-          else:
-              draw_graphdp (datadp, 'Teclados operativos por departamento')
-              current_graph = 2
+    global current_graph
+    if event.inaxes == ax_button_next:
+        if current_graph == 1:
+            draw_graphdp (datadp, 'Teclados operativos por departamento')
+            current_graph = 2
+        else:
+            draw_graphst (datast, 'Teclados operativos')
+            current_graph = 1
+    elif event.inaxes == ax_button_prev:
+        if current_graph == 2:
+            draw_graphst (datast, 'Teclados operativos')
+            current_graph = 1
+        else:
+            draw_graphdp (datadp, 'Teclados operativos por departamento')
+            current_graph = 2
 
   ### Buttons
-  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
-  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
-  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  ax_button_prev = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_next = plt.axes ([0.55, 0.05, 0.35, 0.075])
   button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
 
   ### Assign the update function to the buttons
-  button_next.on_clicked (update_graph)
   button_prev.on_clicked (update_graph)
+  button_next.on_clicked (update_graph)
+
+  ### Function to reset the variable for me so that I can reopen the window
+  def on_close (event):
+    global graph_shown
+    graph_shown = False
+    plt.close (event.canvas.figure)
+
+  ### Event that uses the function to reset the variable that allows only one window to open
+  fig.canvas.mpl_connect ('close_event', on_close)
 
   plt.show()
 
@@ -406,7 +449,18 @@ def docx_pm ():
   db.close ()
 
 ## Statistical graph about the monitors
+### Global variable so that the window does not open more than one
+graph_shown = False
+
 def graph_pm ():
+  ### Specifying the global variable
+  global graph_shown
+
+  ### Conditional that tells me if there is already an open window
+  if graph_shown:
+    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+    return
+
   ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
 
@@ -453,34 +507,44 @@ def graph_pm ():
   global current_graph
   current_graph = 1
   draw_graphst (datast, 'Monitores operativos')
+  graph_shown = True
 
   ### Function to update the graph
   def update_graph (event):
-      global current_graph
-      if event.inaxes == ax_button_next:
-          if current_graph == 1:
-              draw_graphdp (datadp, 'Monitores operativos')
-              current_graph = 2
-          else:
-              draw_graphst (datast, 'Monitores operativos por departamento')
-              current_graph = 1
-      elif event.inaxes == ax_button_prev:
-          if current_graph == 2:
-              draw_graphst (datast, 'Monitores operativos')
-              current_graph = 1
-          else:
-              draw_graphdp (datadp, 'Monitores operativos por departamento')
-              current_graph = 2
+    global current_graph
+    if event.inaxes == ax_button_next:
+        if current_graph == 1:
+            draw_graphdp (datadp, 'Monitores operativos por departamento')
+            current_graph = 2
+        else:
+            draw_graphst (datast, 'Monitores operativos')
+            current_graph = 1
+    elif event.inaxes == ax_button_prev:
+        if current_graph == 2:
+            draw_graphst (datast, 'Monitores operativos')
+            current_graph = 1
+        else:
+            draw_graphdp (datadp, 'Monitores operativos por departamento')
+            current_graph = 2
 
   ### Buttons
-  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
-  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
-  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  ax_button_prev = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_next = plt.axes ([0.55, 0.05, 0.35, 0.075])
   button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
 
   ### Assign the update function to the buttons
-  button_next.on_clicked (update_graph)
   button_prev.on_clicked (update_graph)
+  button_next.on_clicked (update_graph)
+
+  ### Function to reset the variable for me so that I can reopen the window
+  def on_close (event):
+    global graph_shown
+    graph_shown = False
+    plt.close (event.canvas.figure)
+
+  ### Event that uses the function to reset the variable that allows only one window to open
+  fig.canvas.mpl_connect ('close_event', on_close)
 
   plt.show()
 
@@ -563,7 +627,18 @@ def docx_pmo ():
   db.close ()
 
 ## Statistical graph about mouses
+### Global variable so that the window does not open more than one
+graph_shown = False
+
 def graph_pmo ():
+  ### Specifying the global variable
+  global graph_shown
+
+  ### Conditional that tells me if there is already an open window
+  if graph_shown:
+    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+    return
+
   ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
 
@@ -610,34 +685,44 @@ def graph_pmo ():
   global current_graph
   current_graph = 1
   draw_graphst (datast, 'Mouses operativos')
+  graph_shown = True
 
   ### Function to update the graph
   def update_graph (event):
-      global current_graph
-      if event.inaxes == ax_button_next:
-          if current_graph == 1:
-              draw_graphdp (datadp, 'Mouses operativos')
-              current_graph = 2
-          else:
-              draw_graphst (datast, 'Mouses operativos por departamento')
-              current_graph = 1
-      elif event.inaxes == ax_button_prev:
-          if current_graph == 2:
-              draw_graphst (datast, 'Mouses operativos')
-              current_graph = 1
-          else:
-              draw_graphdp (datadp, 'Mouses operativos por departamento')
-              current_graph = 2
+    global current_graph
+    if event.inaxes == ax_button_next:
+        if current_graph == 1:
+            draw_graphdp (datadp, 'Mouses operativos por departamento')
+            current_graph = 2
+        else:
+            draw_graphst (datast, 'Mouses operativos')
+            current_graph = 1
+    elif event.inaxes == ax_button_prev:
+        if current_graph == 2:
+            draw_graphst (datast, 'Mouses operativos')
+            current_graph = 1
+        else:
+            draw_graphdp (datadp, 'Mouses operativos por departamento')
+            current_graph = 2
 
   ### Buttons
-  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
-  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
-  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  ax_button_prev = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_next = plt.axes ([0.55, 0.05, 0.35, 0.075])
   button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
 
   ### Assign the update function to the buttons
-  button_next.on_clicked (update_graph)
   button_prev.on_clicked (update_graph)
+  button_next.on_clicked (update_graph)
+
+  ### Function to reset the variable for me so that I can reopen the window
+  def on_close (event):
+    global graph_shown
+    graph_shown = False
+    plt.close (event.canvas.figure)
+
+  ### Event that uses the function to reset the variable that allows only one window to open
+  fig.canvas.mpl_connect ('close_event', on_close)
 
   plt.show()
 
@@ -720,7 +805,18 @@ def docx_pp ():
   db.close ()
 
 ## Statistical graph about printers
+### Global variable so that the window does not open more than one
+graph_shown = False
+
 def graph_pp ():
+  ### Specifying the global variable
+  global graph_shown
+
+  ### Conditional that tells me if there is already an open window
+  if graph_shown:
+    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+    return
+
   ### Connect to the SQLite database
   db = sqlite3.connect ('Resources\\SIEIDB.db')
 
@@ -767,34 +863,44 @@ def graph_pp ():
   global current_graph
   current_graph = 1
   draw_graphst (datast, 'Impresoras operativas')
+  graph_shown = True
 
   ### Function to update the graph
   def update_graph (event):
-      global current_graph
-      if event.inaxes == ax_button_next:
-          if current_graph == 1:
-              draw_graphdp (datadp, 'Impresoras operativas')
-              current_graph = 2
-          else:
-              draw_graphst (datast, 'Impresoras operativas por departamento')
-              current_graph = 1
-      elif event.inaxes == ax_button_prev:
-          if current_graph == 2:
-              draw_graphst (datast, 'Impresoras operativas')
-              current_graph = 1
-          else:
-              draw_graphdp (datadp, 'Impresoras operativas por departamento')
-              current_graph = 2
+    global current_graph
+    if event.inaxes == ax_button_next:
+        if current_graph == 1:
+            draw_graphdp (datadp, 'Impresoras operativas por departamento')
+            current_graph = 2
+        else:
+            draw_graphst (datast, 'Impresoras operativas')
+            current_graph = 1
+    elif event.inaxes == ax_button_prev:
+        if current_graph == 2:
+            draw_graphst (datast, 'Impresoras operativas')
+            current_graph = 1
+        else:
+            draw_graphdp (datadp, 'Impresoras operativas por departamento')
+            current_graph = 2
 
   ### Buttons
-  ax_button_next = plt.axes ([0.1, 0.05, 0.35, 0.075])
-  ax_button_prev = plt.axes ([0.55, 0.05, 0.35, 0.075])
-  button_next = Button (ax_button_next, 'Siguiente Gráfica')
+  ax_button_prev = plt.axes ([0.1, 0.05, 0.35, 0.075])
+  ax_button_next = plt.axes ([0.55, 0.05, 0.35, 0.075])
   button_prev = Button (ax_button_prev, 'Gráfica Anterior')
+  button_next = Button (ax_button_next, 'Siguiente Gráfica')
 
   ### Assign the update function to the buttons
-  button_next.on_clicked (update_graph)
   button_prev.on_clicked (update_graph)
+  button_next.on_clicked (update_graph)
+
+  ### Function to reset the variable for me so that I can reopen the window
+  def on_close (event):
+    global graph_shown
+    graph_shown = False
+    plt.close (event.canvas.figure)
+
+  ### Event that uses the function to reset the variable that allows only one window to open
+  fig.canvas.mpl_connect ('close_event', on_close)
 
   plt.show()
 
