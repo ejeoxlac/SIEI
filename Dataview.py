@@ -187,7 +187,7 @@ def dataviewview (mainmenu):
 
             ##### Validates if they are only numbers and dashes
             def validate_numbers_entry (char):
-                if char == '' or all(c.isdigit() or c == '-' for c in char):
+                if char == '' or all (c.isdigit() or c == '-' for c in char):
                     return True
                 else:
                     return False
@@ -269,7 +269,7 @@ def dataviewview (mainmenu):
             ram_label.place (x=485, y=220)
 
             memory = StringVar ()
-            options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3']
+            options = ['1 GB DDR2', '2 GB DDR2', '4 GB DDR2', '8 GB DDR2', '16 GB DDR2', '32 GB DDR2', '1 GB DDR3', '2 GB DDR3', '4 GB DDR3', '8 GB DDR3', '16 GB DDR3', '32 GB DDR3']
 
             ram_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=memory, values=options, state='readonly')
             ram_options.place (x=485, y=250)
@@ -294,7 +294,7 @@ def dataviewview (mainmenu):
             department_label.place (x=280, y=300)
 
             departments = StringVar ()
-            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo']
+            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
 
             department_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=departments, values=options, state='readonly')
             department_options.place (x=280, y=330)
@@ -322,7 +322,7 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=410)
 
             ######## Displays a calendar to facilitate the selection of the date
-            def calendar():
+            def calendar ():
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
@@ -332,12 +332,12 @@ def dataviewview (mainmenu):
                 calendar.pack (pady=20)
 
                 ######### Function to show the selected date in the Entry of the main window
-                def show_calendar_date():
+                def show_calendar_date ():
                     date_selected = calendar.get_date ()
-                    departuredate_entry.configure(state='normal')
+                    departuredate_entry.configure (state='normal')
                     departuredate_entry.delete (0, tk.END)
                     departuredate_entry.insert (0, date_selected)
-                    departuredate_entry.configure(state='readonly')
+                    departuredate_entry.configure (state='readonly')
 
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
@@ -549,7 +549,7 @@ def dataviewview (mainmenu):
 
             ##### Validates if they are only numbers and dashes
             def validate_numbers_entry (char):
-                if char == '' or all(c.isdigit() or c == '-' for c in char):
+                if char == '' or all (c.isdigit() or c == '-' for c in char):
                     return True
                 else:
                     return False
@@ -600,7 +600,7 @@ def dataviewview (mainmenu):
             department_label.place (x=280, y=140)
 
             departments = StringVar ()
-            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo']
+            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
 
             department_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=departments, values=options, state='readonly')
             department_options.place (x=280, y=170)
@@ -628,7 +628,7 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=250)
 
             ######## Displays a calendar to facilitate the selection of the date
-            def calendar():
+            def calendar ():
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
@@ -638,12 +638,12 @@ def dataviewview (mainmenu):
                 calendar.pack (pady=20)
 
                 ######### Function to show the selected date in the Entry of the main window
-                def show_calendar_date():
+                def show_calendar_date ():
                     date_selected = calendar.get_date ()
-                    departuredate_entry.configure(state='normal')
+                    departuredate_entry.configure (state='normal')
                     departuredate_entry.delete (0, tk.END)
                     departuredate_entry.insert (0, date_selected)
-                    departuredate_entry.configure(state='readonly')
+                    departuredate_entry.configure (state='readonly')
 
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
@@ -847,7 +847,7 @@ def dataviewview (mainmenu):
 
             ##### Validates if they are only numbers and dashes
             def validate_numbers_entry (char):
-                if char == '' or all(c.isdigit() or c == '-' for c in char):
+                if char == '' or all (c.isdigit() or c == '-' for c in char):
                     return True
                 else:
                     return False
@@ -916,7 +916,7 @@ def dataviewview (mainmenu):
             department_label.place (x=680, y=140)
 
             departments = StringVar ()
-            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo']
+            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
 
             department_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=departments, values=options, state='readonly')
             department_options.place (x=680, y=170)
@@ -945,7 +945,7 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=330)
 
             ######## Displays a calendar to facilitate the selection of the date
-            def calendar():
+            def calendar ():
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
@@ -955,12 +955,12 @@ def dataviewview (mainmenu):
                 calendar.pack (pady=20)
 
                 ######### Function to show the selected date in the Entry of the main window
-                def show_calendar_date():
+                def show_calendar_date ():
                     date_selected = calendar.get_date ()
-                    departuredate_entry.configure(state='normal')
+                    departuredate_entry.configure (state='normal')
                     departuredate_entry.delete (0, tk.END)
                     departuredate_entry.insert (0, date_selected)
-                    departuredate_entry.configure(state='readonly')
+                    departuredate_entry.configure (state='readonly')
 
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
@@ -1162,7 +1162,7 @@ def dataviewview (mainmenu):
 
             ##### Validates if they are only numbers and dashes
             def validate_numbers_entry (char):
-                if char == '' or all(c.isdigit() or c == '-' for c in char):
+                if char == '' or all (c.isdigit() or c == '-' for c in char):
                     return True
                 else:
                     return False
@@ -1213,7 +1213,7 @@ def dataviewview (mainmenu):
             department_label.place (x=280, y=140)
 
             departments = StringVar ()
-            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo']
+            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
 
             department_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=departments, values=options, state='readonly')
             department_options.place (x=280, y=170)
@@ -1241,7 +1241,7 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=250)
 
             ######## Displays a calendar to facilitate the selection of the date
-            def calendar():
+            def calendar ():
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
@@ -1251,12 +1251,12 @@ def dataviewview (mainmenu):
                 calendar.pack (pady=20)
 
                 ######### Function to show the selected date in the Entry of the main window
-                def show_calendar_date():
+                def show_calendar_date ():
                     date_selected = calendar.get_date ()
-                    departuredate_entry.configure(state='normal')
+                    departuredate_entry.configure (state='normal')
                     departuredate_entry.delete (0, tk.END)
                     departuredate_entry.insert (0, date_selected)
-                    departuredate_entry.configure(state='readonly')
+                    departuredate_entry.configure (state='readonly')
 
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
@@ -1458,7 +1458,7 @@ def dataviewview (mainmenu):
 
             ##### Validates if they are only numbers and dashes
             def validate_numbers_entry (char):
-                if char == '' or all(c.isdigit() or c == '-' for c in char):
+                if char == '' or all (c.isdigit() or c == '-' for c in char):
                     return True
                 else:
                     return False
@@ -1518,7 +1518,7 @@ def dataviewview (mainmenu):
             department_label.place (x=485, y=140)
 
             departments = StringVar ()
-            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo']
+            options = ['Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
 
             department_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=departments, values=options, state='readonly')
             department_options.place (x=485, y=170)
@@ -1547,7 +1547,7 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=330)
 
             ######## Displays a calendar to facilitate the selection of the date
-            def calendar():
+            def calendar ():
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
@@ -1557,12 +1557,12 @@ def dataviewview (mainmenu):
                 calendar.pack (pady=20)
 
                 ######### Function to show the selected date in the Entry of the main window
-                def show_calendar_date():
+                def show_calendar_date ():
                     date_selected = calendar.get_date ()
-                    departuredate_entry.configure(state='normal')
+                    departuredate_entry.configure (state='normal')
                     departuredate_entry.delete (0, tk.END)
                     departuredate_entry.insert (0, date_selected)
-                    departuredate_entry.configure(state='readonly')
+                    departuredate_entry.configure (state='readonly')
 
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
