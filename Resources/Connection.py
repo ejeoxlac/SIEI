@@ -33,8 +33,24 @@ def insert_pc (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu
   db.close ()
 
 ## Search engine for data
-def search_pc (val, stat):
-  cur.execute ('SELECT * FROM PC WHERE idpc=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+def search_pc (val, stat, dp):
+  query = 'SELECT * FROM PC WHERE'
+  params = []
+
+  query += ' (idpc=?'
+  params.append(val)
+
+  query += ' OR name LIKE ?)'
+  params.append('%'+val+'%')
+
+  query += ' AND status=?'
+  params.append(stat)
+
+  if dp !='Todo':
+    query += ' AND dp=?'
+    params.append(dp)
+
+  cur.execute (query, params)
 
 ## Data editor in the database
 def edit_pc (rowid, idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dom, dtd, obs):
@@ -211,8 +227,24 @@ def insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs):
   db.close ()
 
 ## Search engine for data
-def search_pk (val, stat):
-  cur.execute ('SELECT * FROM PK WHERE idpk=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+def search_pk (val, stat, dp):
+  query = 'SELECT * FROM PK WHERE'
+  params = []
+
+  query += ' (idpk=?'
+  params.append(val)
+
+  query += ' OR name LIKE ?)'
+  params.append('%'+val+'%')
+
+  query += ' AND status=?'
+  params.append(stat)
+
+  if dp !='Todo':
+    query += ' AND dp=?'
+    params.append(dp)
+
+  cur.execute (query, params)
 
 ## Data editor in the database
 def edit_pk (rowid, idpk, name, model, serial, color, dp, user, stat, dom, dtd, obs):
@@ -389,8 +421,24 @@ def insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, 
   db.close ()
 
 ## Search engine for data
-def search_pm (val, stat):
-  cur.execute ('SELECT * FROM PM WHERE idpm=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+def search_pm (val, stat, dp):
+  query = 'SELECT * FROM PM WHERE'
+  params = []
+
+  query += ' (idpm=?'
+  params.append(val)
+
+  query += ' OR name LIKE ?)'
+  params.append('%'+val+'%')
+
+  query += ' AND status=?'
+  params.append(stat)
+
+  if dp !='Todo':
+    query += ' AND dp=?'
+    params.append(dp)
+
+  cur.execute (query, params)
 
 ## Data editor in the database
 def edit_pm (rowid, idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dom, dtd, obs):
@@ -567,8 +615,24 @@ def insert_pmo (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs
   db.close ()
 
 ## Search engine for data
-def search_pmo (val, stat):
-  cur.execute ('SELECT * FROM PMO WHERE idpmo=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+def search_pmo (val, stat, dp):
+  query = 'SELECT * FROM PMO WHERE'
+  params = []
+
+  query += ' (idpmo=?'
+  params.append(val)
+
+  query += ' OR name LIKE ?)'
+  params.append('%'+val+'%')
+
+  query += ' AND status=?'
+  params.append(stat)
+
+  if dp !='Todo':
+    query += ' AND dp=?'
+    params.append(dp)
+
+  cur.execute (query, params)
 
 ## Data editor in the database
 def edit_pmo (rowid, idpmo, name, model, serial, color, dp, user, stat, dom, dtd, obs):
@@ -745,8 +809,24 @@ def insert_pp (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, o
   db.close ()
 
 ## Search engine for data
-def search_pp (val, stat):
-  cur.execute ('SELECT * FROM PP WHERE idpp=? OR name LIKE ? AND status=?', [val, '%'+val+'%', stat])
+def search_pp (val, stat, dp):
+  query = 'SELECT * FROM PP WHERE'
+  params = []
+
+  query += ' (idpp=?'
+  params.append(val)
+
+  query += ' OR name LIKE ?)'
+  params.append('%'+val+'%')
+
+  query += ' AND status=?'
+  params.append(stat)
+
+  if dp !='Todo':
+    query += ' AND dp=?'
+    params.append(dp)
+
+  cur.execute (query, params)
 
 ## Data editor in the database
 def edit_pp (rowid, idpp, name, model, serial, color, tp, dp, user, stat, dom, dtd, obs):

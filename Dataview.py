@@ -26,7 +26,7 @@ def dataviewview (mainmenu):
     maindataview = customtkinter.CTkToplevel ()
     maindataview.iconbitmap ('Resources\\Img\\ico.ico')
     maindataview.title ('Datos de los equipos')
-    maindataview.geometry ('860x580')
+    maindataview.geometry ('1000x580')
     maindataview.resizable (False, False)
 
     ## Code to center the application window
@@ -79,9 +79,10 @@ def dataviewview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            stat = status.get ()
             val = entry_search.get ()
-            Resources.Connection.search_pc (val, stat)
+            stat = status.get ()
+            dp = departments.get ()
+            Resources.Connection.search_pc (val, stat, dp)
             PC = Resources.Connection.cur.fetchall ()
             for row in PC:
                 ###### Format so that the divisions of the data can be created within the table
@@ -157,14 +158,14 @@ def dataviewview (mainmenu):
         scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.place (x=5, y=408, width=878, height=20)
 
         scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.place (x=882, y=5, width=20, height=420)
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.place (x=5, y=5, width=874, height=400)
 
         #### Function of deleting data
         def button_del ():
@@ -212,8 +213,11 @@ def dataviewview (mainmenu):
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de la marca:', text_color='#fff')
             name_label.place (x=280, y=60)
 
-            name_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            name_entry.place (x=280, y=90)
+            namepc = StringVar ()
+            options = ['Vit', 'Dell', 'Lenovo', 'Asus', 'Acer', 'Microsoft', 'Google', 'Apple']
+
+            name_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepc, values=options, state='readonly')
+            name_options.place (x=280, y=90)
 
             model_label = CTkLabel (data_editing_menu, font=font2, text='Modelo:', text_color='#fff')
             model_label.place (x=485, y=60)
@@ -231,8 +235,11 @@ def dataviewview (mainmenu):
             color_label = CTkLabel (data_editing_menu, font=font2, text='Color:', text_color='#fff')
             color_label.place (x=50, y=140)
 
-            color_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            color_entry.place (x=50, y=170)
+            colorpc = StringVar ()
+            options = ['Negro', 'Plata', 'Gris', 'Azul', 'Blanco']
+
+            color_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpc, values=options, state='readonly')
+            color_options.place (x=50, y=170)
 
             modelmb_label = CTkLabel (data_editing_menu, font=font3, text='Modelo de la placa madre:', text_color='#fff')
             modelmb_label.place (x=280, y=140)
@@ -243,14 +250,20 @@ def dataviewview (mainmenu):
             colormb_label = CTkLabel (data_editing_menu, font=font3, text='Color de la placa madre:', text_color='#fff')
             colormb_label.place (x=485, y=140)
 
-            colormb_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            colormb_entry.place (x=485, y=170)
+            colormbpc = StringVar ()
+            options = ['Verde', 'Negro', 'Azul', 'Rojo', 'Blanco']
+
+            colormb_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colormbpc, values=options, state='readonly')
+            colormb_options.place (x=485, y=170)
 
             graphicscardname_label = CTkLabel (data_editing_menu, font=font3, text='Marca de la grafica:', text_color='#fff')
             graphicscardname_label.place (x=680, y=140)
 
-            graphicscardname_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            graphicscardname_entry.place (x=680, y=170)
+            graphicscardpc = StringVar ()
+            options = ['NVIDIA', 'AMD', 'Intel', 'ASUS', 'EVGA', 'MSI', 'Zotac']
+
+            graphicscardname_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=graphicscardpc, values=options, state='readonly')
+            graphicscardname_options.place (x=680, y=170)
 
             ####### Third row
             graphicscardmodel_label = CTkLabel (data_editing_menu, font=font3, text='Modelo de la grafica:', text_color='#fff')
@@ -362,13 +375,13 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 rowid = selected [0]
                 idpc = idpc_entry.get ()
-                name = name_entry.get ()
+                name = namepc.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
-                color = color_entry.get ()
+                color = colorpc.get ()
                 modelmb = modelmb_entry.get ()
-                colormb = colormb_entry.get ()
-                gcn = graphicscardname_entry.get ()
+                colormb = colormbpc.get ()
+                gcn = graphicscardpc.get ()
                 gcm = graphicscardmodel_entry.get ()
                 cpu = cpu_entry.get ()
                 ram = memory.get ()
@@ -399,13 +412,13 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
                 idpc_entry.insert (0, values[0])
-                name_entry.insert (0, values[1])
+                name_options.set (values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
-                color_entry.insert (0, values[4])
+                color_options.set (values[4])
                 modelmb_entry.insert (0, values[5])
-                colormb_entry.insert (0, values[6])
-                graphicscardname_entry.insert (0, values[7])
+                colormb_options.set (values[6])
+                graphicscardname_options.set (values[7])
                 graphicscardmodel_entry.insert (0, values[8])
                 cpu_entry.insert (0, values[9])
                 ram_options.set (values[10])
@@ -457,9 +470,10 @@ def dataviewview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            stat = status.get ()
             val = entry_search.get ()
-            Resources.Connection.search_pk (val, stat)
+            stat = status.get ()
+            dp = departments.get ()
+            Resources.Connection.search_pk (val, stat, dp)
             PK = Resources.Connection.cur.fetchall ()
             for row in PK:
                 ###### Format so that the divisions of the data can be created within the table
@@ -519,14 +533,14 @@ def dataviewview (mainmenu):
         scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.place (x=5, y=408, width=878, height=20)
 
         scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.place (x=882, y=5, width=20, height=420)
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.place (x=5, y=5, width=874, height=400)
 
         #### Function of deleting data
         def button_del ():
@@ -574,8 +588,11 @@ def dataviewview (mainmenu):
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de la marca:', text_color='#fff')
             name_label.place (x=280, y=60)
 
-            name_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            name_entry.place (x=280, y=90)
+            namepk = StringVar ()
+            options = ['Vit', 'Dell', 'Logitech', 'Corsair']
+
+            name_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepk, values=options, state='readonly')
+            name_options.place (x=280, y=90)
 
             model_label = CTkLabel (data_editing_menu, font=font2, text='Modelo:', text_color='#fff')
             model_label.place (x=485, y=60)
@@ -593,8 +610,11 @@ def dataviewview (mainmenu):
             color_label = CTkLabel (data_editing_menu, font=font2, text='Color:', text_color='#fff')
             color_label.place (x=50, y=140)
 
-            color_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            color_entry.place (x=50, y=170)
+            colorpk = StringVar ()
+            options = ['Negro', 'Plata', 'Gris', 'Blanco', 'Verde', 'Amarillo', 'Rojo']
+
+            color_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpk, values=options, state='readonly')
+            color_options.place (x=50, y=170)
 
             department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
             department_label.place (x=280, y=140)
@@ -672,10 +692,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 rowid = selected [0]
                 idpk = idpk_entry.get ()
-                name = name_entry.get ()
+                name = namepk.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
-                color = color_entry.get ()
+                color = colorpk.get ()
                 dp = departments.get ()
                 user = user_entry.get ()
                 stat = status.get ()
@@ -701,10 +721,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
                 idpk_entry.insert (0, values[0])
-                name_entry.insert (0, values[1])
+                name_options.set (values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
-                color_entry.insert (0, values[4])
+                color_options.set (values[4])
                 department_options.set (values[5])
                 user_entry.insert (0, values[6])
                 stat_options.set (values[7])
@@ -751,9 +771,10 @@ def dataviewview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            stat = status.get ()
             val = entry_search.get ()
-            Resources.Connection.search_pm (val, stat)
+            stat = status.get ()
+            dp = departments.get ()
+            Resources.Connection.search_pm (val, stat, dp)
             PM = Resources.Connection.cur.fetchall ()
             for row in PM:
                 ###### Format so that the divisions of the data can be created within the table
@@ -817,14 +838,14 @@ def dataviewview (mainmenu):
         scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.place (x=5, y=408, width=878, height=20)
 
         scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.place (x=882, y=5, width=20, height=420)
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.place (x=5, y=5, width=874, height=400)
 
         #### Function to delete users
         def button_del ():
@@ -872,8 +893,11 @@ def dataviewview (mainmenu):
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de la marca:', text_color='#fff')
             name_label.place (x=280, y=60)
 
-            name_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            name_entry.place (x=280, y=90)
+            namepm = StringVar ()
+            options = ['Vit', 'Dell', 'Samsung', 'Asus', 'LG', 'Acer', 'Dahua', 'BenQ', 'HP']
+
+            name_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepm, values=options, state='readonly')
+            name_options.place (x=280, y=90)
 
             model_label = CTkLabel (data_editing_menu, font=font2, text='Modelo:', text_color='#fff')
             model_label.place (x=485, y=60)
@@ -891,8 +915,11 @@ def dataviewview (mainmenu):
             color_label = CTkLabel (data_editing_menu, font=font2, text='Color:', text_color='#fff')
             color_label.place (x=50, y=140)
 
-            color_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            color_entry.place (x=50, y=170)
+            colorpm = StringVar ()
+            options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+            color_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpm, values=options, state='readonly')
+            color_options.place (x=50, y=170)
 
             typescreen_label = CTkLabel (data_editing_menu, font=font2, text='Tipo de pantalla:', text_color='#fff')
             typescreen_label.place (x=280, y=140)
@@ -987,10 +1014,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 rowid = selected [0]
                 idpm = idpm_entry.get ()
-                name = name_entry.get ()
+                name = namepm.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
-                color = color_entry.get ()
+                color = colorpm.get ()
                 tsi = typescreeninch.get ()
                 tcp = typeconnectorport.get ()
                 dp = departments.get ()
@@ -1018,10 +1045,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
                 idpm_entry.insert (0, values[0])
-                name_entry.insert (0, values[1])
+                name_options.set (values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
-                color_entry.insert (0, values[4])
+                color_options.set (values[4])
                 typescreen_options.set (values[5])
                 typeconnector_options.set (values[6])
                 department_options.set (values[7])
@@ -1070,9 +1097,10 @@ def dataviewview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            stat = status.get ()
             val = entry_search.get ()
-            Resources.Connection.search_pmo (val, stat)
+            stat = status.get ()
+            dp = departments.get ()
+            Resources.Connection.search_pmo (val, stat, dp)
             PMO = Resources.Connection.cur.fetchall ()
             for row in PMO:
                 ###### Format so that the divisions of the data can be created within the table
@@ -1132,14 +1160,14 @@ def dataviewview (mainmenu):
         scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.place (x=5, y=408, width=878, height=20)
 
         scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.place (x=882, y=5, width=20, height=420)
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.place (x=5, y=5, width=874, height=400)
 
         #### Function to delete users
         def button_del ():
@@ -1187,8 +1215,11 @@ def dataviewview (mainmenu):
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de la marca:', text_color='#fff')
             name_label.place (x=280, y=60)
 
-            name_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            name_entry.place (x=280, y=90)
+            namepmo = StringVar ()
+            options = ['Vit', 'Logitech', 'Corsair', 'Genius', 'Argom', 'Lenovo', 'HP']
+
+            name_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepmo, values=options, state='readonly')
+            name_options.place (x=280, y=90)
 
             model_label = CTkLabel (data_editing_menu, font=font2, text='Modelo:', text_color='#fff')
             model_label.place (x=485, y=60)
@@ -1206,8 +1237,11 @@ def dataviewview (mainmenu):
             color_label = CTkLabel (data_editing_menu, font=font2, text='Color:', text_color='#fff')
             color_label.place (x=50, y=140)
 
-            color_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            color_entry.place (x=50, y=170)
+            colorpmo = StringVar ()
+            options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+            color_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpmo, values=options, state='readonly')
+            color_options.place (x=50, y=170)
 
             department_label = CTkLabel (data_editing_menu, font=font2, text='Departamento:', text_color='#fff')
             department_label.place (x=280, y=140)
@@ -1285,10 +1319,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 rowid = selected [0]
                 idpmo = idpmo_entry.get ()
-                name = name_entry.get ()
+                name = namepmo.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
-                color = color_entry.get ()
+                color = colorpmo.get ()
                 dp = departments.get ()
                 user = user_entry.get ()
                 stat = status.get ()
@@ -1314,10 +1348,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
                 idpmo_entry.insert (0, values[0])
-                name_entry.insert (0, values[1])
+                name_options.set (values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
-                color_entry.insert (0, values[4])
+                color_options.set (values[4])
                 department_options.set (values[5])
                 user_entry.insert (0, values[6])
                 stat_options.set (values[7])
@@ -1364,9 +1398,10 @@ def dataviewview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            stat = status.get ()
             val = entry_search.get ()
-            Resources.Connection.search_pp (val, stat)
+            stat = status.get ()
+            dp = departments.get ()
+            Resources.Connection.search_pp (val, stat, dp)
             PP = Resources.Connection.cur.fetchall ()
             for row in PP:
                 ###### Format so that the divisions of the data can be created within the table
@@ -1428,14 +1463,14 @@ def dataviewview (mainmenu):
         scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.place (x=5, y=408, width=878, height=20)
 
         scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.place (x=882, y=5, width=20, height=420)
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.place (x=5, y=5, width=874, height=400)
 
         #### Function to delete users
         def button_del ():
@@ -1483,8 +1518,11 @@ def dataviewview (mainmenu):
             name_label = CTkLabel (data_editing_menu, font=font2, text='Nombre de la marca:', text_color='#fff')
             name_label.place (x=280, y=60)
 
-            name_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            name_entry.place (x=280, y=90)
+            namepp = StringVar ()
+            options = ['HP', 'Canon', 'Epson', 'Samsung', 'Brother', 'Lexmark', 'Xerox']
+
+            name_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=namepp, values=options, state='readonly')
+            name_options.place (x=280, y=90)
 
             model_label = CTkLabel (data_editing_menu, font=font2, text='Modelo:', text_color='#fff')
             model_label.place (x=485, y=60)
@@ -1502,8 +1540,11 @@ def dataviewview (mainmenu):
             color_label = CTkLabel (data_editing_menu, font=font2, text='Color:', text_color='#fff')
             color_label.place (x=50, y=140)
 
-            color_entry = CTkEntry (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-            color_entry.place (x=50, y=170)
+            colorpp = StringVar ()
+            options = ['Negro', 'Plata', 'Gris', 'Blanco']
+
+            color_options = CTkComboBox (data_editing_menu, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=colorpp, values=options, state='readonly')
+            color_options.place (x=50, y=170)
 
             type_label = CTkLabel (data_editing_menu, font=font2, text='Tipo de impresión:', text_color='#fff')
             type_label.place (x=280, y=140)
@@ -1589,10 +1630,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 rowid = selected [0]
                 idpp = idpp_entry.get ()
-                name = name_entry.get ()
+                name = namepp.get ()
                 model = model_entry.get ()
                 serial = serial_entry.get ()
-                color = color_entry.get ()
+                color = colorpp.get ()
                 tp = typeprinting.get ()
                 dp = departments.get ()
                 user = user_entry.get ()
@@ -1619,10 +1660,10 @@ def dataviewview (mainmenu):
                 selected = trv.focus ()
                 values = trv.item (selected, 'values')
                 idpp_entry.insert (0, values[0])
-                name_entry.insert (0, values[1])
+                name_options.set (values[1])
                 model_entry.insert (0, values[2])
                 serial_entry.insert (0, values[3])
-                color_entry.insert (0, values[4])
+                color_options.set (values[4])
                 typeprinting.set (values[5])
                 department_options.set (values[6])
                 user_entry.insert (0, values[7])
@@ -1762,7 +1803,7 @@ def dataviewview (mainmenu):
     main_frame = CTkFrame (maindataview)
     main_frame.pack (side=tk.LEFT)
     main_frame.pack_propagate (False)
-    main_frame.configure (width=800, height=500)
+    main_frame.configure (width=910, height=500)
 
     ## Search box and button to be used with the options box for filtering
     entry_search = CTkEntry (maindataview, text_color='#000', fg_color='#fff', border_color='#B2016C', border_width=2, width=300)
@@ -1775,6 +1816,13 @@ def dataviewview (mainmenu):
     stat_options = CTkComboBox (maindataview, text_color='#000', fg_color='#fff', dropdown_hover_color='#7d01b2', button_color='#7d01b2', button_hover_color='#7d01b2', border_color="#7d01b2", width=150, variable=status, values=options, state='readonly')
     stat_options.set ('Operativo')
     stat_options.place (x=650, y=10)
+
+    departments = StringVar ()
+    options = ['Todo', 'Informática', 'Tesorería', 'Contabilidad', 'Administración', 'Recursos humanos', 'Presupuesto', 'Sala situacional', 'Catastro', 'Proyectos especiales', 'Turismo', 'Despacho', 'Dirección general']
+
+    department_options = CTkComboBox (maindataview, text_color='#000', fg_color='#fff', dropdown_hover_color='#7d01b2', button_color='#7d01b2', button_hover_color='#7d01b2', border_color="#7d01b2", width=150, variable=departments, values=options, state='readonly')
+    department_options.set ('Todo')
+    department_options.place (x=810, y=10)
 
     ## To display one of the pages
     pc_page ()
