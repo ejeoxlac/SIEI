@@ -85,7 +85,7 @@ def loginview ():
   CTkLabel (frame, text='equipos informáticos', font=('Roboto', 21)).pack (pady=2)
 
   ### Data entry for the login
-  name = CTkEntry (frame, placeholder_text='Usuario 👤', show='*', width=250, height=40)
+  name = CTkEntry (frame, placeholder_text='Usuario 👤', width=250, height=40)
   name.pack (pady=5)
 
   password = CTkEntry (frame, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
