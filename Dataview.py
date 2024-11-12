@@ -335,10 +335,23 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=410)
 
             ######## Displays a calendar to facilitate the selection of the date
+            ######### Global variable so that the window does not open more than one
+            global calendar_window
+            calendar_window = False
+
             def calendar ():
+                ######### Specifying the global variable
+                global calendar_window
+
+                ######### Conditional that tells me if there is already an open window
+                if calendar_window:
+                    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+                    return
+
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
+                calendar_window = True
 
                 ######### Create a calendar widget
                 calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
@@ -355,6 +368,14 @@ def dataviewview (mainmenu):
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
                 date_button.pack (pady=10)
+
+                ######### Function to reset the variable, so that you can reopen the window
+                def calendar_close ():
+                    global calendar_window
+                    window_callendary.destroy ()
+                    calendar_window = None
+
+                window_callendary.protocol('WM_DELETE_WINDOW', calendar_close)
 
             calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
             calendar_button.place (x=54, y=460)
@@ -648,10 +669,23 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=250)
 
             ######## Displays a calendar to facilitate the selection of the date
+            ######### Global variable so that the window does not open more than one
+            global calendar_window
+            calendar_window = False
+
             def calendar ():
+                ######### Specifying the global variable
+                global calendar_window
+
+                ######### Conditional that tells me if there is already an open window
+                if calendar_window:
+                    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+                    return
+
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
+                calendar_window = True
 
                 ######### Create a calendar widget
                 calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
@@ -668,6 +702,14 @@ def dataviewview (mainmenu):
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
                 date_button.pack (pady=10)
+
+                ######### Function to reset the variable, so that you can reopen the window
+                def calendar_close ():
+                    global calendar_window
+                    window_callendary.destroy ()
+                    calendar_window = None
+
+                window_callendary.protocol('WM_DELETE_WINDOW', calendar_close)
 
             calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
             calendar_button.place (x=54, y=300)
@@ -972,10 +1014,23 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=330)
 
             ######## Displays a calendar to facilitate the selection of the date
+            ######### Global variable so that the window does not open more than one
+            global calendar_window
+            calendar_window = False
+
             def calendar ():
+                ######### Specifying the global variable
+                global calendar_window
+
+                ######### Conditional that tells me if there is already an open window
+                if calendar_window:
+                    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+                    return
+
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
+                calendar_window = True
 
                 ######### Create a calendar widget
                 calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
@@ -992,6 +1047,14 @@ def dataviewview (mainmenu):
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
                 date_button.pack (pady=10)
+
+                ######### Function to reset the variable, so that you can reopen the window
+                def calendar_close ():
+                    global calendar_window
+                    window_callendary.destroy ()
+                    calendar_window = None
+
+                window_callendary.protocol('WM_DELETE_WINDOW', calendar_close)
 
             calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
             calendar_button.place (x=54, y=380)
@@ -1275,10 +1338,23 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=250)
 
             ######## Displays a calendar to facilitate the selection of the date
+            ######### Global variable so that the window does not open more than one
+            global calendar_window
+            calendar_window = False
+
             def calendar ():
+                ######### Specifying the global variable
+                global calendar_window
+
+                ######### Conditional that tells me if there is already an open window
+                if calendar_window:
+                    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+                    return
+
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
+                calendar_window = True
 
                 ######### Create a calendar widget
                 calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
@@ -1295,6 +1371,14 @@ def dataviewview (mainmenu):
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
                 date_button.pack (pady=10)
+
+                ######### Function to reset the variable, so that you can reopen the window
+                def calendar_close ():
+                    global calendar_window
+                    window_callendary.destroy ()
+                    calendar_window = None
+
+                window_callendary.protocol('WM_DELETE_WINDOW', calendar_close)
 
             calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
             calendar_button.place (x=54, y=300)
@@ -1588,10 +1672,23 @@ def dataviewview (mainmenu):
             departuredate_entry.place (x=50, y=330)
 
             ######## Displays a calendar to facilitate the selection of the date
+            ######### Global variable so that the window does not open more than one
+            global calendar_window
+            calendar_window = False
+
             def calendar ():
+                ######### Specifying the global variable
+                global calendar_window
+
+                ######### Conditional that tells me if there is already an open window
+                if calendar_window:
+                    messagebox.showerror ('Nueva ventana', 'Ya existe una ventana abierta')
+                    return
+
                 ######### Create a new window for the calendar
                 window_callendary = tk.Toplevel (data_editing_menu)
                 window_callendary.title ('Calendario seleccionable')
+                calendar_window = True
 
                 ######### Create a calendar widget
                 calendar = Calendar (window_callendary, date_pattern='dd-mm-y', selectmode='day')
@@ -1608,6 +1705,14 @@ def dataviewview (mainmenu):
                 ######### button to show the selected date
                 date_button = tk.Button (window_callendary, text='Mostrar fecha', command=show_calendar_date)
                 date_button.pack (pady=10)
+
+                ######### Function to reset the variable, so that you can reopen the window
+                def calendar_close ():
+                    global calendar_window
+                    window_callendary.destroy ()
+                    calendar_window = None
+
+                window_callendary.protocol('WM_DELETE_WINDOW', calendar_close)
 
             calendar_button = CTkButton (data_editing_menu, text='Abrir Calendario', command=calendar)
             calendar_button.place (x=54, y=380)
@@ -1713,7 +1818,7 @@ def dataviewview (mainmenu):
             maindataview.destroy ()
             mainmenu.deiconify ()
 
-    maindataview.protocol("WM_DELETE_WINDOW", menu_page)
+    maindataview.protocol('WM_DELETE_WINDOW', menu_page)
 
     ## Function to show which button and window is being selected
     def hide_indicator ():
