@@ -458,12 +458,80 @@ def dataviewview (mainmenu):
             idpc_entry.configure (state='readonly')
             departuredate_entry.configure (state='readonly')
 
+        #### Function to generate a word document about the device status report
+        def button_docx ():
+
+            ##### Format of the window interface
+            print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.title ('Menu para generar el oficio')
+            print_data_menu.geometry ('400x550')
+            print_data_menu.resizable (False, False)
+
+            ##### Fonts for the letters
+            font2 = ('Roboto', 18, 'bold')
+
+            ##### Specifying the global variables
+            global addressed_to_entry
+            global by_entry
+            global namepc, model, serial, memory
+            global observation_docx_entry
+            global item_values
+
+            ##### Boxes to write to whom the letter is addressed and who sends it
+            addressed_to_label = CTkLabel (print_data_menu, font=font2, text='Dirigido a:', text_color='#fff')
+            addressed_to_label.pack ()
+
+            addressed_to_entry = CTkEntry (print_data_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            addressed_to_entry.pack (pady=6)
+
+            by_label = CTkLabel (print_data_menu, font=font2, text='Por:', text_color='#fff')
+            by_label.pack ()
+
+            by_entry = CTkEntry (print_data_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+            by_entry.pack (pady=6)
+
+            ##### Status of the checkboxes
+            namepc = IntVar (value=1)
+            model = IntVar (value=1)
+            serial = IntVar (value=1)
+            memory = IntVar (value=1)
+
+            ##### Checkboxes to say include more data
+            CTkCheckBox (print_data_menu, text='Incluir Nombre', variable=namepc).pack (pady=6)
+
+            CTkCheckBox (print_data_menu, text='Incluir Modelo', variable=model).pack (pady=6)
+
+            CTkCheckBox (print_data_menu, text='Incluir Serial', variable=serial).pack (pady=6)
+
+            CTkCheckBox (print_data_menu, text='Incluir RAM', variable=memory).pack (pady=6)
+
+            ##### Box to write the observations to be reported
+            observation_docx_label = CTkLabel (print_data_menu, font=font2, text='Reporte:', text_color='#fff')
+            observation_docx_label.pack ()
+
+            observation_docx_entry = CTkTextbox (print_data_menu, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=250, height=150, corner_radius=10, wrap=WORD)
+            observation_docx_entry.pack (pady=6)
+
+            ##### Conditional so that when an element is chosen it allows to open the window or not, in addition to saving the element's data to use
+            selected_item = trv.selection ()
+            if not selected_item:
+                print_data_menu.destroy ()
+                messagebox.showerror ('Error - sin elemento no seleccionado', 'Se debe seleccionar un elemento para generar un oficio')
+                return
+
+            ##### Gets the values of the selected register
+            item_values = trv.item (selected_item[0], 'values')
+
+            ##### Button to confirm and generate the document
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, namepc, model, serial, memory, observation_docx_entry, item_values))
+            button_confirm.pack (pady=10)
+
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pc ():
             Resources.Connection.graph_pc ()
 
         #### Button area
-        button_docx = CTkButton (main_frame, font=font1, text='Imprimir datos', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=Resources.Connection.docx_pc)
+        button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
         button_docx.place (x=50, y=450)
 
         button_del = CTkButton (main_frame, font=font1, text='Borrar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
