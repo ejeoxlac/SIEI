@@ -961,7 +961,7 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
@@ -1394,7 +1394,7 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
@@ -1802,7 +1802,7 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
@@ -2226,7 +2226,7 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods

@@ -1,10 +1,12 @@
 # Libraries
 import sqlite3, pandas, matplotlib.pyplot as plt
 from matplotlib.widgets import Button
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from docx import Document
 from docx.shared import Inches
-from docx.enum.section import WD_ORIENT
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+import locale
+from datetime import datetime
 
 # Connector to the database and to execute the SQL statements the database cursor was created
 db = sqlite3.connect ('Resources\\SIEIDB.db')
@@ -69,44 +71,157 @@ def del_pc (rowid):
   db.close ()
 
 ## Printing a word document with data obtained from the database
-def docx_pc ():
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT * FROM PC')
-  data = cur.fetchall ()
+def docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values):
+  ### Check that there are enough values
+  if len(item_values) < 3:
+    messagebox.showerror ('Error', 'El registro seleccionado no tiene suficientes datos.')
+    return
 
-  ### Creation of the Word document and placement of the data
+  ### Values that the letter document may or may not have
+  #### Data to whom the letter is addressed, who sends the letter and the subject
+  addressed_to = addressed_to_entry.get().strip ()
+  by = by_entry.get().strip ()
+  subject = subject_entry.get().strip ()
+
+  #### Assuming the columns to get the data are: Name, Model, Serial, Motherboard, Processor, Memory RAM, Hard disk or solid disk
+  pcnamepc = item_values [1] # Name
+  pcmodelpc = item_values [2] # Model
+  pcserialpc = item_values [3] # Serial
+  pcmbpc = item_values [5] # Motherboard
+  pccpupc = item_values [9] # Processor
+  pcrampc = item_values [10] # Memory RAM
+  pcdiskpc = item_values [11] # Hard disk or solid disk
+
+  #### Get the text of the observation
+  observation = observation_docx_entry.get('1.0', 'end').strip ()
+
+  ### Create the Word document
   docx = Document()
   section = docx.sections [-1]
-  new_width, new_height = section.page_height, section.page_width
-  section.orientation = WD_ORIENT.LANDSCAPE
-  section.page_width = new_width
-  section.page_height = new_height
-  table = docx.add_table (rows=1, cols=len(data[0]))
-  ### Apply a table style
-  table.style = 'Table Grid'
+  section.page_height = Inches (11)
+  section.page_width = Inches (8.5)
 
-  ### Column headings
-  headings = [descripcion[0] for descripcion in cur.description]
-  for i, heading in enumerate (headings):
-      cell = table.cell (0, i)
-      cell.text = heading
+  #### Modification of the header to put logos
+  header_for_logos = docx.sections[0].header
+  hflp = header_for_logos.paragraphs [0]
 
-  ### Add rows of data
-  for row in data:
-      new_row = table.add_row().cells
-      for i, column in enumerate (row):
-          new_row[i].text = str (column)
+  ##### Add logo on the left
+  tll = hflp.add_run ()
+  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
-  ### Adjusts the width of the table columns
-  for column in table.columns:
-    width = Inches (1.5)
-    column.width = width
+  ##### Add a space between the images
+  hflp.add_run ('                                                                                         ')
 
-  ### Saves the document in the current folder
-  docx.save ('Datos de las computadoras.docx')
+  ##### Add logo on the right
+  trl = hflp.add_run ()
+  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-  db.close ()
+  #### Modification of the body for the creation of the document
+  ##### Introductory text as a header
+  tihr1= docx.add_paragraph ('Republica borivariana de venezuela')
+  tihr1.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  tihr2 = docx.add_paragraph ('Estado Zulia')
+  tihr2.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Places the date automatically and also puts it in Spanish
+  locale.setlocale (locale.LC_TIME, 'es_ES.UTF-8')  # Switch to 'es_ES' if you have problems with 'es_ES.UTF-8'
+  current_date = datetime.now().strftime ('%d de %B de %Y')
+  tcud = docx.add_paragraph (f'Cabimas, {current_date}')
+  tcud.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+  ##### Recipient and sender information
+  ###### Recipient
+  tat = 'Para:'
+  details = []
+
+  if addressed_to_entry:
+    tat = f'Para: {addressed_to}'
+
+  tatp = docx.add_paragraph (tat)
+  tatp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ###### sender
+  tby = 'De:'
+  details = []
+
+  if by_entry:
+    tby = f'De: {by}'
+
+  tbyp = docx.add_paragraph (tby)
+  tbyp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Subject information
+  tsu = 'Asunto:'
+  details = []
+
+  if subject_entry:
+    tsu = f'Asunto: {subject}'
+
+  tsup = docx.add_paragraph (tsu)
+  tsup.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Introductory paragraph
+  tinp = docx.add_paragraph ('Reciba usted un cordial saludo')
+  tinp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Content for the details of the letter
+  tcd = 'El equipo de la marca, modelo, serial, está presentando el siguiente problema, sus caracteriticas son:\n'
+  details = []
+
+  ###### Add details according to the selections
+  if namepc.get ():
+    details.append (f'"{pcnamepc}"')
+  if model.get ():
+    details.append (f'modelo "{pcmodelpc}"')
+  if serial.get ():
+    details.append (f'serial "{pcserialpc}"')
+
+  if details:
+    tcd = f'El equipo de la marca {', '.join(details)} está presentando el siguiente'
+
+  if observation_docx_entry:
+    tcd += f" problema: {observation}\n"
+
+  tcdp = docx.add_paragraph (tcd)
+  tcdp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  #### Modification of the final part of the body for the creation of the document
+  ##### Farewell paragraph
+  fwp = docx.add_paragraph ('Sin más que comentar, me despido de usted')
+  fwp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says who made the letter
+  fts = docx.add_paragraph ()
+  fts_run = fts.add_run (f'{by_entry.get()}')
+  fts_run.bold = True
+  fts.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says which department made the letter
+  ftd = docx.add_paragraph ()
+  ftd_run = ftd.add_run ('De parte de la Dirección de Informática')
+  ftd_run.bold = True
+  ftd_run.underline = True
+  ftd.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ### Option that opens a window that allows you to decide the name and place where the document will be saved
+  file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if file_save:
+    docx.save (file_save)
+    messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
+
+  ### Close the window for the generation of the document
+  print_data_menu.destroy()
 
 ## Statistical graph about computers
 ### Global variable so that the window does not open more than one
@@ -263,44 +378,154 @@ def del_pk (rowid):
   db.close ()
 
 ## Printing a word document with data obtained from the database
-def docx_pk ():
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT * FROM PK')
-  data = cur.fetchall ()
+def docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values):
+  ### Check that there are enough values
+  if len(item_values) < 3:
+    messagebox.showerror ('Error', 'El registro seleccionado no tiene suficientes datos.')
+    return
 
-  ### Creation of the Word document and placement of the data
+  ### Values that the letter document may or may not have
+  #### Data to whom the letter is addressed, who sends the letter and the subject
+  addressed_to = addressed_to_entry.get().strip ()
+  by = by_entry.get().strip ()
+  subject = subject_entry.get().strip ()
+
+  #### Assuming the columns to get the data are: Name, Model, Serial
+  pknamepk = item_values [1] # Name
+  pkmodelpk = item_values [2] # Model
+  pkserialpk = item_values [3] # Serial
+
+
+  #### Get the text of the observation
+  observation = observation_docx_entry.get('1.0', 'end').strip ()
+
+  ### Create the Word document
   docx = Document()
   section = docx.sections [-1]
-  new_width, new_height = section.page_height, section.page_width
-  section.orientation = WD_ORIENT.LANDSCAPE
-  section.page_width = new_width
-  section.page_height = new_height
-  table = docx.add_table (rows=1, cols=len(data[0]))
-  ### Apply a table style
-  table.style = 'Table Grid'
+  section.page_height = Inches (11)
+  section.page_width = Inches (8.5)
 
-  ### Column headings
-  headings = [descripcion[0] for descripcion in cur.description]
-  for i, heading in enumerate (headings):
-      cell = table.cell (0, i)
-      cell.text = heading
+  #### Modification of the header to put logos
+  header_for_logos = docx.sections[0].header
+  hflp = header_for_logos.paragraphs [0]
 
-  ### Add rows of data
-  for row in data:
-      new_row = table.add_row().cells
-      for i, column in enumerate (row):
-          new_row[i].text = str (column)
+  ##### Add logo on the left
+  tll = hflp.add_run ()
+  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
-  ### Adjusts the width of the table columns
-  for column in table.columns:
-    width = Inches (1.5)
-    column.width = width
+  ##### Add a space between the images
+  hflp.add_run ('                                                                                         ')
 
-  ### Saves the document in the current folder
-  docx.save ('Datos de los teclados.docx')
+  ##### Add logo on the right
+  trl = hflp.add_run ()
+  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-  db.close ()
+  #### Modification of the body for the creation of the document
+  ##### Introductory text as a header
+  tihr1= docx.add_paragraph ('Republica borivariana de venezuela')
+  tihr1.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  tihr2 = docx.add_paragraph ('Estado Zulia')
+  tihr2.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Places the date automatically and also puts it in Spanish
+  locale.setlocale (locale.LC_TIME, 'es_ES.UTF-8')  # Switch to 'es_ES' if you have problems with 'es_ES.UTF-8'
+  current_date = datetime.now().strftime ('%d de %B de %Y')
+  tcud = docx.add_paragraph (f'Cabimas, {current_date}')
+  tcud.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+  ##### Recipient and sender information
+  ###### Recipient
+  tat = 'Para:'
+  details = []
+
+  if addressed_to_entry:
+    tat = f'Para: {addressed_to}'
+
+  tatp = docx.add_paragraph (tat)
+  tatp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ###### sender
+  tby = 'De:'
+  details = []
+
+  if by_entry:
+    tby = f'De: {by}'
+
+  tbyp = docx.add_paragraph (tby)
+  tbyp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Subject information
+  tsu = 'Asunto:'
+  details = []
+
+  if subject_entry:
+    tsu = f'Asunto: {subject}'
+
+  tsup = docx.add_paragraph (tsu)
+  tsup.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Introductory paragraph
+  tinp = docx.add_paragraph ('Reciba usted un cordial saludo')
+  tinp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Content for the details of the letter
+  tcd = 'El equipo de la marca, modelo, serial, está presentando el siguiente problema, sus caracteriticas son:\n'
+  details = []
+
+  ###### Add details according to the selections
+  if namepk.get ():
+    details.append (f'"{pknamepk}"')
+  if model.get ():
+    details.append (f'modelo "{pkmodelpk}"')
+  if serial.get ():
+    details.append (f'serial "{pkserialpk}"')
+
+  if details:
+    tcd = f'El equipo de la marca {', '.join(details)} está presentando el siguiente'
+
+  if observation_docx_entry:
+    tcd += f" problema: {observation}\n"
+
+  tcdp = docx.add_paragraph (tcd)
+  tcdp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  #### Modification of the final part of the body for the creation of the document
+  ##### Farewell paragraph
+  fwp = docx.add_paragraph ('Sin más que comentar, me despido de usted')
+  fwp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says who made the letter
+  fts = docx.add_paragraph ()
+  fts_run = fts.add_run (f'{by_entry.get()}')
+  fts_run.bold = True
+  fts.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says which department made the letter
+  ftd = docx.add_paragraph ()
+  ftd_run = ftd.add_run ('De parte de la Dirección de Informática')
+  ftd_run.bold = True
+  ftd_run.underline = True
+  ftd.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ### Option that opens a window that allows you to decide the name and place where the document will be saved
+  file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if file_save:
+    docx.save (file_save)
+    messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
+
+  ### Close the window for the generation of the document
+  print_data_menu.destroy()
 
 ## Statistical graph about the keyboards
 ### Global variable so that the window does not open more than one
@@ -457,44 +682,153 @@ def del_pm (rowid):
   db.close ()
 
 ## Printing a word document with data obtained from the database
-def docx_pm ():
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT * FROM PM')
-  data = cur.fetchall ()
+def docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values):
+  ### Check that there are enough values
+  if len(item_values) < 3:
+    messagebox.showerror ('Error', 'El registro seleccionado no tiene suficientes datos.')
+    return
 
-  ### Creation of the Word document and placement of the data
+  ### Values that the letter document may or may not have
+  #### Data to whom the letter is addressed, who sends the letter and the subject
+  addressed_to = addressed_to_entry.get().strip ()
+  by = by_entry.get().strip ()
+  subject = subject_entry.get().strip ()
+
+  #### Assuming the columns to get the data are: Name, Model, Serial
+  pmnamepm = item_values [1] # Name
+  pmmodelpm = item_values [2] # Model
+  pmserialpm = item_values [3] # Serial
+
+  #### Get the text of the observation
+  observation = observation_docx_entry.get('1.0', 'end').strip ()
+
+  ### Create the Word document
   docx = Document()
   section = docx.sections [-1]
-  new_width, new_height = section.page_height, section.page_width
-  section.orientation = WD_ORIENT.LANDSCAPE
-  section.page_width = new_width
-  section.page_height = new_height
-  table = docx.add_table (rows=1, cols=len(data[0]))
-  ### Apply a table style
-  table.style = 'Table Grid'
+  section.page_height = Inches (11)
+  section.page_width = Inches (8.5)
 
-  ### Column headings
-  headings = [descripcion[0] for descripcion in cur.description]
-  for i, heading in enumerate (headings):
-      cell = table.cell (0, i)
-      cell.text = heading
+  #### Modification of the header to put logos
+  header_for_logos = docx.sections[0].header
+  hflp = header_for_logos.paragraphs [0]
 
-  ### Add rows of data
-  for row in data:
-      new_row = table.add_row().cells
-      for i, column in enumerate (row):
-          new_row[i].text = str (column)
+  ##### Add logo on the left
+  tll = hflp.add_run ()
+  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
-  ### Adjusts the width of the table columns
-  for column in table.columns:
-    width = Inches (1.5)
-    column.width = width
+  ##### Add a space between the images
+  hflp.add_run ('                                                                                         ')
 
-  ### Saves the document in the current folder
-  docx.save ('Datos de los monitores.docx')
+  ##### Add logo on the right
+  trl = hflp.add_run ()
+  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-  db.close ()
+  #### Modification of the body for the creation of the document
+  ##### Introductory text as a header
+  tihr1= docx.add_paragraph ('Republica borivariana de venezuela')
+  tihr1.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  tihr2 = docx.add_paragraph ('Estado Zulia')
+  tihr2.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Places the date automatically and also puts it in Spanish
+  locale.setlocale (locale.LC_TIME, 'es_ES.UTF-8')  # Switch to 'es_ES' if you have problems with 'es_ES.UTF-8'
+  current_date = datetime.now().strftime ('%d de %B de %Y')
+  tcud = docx.add_paragraph (f'Cabimas, {current_date}')
+  tcud.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+  ##### Recipient and sender information
+  ###### Recipient
+  tat = 'Para:'
+  details = []
+
+  if addressed_to_entry:
+    tat = f'Para: {addressed_to}'
+
+  tatp = docx.add_paragraph (tat)
+  tatp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ###### sender
+  tby = 'De:'
+  details = []
+
+  if by_entry:
+    tby = f'De: {by}'
+
+  tbyp = docx.add_paragraph (tby)
+  tbyp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Subject information
+  tsu = 'Asunto:'
+  details = []
+
+  if subject_entry:
+    tsu = f'Asunto: {subject}'
+
+  tsup = docx.add_paragraph (tsu)
+  tsup.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Introductory paragraph
+  tinp = docx.add_paragraph ('Reciba usted un cordial saludo')
+  tinp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Content for the details of the letter
+  tcd = 'El equipo de la marca, modelo, serial, está presentando el siguiente problema, sus caracteriticas son:\n'
+  details = []
+
+  ###### Add details according to the selections
+  if namepm.get ():
+    details.append (f'"{pmnamepm}"')
+  if model.get ():
+    details.append (f'modelo "{pmmodelpm}"')
+  if serial.get ():
+    details.append (f'serial "{pmserialpm}"')
+
+  if details:
+    tcd = f'El equipo de la marca {', '.join(details)} está presentando el siguiente'
+
+  if observation_docx_entry:
+    tcd += f" problema: {observation}\n"
+
+  tcdp = docx.add_paragraph (tcd)
+  tcdp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  #### Modification of the final part of the body for the creation of the document
+  ##### Farewell paragraph
+  fwp = docx.add_paragraph ('Sin más que comentar, me despido de usted')
+  fwp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says who made the letter
+  fts = docx.add_paragraph ()
+  fts_run = fts.add_run (f'{by_entry.get()}')
+  fts_run.bold = True
+  fts.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says which department made the letter
+  ftd = docx.add_paragraph ()
+  ftd_run = ftd.add_run ('De parte de la Dirección de Informática')
+  ftd_run.bold = True
+  ftd_run.underline = True
+  ftd.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ### Option that opens a window that allows you to decide the name and place where the document will be saved
+  file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if file_save:
+    docx.save (file_save)
+    messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
+
+  ### Close the window for the generation of the document
+  print_data_menu.destroy()
 
 ## Statistical graph about the monitors
 ### Global variable so that the window does not open more than one
@@ -651,44 +985,154 @@ def del_pmo (rowid):
   db.close ()
 
 ## Printing a word document with data obtained from the database
-def docx_pmo ():
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT * FROM PMO')
-  data = cur.fetchall ()
+def docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values):
+  ### Check that there are enough values
+  if len(item_values) < 3:
+    messagebox.showerror ('Error', 'El registro seleccionado no tiene suficientes datos.')
+    return
 
-  ### Creation of the Word document and placement of the data
+  ### Values that the letter document may or may not have
+  #### Data to whom the letter is addressed, who sends the letter and the subject
+  addressed_to = addressed_to_entry.get().strip ()
+  by = by_entry.get().strip ()
+  subject = subject_entry.get().strip ()
+
+  #### Assuming the columns to get the data are: Name, Model, Serial
+  pmonamepmo = item_values [1] # Name
+  pmomodelpmo = item_values [2] # Model
+  pmoserialpmo = item_values [3] # Serial
+
+
+  #### Get the text of the observation
+  observation = observation_docx_entry.get('1.0', 'end').strip ()
+
+  ### Create the Word document
   docx = Document()
   section = docx.sections [-1]
-  new_width, new_height = section.page_height, section.page_width
-  section.orientation = WD_ORIENT.LANDSCAPE
-  section.page_width = new_width
-  section.page_height = new_height
-  table = docx.add_table (rows=1, cols=len(data[0]))
-  ### Apply a table style
-  table.style = 'Table Grid'
+  section.page_height = Inches (11)
+  section.page_width = Inches (8.5)
 
-  ### Column headings
-  headings = [descripcion[0] for descripcion in cur.description]
-  for i, heading in enumerate (headings):
-      cell = table.cell (0, i)
-      cell.text = heading
+  #### Modification of the header to put logos
+  header_for_logos = docx.sections[0].header
+  hflp = header_for_logos.paragraphs [0]
 
-  ### Add rows of data
-  for row in data:
-      new_row = table.add_row().cells
-      for i, column in enumerate (row):
-          new_row[i].text = str (column)
+  ##### Add logo on the left
+  tll = hflp.add_run ()
+  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
-  ### Adjusts the width of the table columns
-  for column in table.columns:
-    width = Inches (1.5)
-    column.width = width
+  ##### Add a space between the images
+  hflp.add_run ('                                                                                         ')
 
-  ### Saves the document in the current folder
-  docx.save ('Datos de los mouses.docx')
+  ##### Add logo on the right
+  trl = hflp.add_run ()
+  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-  db.close ()
+  #### Modification of the body for the creation of the document
+  ##### Introductory text as a header
+  tihr1= docx.add_paragraph ('Republica borivariana de venezuela')
+  tihr1.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  tihr2 = docx.add_paragraph ('Estado Zulia')
+  tihr2.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Places the date automatically and also puts it in Spanish
+  locale.setlocale (locale.LC_TIME, 'es_ES.UTF-8')  # Switch to 'es_ES' if you have problems with 'es_ES.UTF-8'
+  current_date = datetime.now().strftime ('%d de %B de %Y')
+  tcud = docx.add_paragraph (f'Cabimas, {current_date}')
+  tcud.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+  ##### Recipient and sender information
+  ###### Recipient
+  tat = 'Para:'
+  details = []
+
+  if addressed_to_entry:
+    tat = f'Para: {addressed_to}'
+
+  tatp = docx.add_paragraph (tat)
+  tatp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ###### sender
+  tby = 'De:'
+  details = []
+
+  if by_entry:
+    tby = f'De: {by}'
+
+  tbyp = docx.add_paragraph (tby)
+  tbyp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Subject information
+  tsu = 'Asunto:'
+  details = []
+
+  if subject_entry:
+    tsu = f'Asunto: {subject}'
+
+  tsup = docx.add_paragraph (tsu)
+  tsup.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Introductory paragraph
+  tinp = docx.add_paragraph ('Reciba usted un cordial saludo')
+  tinp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Content for the details of the letter
+  tcd = 'El equipo de la marca, modelo, serial, está presentando el siguiente problema, sus caracteriticas son:\n'
+  details = []
+
+  ###### Add details according to the selections
+  if namepmo.get ():
+    details.append (f'"{pmonamepmo}"')
+  if model.get ():
+    details.append (f'modelo "{pmomodelpmo}"')
+  if serial.get ():
+    details.append (f'serial "{pmoserialpmo}"')
+
+  if details:
+    tcd = f'El equipo de la marca {', '.join(details)} está presentando el siguiente'
+
+  if observation_docx_entry:
+    tcd += f" problema: {observation}\n"
+
+  tcdp = docx.add_paragraph (tcd)
+  tcdp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  #### Modification of the final part of the body for the creation of the document
+  ##### Farewell paragraph
+  fwp = docx.add_paragraph ('Sin más que comentar, me despido de usted')
+  fwp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says who made the letter
+  fts = docx.add_paragraph ()
+  fts_run = fts.add_run (f'{by_entry.get()}')
+  fts_run.bold = True
+  fts.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says which department made the letter
+  ftd = docx.add_paragraph ()
+  ftd_run = ftd.add_run ('De parte de la Dirección de Informática')
+  ftd_run.bold = True
+  ftd_run.underline = True
+  ftd.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ### Option that opens a window that allows you to decide the name and place where the document will be saved
+  file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if file_save:
+    docx.save (file_save)
+    messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
+
+  ### Close the window for the generation of the document
+  print_data_menu.destroy()
 
 ## Statistical graph about mouses
 ### Global variable so that the window does not open more than one
@@ -845,44 +1289,154 @@ def del_pp (rowid):
   db.close ()
 
 ## Printing a word document with data obtained from the database
-def docx_pp ():
-  db = sqlite3.connect ('Resources\\SIEIDB.db')
-  cur = db.cursor ()
-  cur.execute ('SELECT * FROM PP')
-  data = cur.fetchall ()
+def docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values):
+  ### Check that there are enough values
+  if len(item_values) < 3:
+    messagebox.showerror ('Error', 'El registro seleccionado no tiene suficientes datos.')
+    return
 
-  ### Creation of the Word document and placement of the data
+  ### Values that the letter document may or may not have
+  #### Data to whom the letter is addressed, who sends the letter and the subject
+  addressed_to = addressed_to_entry.get().strip ()
+  by = by_entry.get().strip ()
+  subject = subject_entry.get().strip ()
+
+  #### Assuming the columns to get the data are: Name, Model, Serial, Type printing
+  ppnamepp = item_values [1] # Name
+  ppmodelpp = item_values [2] # Model
+  ppserialpp = item_values [3] # Serial
+  pptypeprintingpp = item_values [3] # Type printing
+
+  #### Get the text of the observation
+  observation = observation_docx_entry.get('1.0', 'end').strip ()
+
+  ### Create the Word document
   docx = Document()
   section = docx.sections [-1]
-  new_width, new_height = section.page_height, section.page_width
-  section.orientation = WD_ORIENT.LANDSCAPE
-  section.page_width = new_width
-  section.page_height = new_height
-  table = docx.add_table (rows=1, cols=len(data[0]))
-  ### Apply a table style
-  table.style = 'Table Grid'
+  section.page_height = Inches (11)
+  section.page_width = Inches (8.5)
 
-  ### Column headings
-  headings = [descripcion[0] for descripcion in cur.description]
-  for i, heading in enumerate (headings):
-      cell = table.cell (0, i)
-      cell.text = heading
+  #### Modification of the header to put logos
+  header_for_logos = docx.sections[0].header
+  hflp = header_for_logos.paragraphs [0]
 
-  ### Add rows of data
-  for row in data:
-      new_row = table.add_row().cells
-      for i, column in enumerate (row):
-          new_row[i].text = str (column)
+  ##### Add logo on the left
+  tll = hflp.add_run ()
+  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
-  ### Adjusts the width of the table columns
-  for column in table.columns:
-    width = Inches (1.5)
-    column.width = width
+  ##### Add a space between the images
+  hflp.add_run ('                                                                                         ')
 
-  ### Saves the document in the current folder
-  docx.save ('Datos de las impresoras.docx')
+  ##### Add logo on the right
+  trl = hflp.add_run ()
+  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-  db.close ()
+  #### Modification of the body for the creation of the document
+  ##### Introductory text as a header
+  tihr1= docx.add_paragraph ('Republica borivariana de venezuela')
+  tihr1.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  tihr2 = docx.add_paragraph ('Estado Zulia')
+  tihr2.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Places the date automatically and also puts it in Spanish
+  locale.setlocale (locale.LC_TIME, 'es_ES.UTF-8')  # Switch to 'es_ES' if you have problems with 'es_ES.UTF-8'
+  current_date = datetime.now().strftime ('%d de %B de %Y')
+  tcud = docx.add_paragraph (f'Cabimas, {current_date}')
+  tcud.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+
+  ##### Recipient and sender information
+  ###### Recipient
+  tat = 'Para:'
+  details = []
+
+  if addressed_to_entry:
+    tat = f'Para: {addressed_to}'
+
+  tatp = docx.add_paragraph (tat)
+  tatp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ###### sender
+  tby = 'De:'
+  details = []
+
+  if by_entry:
+    tby = f'De: {by}'
+
+  tbyp = docx.add_paragraph (tby)
+  tbyp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Subject information
+  tsu = 'Asunto:'
+  details = []
+
+  if subject_entry:
+    tsu = f'Asunto: {subject}'
+
+  tsup = docx.add_paragraph (tsu)
+  tsup.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Introductory paragraph
+  tinp = docx.add_paragraph ('Reciba usted un cordial saludo')
+  tinp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  ##### Content for the details of the letter
+  tcd = 'El equipo de la marca, modelo, serial, está presentando el siguiente problema, sus caracteriticas son:\n'
+  details = []
+
+  ###### Add details according to the selections
+  if namepp.get ():
+    details.append (f'"{ppnamepp}"')
+  if model.get ():
+    details.append (f'modelo "{ppmodelpp}"')
+  if serial.get ():
+    details.append (f'serial "{ppserialpp}"')
+
+  if details:
+    tcd = f'El equipo de la marca {', '.join(details)} está presentando el siguiente'
+
+  if observation_docx_entry:
+    tcd += f" problema: {observation}\n"
+
+  tcdp = docx.add_paragraph (tcd)
+  tcdp.alignment = WD_PARAGRAPH_ALIGNMENT.LEFT
+
+  #### Modification of the final part of the body for the creation of the document
+  ##### Farewell paragraph
+  fwp = docx.add_paragraph ('Sin más que comentar, me despido de usted')
+  fwp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says who made the letter
+  fts = docx.add_paragraph ()
+  fts_run = fts.add_run (f'{by_entry.get()}')
+  fts_run.bold = True
+  fts.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ##### Blank line breaks
+  docx.add_paragraph ()
+  docx.add_paragraph ()
+
+  ##### Final text that says which department made the letter
+  ftd = docx.add_paragraph ()
+  ftd_run = ftd.add_run ('De parte de la Dirección de Informática')
+  ftd_run.bold = True
+  ftd_run.underline = True
+  ftd.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+
+  ### Option that opens a window that allows you to decide the name and place where the document will be saved
+  file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if file_save:
+    docx.save (file_save)
+    messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
+
+  ### Close the window for the generation of the document
+  print_data_menu.destroy()
 
 ## Statistical graph about printers
 ### Global variable so that the window does not open more than one
