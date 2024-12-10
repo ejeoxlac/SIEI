@@ -16,6 +16,37 @@ cur = db.cursor ()
 def loginv (user, psw):
   cur.execute ('SELECT * FROM UsersSys WHERE users=? AND psw=?', [user, psw])
 
+# Function to display the total number of records in the database
+def number_of_DB_records ():
+  ## Original path of the database
+  original_DB = 'Resources\\SIEIDB.db'
+
+  ## Variable set to zero to avoid wrong addition
+  total_records = 0
+
+  ## Connect to the database and count the records
+  try:
+    db = sqlite3.connect (original_DB)
+    cur = db.cursor ()
+
+    ### Get the names of all the tables, excluding 'sqlite_sequence' for a correct sum
+    cur.execute ('SELECT name FROM sqlite_master WHERE type="table" AND name != "sqlite_sequence"')
+    tables = cur.fetchall ()
+    
+    ### Count the records of each table
+    for table in tables:
+      cur.execute (f'SELECT COUNT(*) FROM {table[0]}')
+      quantity = cur.fetchone ()[0]
+      total_records += quantity
+
+    ### Show the result and finish the process
+    return f'El total de registros en la base de datos son: {total_records}'
+  except Exception as e:
+    return f'Error al contar registros: {e}'
+  finally:
+    if 'db' in locals ():
+      db.close ()
+
 # Functions to work with the data from the computers that are registered
 ## Check if the ID is already registered
 def id_exist_pc (idpc):
@@ -215,6 +246,9 @@ def docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Option that opens a window that allows you to decide the name and place where the document will be saved
   file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if not file_save:
+    return
 
   if file_save:
     docx.save (file_save)
@@ -520,6 +554,9 @@ def docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
   ### Option that opens a window that allows you to decide the name and place where the document will be saved
   file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
 
+  if not file_save:
+    return
+
   if file_save:
     docx.save (file_save)
     messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
@@ -822,6 +859,9 @@ def docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Option that opens a window that allows you to decide the name and place where the document will be saved
   file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if not file_save:
+    return
 
   if file_save:
     docx.save (file_save)
@@ -1127,6 +1167,9 @@ def docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, name
   ### Option that opens a window that allows you to decide the name and place where the document will be saved
   file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
 
+  if not file_save:
+    return
+
   if file_save:
     docx.save (file_save)
     messagebox.showinfo ('Éxito', 'El documento se ha guardado correctamente.')
@@ -1430,6 +1473,9 @@ def docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Option that opens a window that allows you to decide the name and place where the document will be saved
   file_save = filedialog.asksaveasfilename (defaultextension='.docx', filetypes=[('Documentos de Word', '*.docx'), ('Todos los archivos', '*.*')])
+
+  if not file_save:
+    return
 
   if file_save:
     docx.save (file_save)
