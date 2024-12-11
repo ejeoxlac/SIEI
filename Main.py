@@ -59,13 +59,13 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpc_entry.delete (0, END)
-      namepc.set ('Vit')
+      name.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      colorpc.set ('Negro')
+      color.set ('Negro')
       modelmb_entry.delete (0, END)
-      colormbpc.set ('Verde')
-      graphicscard.set ('NVIDIA')
+      colormb.set ('Verde')
+      graphicscardname.set ('NVIDIA')
       graphicscardmodel_entry.delete (0, END)
       cpu_entry.delete (0, END)
       memory.set ('1 GB DDR2')
@@ -116,6 +116,12 @@ def mainview (mainmenu):
       else:
         return False
 
+    def validate_only_number_input (char):
+      if char == '' or all (c.isdigit() for c in char):
+        return True
+      else:
+        return False
+
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -130,7 +136,7 @@ def mainview (mainmenu):
     idpc_label = CTkLabel (main_frame, font=font2, text='ID:', text_color='#fff')
     idpc_label.place (x=50, y=60)
 
-    idpc_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idpc_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_only_number_input), '%S'))
     idpc_entry.place (x=50, y=90)
 
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
@@ -188,9 +194,9 @@ def mainview (mainmenu):
     graphicscard = StringVar ()
     options = ['NVIDIA', 'AMD', 'Intel', 'ASUS', 'EVGA', 'MSI', 'Zotac']
 
-    graphicscardmodel = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=graphicscard, values=options, state='readonly')
-    graphicscardmodel.set ('NVIDIA')
-    graphicscardmodel.place (x=680, y=170)
+    graphicscardname = CTkComboBox (main_frame, font=font2, text_color='#000', fg_color='#fff', dropdown_hover_color='#3484F0', button_color='#3484F0', button_hover_color='#1a4278', border_color="#3484F0", width=150, variable=graphicscard, values=options, state='readonly')
+    graphicscardname.set ('NVIDIA')
+    graphicscardname.place (x=680, y=170)
 
     ###### Third row
     graphicscardmodel_label = CTkLabel (main_frame, font=font3, text='Modelo de la grafica:', text_color='#fff')
@@ -325,10 +331,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpk_entry.delete (0, END)
-      namepk.set ('Vit')
+      name.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      colorpk.set ('Negro')
+      color.set ('Negro')
       departments.set ('Informática')
       user_entry.delete (0, END)
       status.set ('Operativo')
@@ -366,6 +372,12 @@ def mainview (mainmenu):
       else:
         return False
 
+    def validate_only_number_input (char):
+      if char == '' or all (c.isdigit() for c in char):
+        return True
+      else:
+        return False
+
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -380,7 +392,7 @@ def mainview (mainmenu):
     idpk_label = CTkLabel (main_frame, font=font2, text='ID:', text_color='#fff')
     idpk_label.place (x=50, y=60)
 
-    idpk_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idpk_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_only_number_input), '%S'))
     idpk_entry.place (x=50, y=90)
 
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
@@ -513,10 +525,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpm_entry.delete (0, END)
-      namepm.set ('Vit')
+      name.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      colorpm.set ('Negro')
+      color.set ('Negro')
       typescreeninch.set ('18 pulgadas')
       typeconnectorport.set ('VGA')
       departments.set ('Informática')
@@ -558,6 +570,12 @@ def mainview (mainmenu):
       else:
         return False
 
+    def validate_only_number_input (char):
+      if char == '' or all (c.isdigit() for c in char):
+        return True
+      else:
+        return False
+
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -572,7 +590,7 @@ def mainview (mainmenu):
     idpm_label = CTkLabel (main_frame, font=font2, text='ID:', text_color='#fff')
     idpm_label.place (x=50, y=60)
 
-    idpm_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idpm_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_only_number_input), '%S'))
     idpm_entry.place (x=50, y=90)
 
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
@@ -724,10 +742,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpmo_entry.delete (0, END)
-      namepmo.set ('Vit')
+      name.set ('Vit')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      colorpmo.set ('Negro')
+      color.set ('Negro')
       departments.set ('Informática')
       user_entry.delete (0, END)
       status.set ('Operativo')
@@ -765,6 +783,12 @@ def mainview (mainmenu):
       else:
         return False
 
+    def validate_only_number_input (char):
+      if char == '' or all (c.isdigit() for c in char):
+        return True
+      else:
+        return False
+
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -779,7 +803,7 @@ def mainview (mainmenu):
     idpmo_label = CTkLabel (main_frame, font=font2, text='ID:', text_color='#fff')
     idpmo_label.place (x=50, y=60)
 
-    idpmo_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idpmo_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_only_number_input), '%S'))
     idpmo_entry.place (x=50, y=90)
 
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
@@ -912,10 +936,10 @@ def mainview (mainmenu):
     ##### Input re-initiator for data logging
     def new_dt ():
       idpp_entry.delete (0, END)
-      namepp.set ('HP')
+      name.set ('HP')
       model_entry.delete (0, END)
       serial_entry.delete (0, END)
-      colorpp.set ('Negro')
+      color.set ('Negro')
       typeprinting.set ('Tóner')
       departments.set ('Informática')
       user_entry.delete (0, END)
@@ -955,6 +979,12 @@ def mainview (mainmenu):
       else:
         return False
 
+    def validate_only_number_input (char):
+      if char == '' or all (c.isdigit() for c in char):
+        return True
+      else:
+        return False
+
     #### Fonts for the letters
     font1 = ('Roboto', 30, 'bold')
     font2 = ('Roboto', 18, 'bold')
@@ -969,7 +999,7 @@ def mainview (mainmenu):
     idpp_label = CTkLabel (main_frame, font=font2, text='ID:', text_color='#fff')
     idpp_label.place (x=50, y=60)
 
-    idpp_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
+    idpp_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_only_number_input), '%S'))
     idpp_entry.place (x=50, y=90)
 
     name_label = CTkLabel (main_frame, font=font2, text='Nombre de la marca:', text_color='#fff')
