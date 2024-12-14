@@ -78,7 +78,7 @@ def menuview (mainlogin):
     #### Format of the window interface
     options_database = CTkToplevel ()
     options_database.title ('Opciones para la base de datos')
-    options_database.geometry ('500x400')
+    options_database.geometry ('500x450')
     options_database.resizable (False, False)
 
     #### Code to center the application window
@@ -164,6 +164,21 @@ def menuview (mainlogin):
     #### Show the total records in the database
     total_records_label = CTkLabel (options_database, text=Resources.Connection.number_of_DB_records())
     total_records_label.pack (pady=10)
+
+    xlsx_pcs = CTkButton (options_database, text='Imprimir todos los datos PCs', command=Resources.Connection.xlsx_pcs)
+    xlsx_pcs.pack (pady=10)
+
+    xlsx_pks = CTkButton (options_database, text='Imprimir todos los datos Teclados', command=Resources.Connection.xlsx_pks)
+    xlsx_pks.pack (pady=10)
+
+    xlsx_pms = CTkButton (options_database, text='Imprimir todos los datos Monitores', command=Resources.Connection.xlsx_pms)
+    xlsx_pms.pack (pady=10)
+
+    xlsx_pmos = CTkButton (options_database, text='Imprimir todos los datos Mouses', command=Resources.Connection.xlsx_pmos)
+    xlsx_pmos.pack (pady=10)
+
+    xlsx_pps = CTkButton (options_database, text='Imprimir todos los datos Impresoras', command=Resources.Connection.xlsx_pps)
+    xlsx_pps.pack (pady=10)
 
   ### Function to open the 'about us' window, in this it shows who participated in the creation of the application, the reason for the creation of the application and other things related to the application
   def m6 ():

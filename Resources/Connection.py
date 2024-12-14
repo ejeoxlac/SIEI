@@ -2,6 +2,7 @@
 import sqlite3, pandas, matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 from tkinter import messagebox, filedialog
+import xlsxwriter
 from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -256,6 +257,65 @@ def docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Close the window for the generation of the document
   print_data_menu.destroy()
+
+## Function to generate an excel document from data obtained from the database
+def xlsx_pcs ():
+  ### Connect to the SQLite database
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+
+  ### Prompt the user to select the save location
+  file_save = filedialog.asksaveasfilename (defaultextension='.xlsx', filetypes=[('Documentos de excel', '*.xlsx'),  ('Todos los archivos', '*.*')])
+
+  ### Conditional if the generation of the document is canceled
+  if not file_save:
+    messagebox.showwarning ('Aviso', 'No se seleccionó ninguna ruta. La operación se canceló.')
+    return
+
+  ### Conditional if you choose to save the document
+  else:
+    #### Create an Excel Workbook
+    workbook = xlsxwriter.Workbook (file_save)
+    worksheet = workbook.add_worksheet ()
+
+    #### Consult the data in the database
+    cur.execute ('SELECT * FROM PC')
+    data = cur.fetchall ()
+
+    ##### Get the names of the original columns from the database itself
+    original_column_names = [description[0] for description in cur.description]
+
+    ###### Define new names for the columns
+    new_column_names = ['ID', 'Nombre', 'Modelo', 'Serial', 'Color', 'ModeloMb', 'ColorMb', 'Nombre de la grafica', 'Modelo de la grafica', 'Procesador', 'Ram', 'Unidad de almacenamiento', 'SO', 'DP', 'Usuario', 'Estado', 'Fecha de ingreso', 'Fecha de modificación', 'Fecha de salida', 'Observaciones']  # Change these names as needed
+
+    ###### Create a format for headers in yellow color with borders
+    header_format = workbook.add_format ({'bg_color': '#FFFF00', 'bold': True, 'border': 1})
+
+    ###### Write the new headers in the Excel file
+    worksheet.write_row (0, 0, new_column_names, header_format)
+
+    ##### Write the data obtained from the database to the Excel file
+    for row, row_data in enumerate (data, start=1):
+      worksheet.write_row (row, 0, row_data)
+
+    ###### Adjust the width of the columns automatically to the longest text
+    for i, name in enumerate (new_column_names):
+      max_length = max (len(str(x)) for x in [name] + [str(item) for item in [row[i] for row in data]])
+      worksheet.set_column (i, i, max_length + 2)
+
+    ##### Define the range of the table
+    num_rows = len(data) + 1  # +1 to include the headings
+    table_range = f'A1:{chr(65 + len(new_column_names) - 1)}{num_rows}'
+
+    ##### Adds the table with its columns with filters, it is assigned a name and style
+    worksheet.add_table (table_range, {'header_row': 1, 'columns': [{'header': name} for name in new_column_names], 'name': 'PC', 'style': 'Table Style Light 9'})
+
+    #### Close the Excel workbook and the connection to the database
+    workbook.close()
+    db.close()
+
+    #### Final message after finishing the whole process
+    messagebox.showinfo ('Aviso', 'El archivo Excel ha sido creado exitosamente.')
 
 ## Statistical graph about computers
 ### Global variable so that the window does not open more than one
@@ -564,6 +624,65 @@ def docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
   ### Close the window for the generation of the document
   print_data_menu.destroy()
 
+## Function to generate an excel document from data obtained from the database
+def xlsx_pks ():
+  ### Connect to the SQLite database
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+
+  ### Prompt the user to select the save location
+  file_save = filedialog.asksaveasfilename (defaultextension='.xlsx', filetypes=[('Documentos de excel', '*.xlsx'),  ('Todos los archivos', '*.*')])
+
+  ### Conditional if the generation of the document is canceled
+  if not file_save:
+    messagebox.showwarning ('Aviso', 'No se seleccionó ninguna ruta. La operación se canceló.')
+    return
+
+  ### Conditional if you choose to save the document
+  else:
+    #### Create an Excel Workbook
+    workbook = xlsxwriter.Workbook (file_save)
+    worksheet = workbook.add_worksheet ()
+
+    #### Consult the data in the database
+    cur.execute ('SELECT * FROM PK')
+    data = cur.fetchall ()
+
+    ##### Get the names of the original columns from the database itself
+    original_column_names = [description[0] for description in cur.description]
+
+    ###### Define new names for the columns
+    new_column_names = ['ID', 'Nombre', 'Modelo', 'Serial', 'Color', 'DP', 'Usuario', 'Estado', 'Fecha de ingreso', 'Fecha de modificación', 'Fecha de salida', 'Observaciones']  # Change these names as needed
+
+    ###### Create a format for headers in yellow color with borders
+    header_format = workbook.add_format ({'bg_color': '#FFFF00', 'bold': True, 'border': 1})
+
+    ###### Write the new headers in the Excel file
+    worksheet.write_row (0, 0, new_column_names, header_format)
+
+    ##### Write the data obtained from the database to the Excel file
+    for row, row_data in enumerate (data, start=1):
+      worksheet.write_row (row, 0, row_data)
+
+    ###### Adjust the width of the columns automatically to the longest text
+    for i, name in enumerate (new_column_names):
+      max_length = max (len(str(x)) for x in [name] + [str(item) for item in [row[i] for row in data]])
+      worksheet.set_column (i, i, max_length + 2)
+
+    ##### Define the range of the table
+    num_rows = len(data) + 1  # +1 to include the headings
+    table_range = f'A1:{chr(65 + len(new_column_names) - 1)}{num_rows}'
+
+    ##### Adds the table with its columns with filters, it is assigned a name and style
+    worksheet.add_table (table_range, {'header_row': 1, 'columns': [{'header': name} for name in new_column_names], 'name': 'PK', 'style': 'Table Style Light 9'})
+
+    #### Close the Excel workbook and the connection to the database
+    workbook.close()
+    db.close()
+
+    #### Final message after finishing the whole process
+    messagebox.showinfo ('Aviso', 'El archivo Excel ha sido creado exitosamente.')
+
 ## Statistical graph about the keyboards
 ### Global variable so that the window does not open more than one
 graph_shown = False
@@ -869,6 +988,65 @@ def docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Close the window for the generation of the document
   print_data_menu.destroy()
+
+## Function to generate an excel document from data obtained from the database
+def xlsx_pms ():
+  ### Connect to the SQLite database
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+
+  ### Prompt the user to select the save location
+  file_save = filedialog.asksaveasfilename (defaultextension='.xlsx', filetypes=[('Documentos de excel', '*.xlsx'),  ('Todos los archivos', '*.*')])
+
+  ### Conditional if the generation of the document is canceled
+  if not file_save:
+    messagebox.showwarning ('Aviso', 'No se seleccionó ninguna ruta. La operación se canceló.')
+    return
+
+  ### Conditional if you choose to save the document
+  else:
+    #### Create an Excel Workbook
+    workbook = xlsxwriter.Workbook (file_save)
+    worksheet = workbook.add_worksheet ()
+
+    #### Consult the data in the database
+    cur.execute ('SELECT * FROM PM')
+    data = cur.fetchall ()
+
+    ##### Get the names of the original columns from the database itself
+    original_column_names = [description[0] for description in cur.description]
+
+    ###### Define new names for the columns
+    new_column_names = ['ID', 'Nombre', 'Modelo', 'Serial', 'Color', 'Tamaño de la pantalla', 'Tipo de contector de la pantalla', 'DP', 'Usuario', 'Estado', 'Fecha de ingreso', 'Fecha de modificación', 'Fecha de salida', 'Observaciones']  # Change these names as needed
+
+    ###### Create a format for headers in yellow color with borders
+    header_format = workbook.add_format ({'bg_color': '#FFFF00', 'bold': True, 'border': 1})
+
+    ###### Write the new headers in the Excel file
+    worksheet.write_row (0, 0, new_column_names, header_format)
+
+    ##### Write the data obtained from the database to the Excel file
+    for row, row_data in enumerate (data, start=1):
+      worksheet.write_row (row, 0, row_data)
+
+    ###### Adjust the width of the columns automatically to the longest text
+    for i, name in enumerate (new_column_names):
+      max_length = max (len(str(x)) for x in [name] + [str(item) for item in [row[i] for row in data]])
+      worksheet.set_column (i, i, max_length + 2)
+
+    ##### Define the range of the table
+    num_rows = len(data) + 1  # +1 to include the headings
+    table_range = f'A1:{chr(65 + len(new_column_names) - 1)}{num_rows}'
+
+    ##### Adds the table with its columns with filters, it is assigned a name and style
+    worksheet.add_table (table_range, {'header_row': 1, 'columns': [{'header': name} for name in new_column_names], 'name': 'PM', 'style': 'Table Style Light 9'})
+
+    #### Close the Excel workbook and the connection to the database
+    workbook.close()
+    db.close()
+
+    #### Final message after finishing the whole process
+    messagebox.showinfo ('Aviso', 'El archivo Excel ha sido creado exitosamente.')
 
 ## Statistical graph about the monitors
 ### Global variable so that the window does not open more than one
@@ -1177,6 +1355,65 @@ def docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, name
   ### Close the window for the generation of the document
   print_data_menu.destroy()
 
+## Function to generate an excel document from data obtained from the database
+def xlsx_pmos ():
+  ### Connect to the SQLite database
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+
+  ### Prompt the user to select the save location
+  file_save = filedialog.asksaveasfilename (defaultextension='.xlsx', filetypes=[('Documentos de excel', '*.xlsx'),  ('Todos los archivos', '*.*')])
+
+  ### Conditional if the generation of the document is canceled
+  if not file_save:
+    messagebox.showwarning ('Aviso', 'No se seleccionó ninguna ruta. La operación se canceló.')
+    return
+
+  ### Conditional if you choose to save the document
+  else:
+    #### Create an Excel Workbook
+    workbook = xlsxwriter.Workbook (file_save)
+    worksheet = workbook.add_worksheet ()
+
+    #### Consult the data in the database
+    cur.execute ('SELECT * FROM PMO')
+    data = cur.fetchall ()
+
+    ##### Get the names of the original columns from the database itself
+    original_column_names = [description[0] for description in cur.description]
+
+    ###### Define new names for the columns
+    new_column_names = ['ID', 'Nombre', 'Modelo', 'Serial', 'Color', 'DP', 'Usuario', 'Estado', 'Fecha de ingreso', 'Fecha de modificación', 'Fecha de salida', 'Observaciones']  # Change these names as needed
+
+    ###### Create a format for headers in yellow color with borders
+    header_format = workbook.add_format ({'bg_color': '#FFFF00', 'bold': True, 'border': 1})
+
+    ###### Write the new headers in the Excel file
+    worksheet.write_row (0, 0, new_column_names, header_format)
+
+    ##### Write the data obtained from the database to the Excel file
+    for row, row_data in enumerate (data, start=1):
+      worksheet.write_row (row, 0, row_data)
+
+    ###### Adjust the width of the columns automatically to the longest text
+    for i, name in enumerate (new_column_names):
+      max_length = max (len(str(x)) for x in [name] + [str(item) for item in [row[i] for row in data]])
+      worksheet.set_column (i, i, max_length + 2)
+
+    ##### Define the range of the table
+    num_rows = len(data) + 1  # +1 to include the headings
+    table_range = f'A1:{chr(65 + len(new_column_names) - 1)}{num_rows}'
+
+    ##### Adds the table with its columns with filters, it is assigned a name and style
+    worksheet.add_table (table_range, {'header_row': 1, 'columns': [{'header': name} for name in new_column_names], 'name': 'PMO', 'style': 'Table Style Light 9'})
+
+    #### Close the Excel workbook and the connection to the database
+    workbook.close()
+    db.close()
+
+    #### Final message after finishing the whole process
+    messagebox.showinfo ('Aviso', 'El archivo Excel ha sido creado exitosamente.')
+
 ## Statistical graph about mouses
 ### Global variable so that the window does not open more than one
 graph_shown = False
@@ -1483,6 +1720,65 @@ def docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ### Close the window for the generation of the document
   print_data_menu.destroy()
+
+## Function to generate an excel document from data obtained from the database
+def xlsx_pps ():
+  ### Connect to the SQLite database
+  db = sqlite3.connect ('Resources\\SIEIDB.db')
+  cur = db.cursor ()
+
+  ### Prompt the user to select the save location
+  file_save = filedialog.asksaveasfilename (defaultextension='.xlsx', filetypes=[('Documentos de excel', '*.xlsx'),  ('Todos los archivos', '*.*')])
+
+  ### Conditional if the generation of the document is canceled
+  if not file_save:
+    messagebox.showwarning ('Aviso', 'No se seleccionó ninguna ruta. La operación se canceló.')
+    return
+
+  ### Conditional if you choose to save the document
+  else:
+    #### Create an Excel Workbook
+    workbook = xlsxwriter.Workbook (file_save)
+    worksheet = workbook.add_worksheet ()
+
+    #### Consult the data in the database
+    cur.execute ('SELECT * FROM PP')
+    data = cur.fetchall ()
+
+    ##### Get the names of the original columns from the database itself
+    original_column_names = [description[0] for description in cur.description]
+
+    ###### Define new names for the columns
+    new_column_names = ['ID', 'Nombre', 'Modelo', 'Serial', 'Color', 'Tipo de impresión', 'DP', 'Usuario', 'Estado', 'Fecha de ingreso', 'Fecha de modificación', 'Fecha de salida', 'Observaciones']  # Change these names as needed
+
+    ###### Create a format for headers in yellow color with borders
+    header_format = workbook.add_format ({'bg_color': '#FFFF00', 'bold': True, 'border': 1})
+
+    ###### Write the new headers in the Excel file
+    worksheet.write_row (0, 0, new_column_names, header_format)
+
+    ##### Write the data obtained from the database to the Excel file
+    for row, row_data in enumerate (data, start=1):
+      worksheet.write_row (row, 0, row_data)
+
+    ###### Adjust the width of the columns automatically to the longest text
+    for i, name in enumerate (new_column_names):
+      max_length = max (len(str(x)) for x in [name] + [str(item) for item in [row[i] for row in data]])
+      worksheet.set_column (i, i, max_length + 2)
+
+    ##### Define the range of the table
+    num_rows = len(data) + 1  # +1 to include the headings
+    table_range = f'A1:{chr(65 + len(new_column_names) - 1)}{num_rows}'
+
+    ##### Adds the table with its columns with filters, it is assigned a name and style
+    worksheet.add_table (table_range, {'header_row': 1, 'columns': [{'header': name} for name in new_column_names], 'name': 'PP', 'style': 'Table Style Light 9'})
+
+    #### Close the Excel workbook and the connection to the database
+    workbook.close()
+    db.close()
+
+    #### Final message after finishing the whole process
+    messagebox.showinfo ('Aviso', 'El archivo Excel ha sido creado exitosamente.')
 
 ## Statistical graph about printers
 ### Global variable so that the window does not open more than one
