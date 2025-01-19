@@ -1,7 +1,7 @@
 # Libraries
 from customtkinter import *
 from tkinter import messagebox
-from PIL import Image
+from PIL import Image, ImageTk
 import Menu
 
 # Communicating with SQLite3 to get the login data from the database
@@ -35,7 +35,7 @@ def loginview ():
   mainlogin = CTk ()
   mainlogin.iconbitmap ('Resources\\Img\\Ico.ico')
   mainlogin.title ('Inicio de sesión al sistema SIEI')
-  mainlogin.geometry ('500x400')
+  mainlogin.geometry ('540x500')
   mainlogin.resizable (False, False)
 
   ## Code to center the application window
@@ -53,45 +53,46 @@ def loginview ():
   ### Set the new position
   mainlogin.geometry(f"+{x}+{y}")
 
-  ## Format to create the background of the application
-  bg_image = CTkImage (Image.open('Resources\\Img\\Bggradient.jpg'), size=(500, 400))
-  bg_image_label = CTkLabel (mainlogin, text='', image=bg_image)
-  bg_image_label.place (x=0, y=0)
+  ## The format of the frames that make up the main body of the window
+  frame_right = CTkFrame (mainlogin)
+  frame_right.pack (side=RIGHT, expand=False, fill='both', padx=(0, 0))
 
-  ## Format of the frame that forms the main body of the window
-  frame = CTkFrame (mainlogin)
-  frame.pack (side=RIGHT, expand=True, fill='both', padx=(220, 0), pady=30)
+  frame_left = CTkCanvas (mainlogin, highlightthickness=0) 
+  frame_left.pack (side=LEFT, expand=True, fill='both', padx=(0, 0))
 
-  # ## Logos
-  # logo_image1 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
-  # logo_image1_label = CTkLabel (frame, text='', image=logo_image1, fg_color=None, bg_color='transparent')
-  # logo_image1_label.place (x=50, y=5)
+  ## Backgraund image
+  image_path = 'Resources\\Img\\Login_SIEI_img_background.png'
+  image = Image.open (image_path)
 
-  logo_image_central = CTkImage (Image.open('Resources\\Img\\LogoLogin.png'), size=(60, 60))
-  logo_image_central_label = CTkLabel (frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
-  logo_image_central_label.place (x=110, y=5)
+  ### Automatically resizes the image to the size of the left frame to avoid problems if the screen is scaled to other percentages
+  def resized_img (event):
+    canvas_width = frame_left.winfo_width ()
+    canvas_height = frame_left.winfo_height ()
+    resized_image = image.resize ((canvas_width, canvas_height), Image.LANCZOS)
+    photo = ImageTk.PhotoImage (resized_image)
+    frame_left.create_image (0, 0, image=photo, anchor='nw')
+    frame_left.image = photo
 
-  # logo_image2 = CTkImage (Image.open('Resources\\Img\\Logo.png'), size=(60, 60))
-  # logo_image2_label = CTkLabel (frame, text='', image=logo_image2, fg_color=None, bg_color='transparent')
-  # logo_image2_label.place (x=212, y=5)
+  frame_left.bind ('<Configure>', resized_img)
+  resized_img (None)
 
-  login_image3 = CTkImage (Image.open('Resources\\Img\\Inventory.jpg'), size=(220, 340))
-  login_image3_label = CTkLabel (mainlogin, text='', image=login_image3)
-  login_image3_label.place (x=0, y=30)
-
+  ## Objects in the right window
   ### Title
-  CTkLabel (frame, text='Sistema de inventario', font=('Roboto', 22)).pack (pady=(80, 0))
-  CTkLabel (frame, text='para', font=('Roboto', 22)).pack (pady=2)
-  CTkLabel (frame, text='equipos informáticos', font=('Roboto', 21)).pack (pady=2)
+  CTkLabel (frame_right, text='Iniciar sesión', font=('Roboto', 22)).pack (padx=(10, 0),pady=(140, 0))
 
   ### Data entry for the login
-  name = CTkEntry (frame, placeholder_text='Usuario 👤', width=250, height=40)
-  name.pack (pady=5)
+  name = CTkEntry (frame_right, placeholder_text='Usuario 👤', width=250, height=40)
+  name.pack (padx=10, pady=(60, 0))
 
-  password = CTkEntry (frame, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
-  password.pack (pady=10)
+  password = CTkEntry (frame_right, placeholder_text='Contraseña 🔑', show='*', width=250, height=40)
+  password.pack (padx=10, pady=10)
 
   ### login button
-  CTkButton (frame, text='Acceder', command=login, corner_radius=15).pack (pady=5)
+  #### Bind the Enter key to the login function
+  password.bind('<Return>', lambda event: login())
+  
+  CTkButton (frame_right, text='Acceder', command=login, corner_radius=15).pack (pady=20)
+
+  CTkLabel (frame_right, text='Versión - v4.0.0', font=('Roboto', 10)).pack (pady=30)
 
   mainlogin.mainloop ()
