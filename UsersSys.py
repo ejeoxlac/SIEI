@@ -22,7 +22,7 @@ def userssysview (mainmenu):
 
     ## Format of the window interface
     mainuserssys = customtkinter.CTkToplevel ()
-    mainuserssys.iconbitmap ('Resources\\Img\\Ico.ico')
+    mainuserssys.after(250, lambda:  mainuserssys.iconbitmap('Resources\\Img\\Ico.ico'))
     mainuserssys.title ('Datos de los usuarios')
     mainuserssys.geometry ('860x580')
     mainuserssys.resizable (False, False)
@@ -41,6 +41,9 @@ def userssysview (mainmenu):
     y = (screen_height // 2) - (win_height // 2)
     ### Set the new position
     mainuserssys.geometry(f"+{x}+{y}")
+
+    ## Variable that saves which window is open
+    current_page = None
 
     ## Setting the table and scrollbar style
     trv_style = ttk.Style ()
@@ -62,9 +65,56 @@ def userssysview (mainmenu):
     reg_icon = CTkImage (Image.open('Resources\\Img\\User.png'), size=(20, 20))
     view_icon = CTkImage (Image.open('Resources\\Img\\Userdetail.png'), size=(20, 20))
 
+    ## Generator of help message for objects in which the cursor is needed to be positioned to know more about the object
+    class CustomHovertip (Hovertip):
+        def showcontents (main):
+            label = tk.Label (main.tipwindow, text=f'''{main.text}''', justify=tk.LEFT, bg='#151515', fg='#ffffff', relief=tk.SOLID, borderwidth=1, font=('Roboto', 12))
+            label.pack ()
+
+    ## Format of the menu
+    menu_bar_frame = tk.Frame (mainuserssys, bg=menu_bar_colour)
+
+    ### Menu buttons
+    exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, menu_page))
+    exit_btn.grid (row=0, column=0, padx=(5, 0), pady=(13.2, 0))
+    CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
+
+    reg_btn = CTkButton (menu_bar_frame, text='', image=reg_icon, width=10, height=10, command=lambda: switch_indication (reg_btn_indicator, reg_page))
+    reg_btn.grid (row=1, column=0, padx=(5, 0), pady=(60, 0))
+    CustomHovertip (reg_btn, text='Ventana para añadir datos de usuarios', hover_delay=500)
+
+    view_btn = CTkButton (menu_bar_frame, text='', image=view_icon, width=10, height=10, command=lambda: switch_indication (view_btn_indicator, view_page))
+    view_btn.grid (row=2, column=0, padx=(5, 0), pady=(20, 0))
+    CustomHovertip (view_btn, text='Ventana para ver los datos de usuarios', hover_delay=500)
+
+    ### Usage indicator for the button
+    exit_btn_indicator = tk.Label(menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    exit_btn_indicator.grid (row=0, column=1, padx=(2, 0), pady=(15, 0), sticky='n')
+
+    reg_btn_indicator = tk.Label (menu_bar_frame, bg='white', width=0, height=3)
+    reg_btn_indicator.grid (row=1, column=1, padx=(2, 0), pady=(72, 0), sticky='n')
+
+    view_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    view_btn_indicator.grid (row=2, column=1, padx=(2, 0), pady=(23, 0), sticky='n')
+
+    #### Form of the menu
+    menu_bar_frame.pack (side=tk.LEFT, fill=Y, pady=4, padx=3)
+    menu_bar_frame.pack_propagate (flag=False)
+    menu_bar_frame.configure (width=45)
+
+    ### Area where the objects that are selected in the menu will be displayed
+    main_frame = CTkFrame (mainuserssys)
+    main_frame.pack (fill='both', expand=True, side=LEFT, padx=(0,20), pady=20)
+    main_frame.pack_propagate (False)
+    main_frame.configure (width=800, height=500)
+
     ## Functions to display the windows
     ### Window where the user's data can be registered
     def reg_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'reg_page'
 
         #### Database manipulators
         ##### Input re-initiator for data logging
@@ -108,57 +158,61 @@ def userssysview (mainmenu):
 
         #### User interface objects
         title_label = CTkLabel (main_frame, font=font1, text='Datos de registro del usuario', text_color='#fff')
-        title_label.place (x=25, y=5)
+        title_label.grid (row=0, column=0, columnspan=3, padx=(20, 0), pady=10, sticky='w')
 
         ##### Objects to register the users that is inside the frame
         ###### Front row
         idus_label = CTkLabel (main_frame, font=font2, text='ID del usuario:', text_color='#fff')
-        idus_label.place (x=50, y=60)
+        idus_label.grid (row=1, column=0, padx=(40, 20), pady=(10, 5), sticky='w')
 
         idus_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        idus_entry.place (x=50, y=90)
+        idus_entry.grid (row=2, column=0, padx=(40, 20), pady=(0, 10), sticky='w')
 
         user_label = CTkLabel (main_frame, font=font2, text='Nombre de usuario:', text_color='#fff')
-        user_label.place (x=280, y=60)
+        user_label.grid (row=1, column=1, padx=20, pady=(10, 5), sticky='w')
 
         user_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        user_entry.place (x=280, y=90)
+        user_entry.grid (row=2, column=1, padx=20, pady=(0, 10), sticky='w')
 
         psw_label = CTkLabel (main_frame, font=font2, text='Contraseña del usuario:', text_color='#fff')
-        psw_label.place (x=520, y=60)
+        psw_label.grid (row=1, column=2, padx=20, pady=(10, 5), sticky='w')
 
         psw_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        psw_entry.place (x=520, y=90)
+        psw_entry.grid (row=2, column=2, padx=20, pady=(0, 10), sticky='w')
 
         ###### Second row
         firstnameperson_label = CTkLabel (main_frame, font=font2, text='Nombre real del usuario:', text_color='#fff')
-        firstnameperson_label.place (x=50, y=140)
+        firstnameperson_label.grid  (row=3, column=0, padx=(40, 20), pady=(10, 5), sticky='w')
 
         firstnameperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        firstnameperson_entry.place (x=50, y=170)
+        firstnameperson_entry.grid (row=4, column=0, padx=(40, 20), pady=(5, 5), sticky='w')
 
         lastnameperson_label = CTkLabel (main_frame, font=font2, text='Apellido real del usuario:', text_color='#fff')
-        lastnameperson_label.place (x=280, y=140)
+        lastnameperson_label.grid (row=3, column=1, padx=20, pady=(10, 5), sticky='w')
 
         lastnameperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10)
-        lastnameperson_entry.place (x=280, y=170)
+        lastnameperson_entry.grid (row=4, column=1, padx=20, pady=(5, 5), sticky='w')
 
         idcardperson_label = CTkLabel (main_frame, font=font2, text='C.I. real del usuario:', text_color='#fff')
-        idcardperson_label.place (x=520, y=140)
+        idcardperson_label.grid (row=3, column=2, padx=20, pady=(10, 5), sticky='w')
 
         idcardperson_entry = CTkEntry (main_frame, font=font2, text_color='#000', fg_color='#fff', border_color='#3484F0', border_width=3, width=150, height=35, corner_radius=10, validate='key', validatecommand=(main_frame.register(validate_numbers_entry), '%S'))
-        idcardperson_entry.place (x=520, y=170)
+        idcardperson_entry.grid (row=4, column=2, padx=20, pady=(5, 5), sticky='w')
 
         ###### Button area
         submit_button = CTkButton (main_frame, font=font2, text='Guardar', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=submit_dt)
-        submit_button.place (x=240, y=450)
+        submit_button.grid (row=5, column=0, columnspan=3, padx=(0, 200), pady=(265, 10))
 
         clear_button = CTkButton (main_frame, font=font2, text='Nuevo registro', border_width=1.5, corner_radius=15, border_color="#3484F0", fg_color='#343638', command=new_dt)
-        clear_button.place (x=420, y=450)
+        clear_button.grid (row=5, column=0, columnspan=3, padx=(200, 0), pady=(265, 10))
         ##### The end of the frame objects
 
     ### Window where users' data can be viewed
     def view_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'view_page'
 
         #### Search function within the database to get user data
         def find ():
@@ -186,12 +240,9 @@ def userssysview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=200, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 7):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=CENTER)
         trv.heading (2, text='Usuario', anchor=CENTER)
@@ -204,18 +255,22 @@ def userssysview (mainmenu):
         trv.tag_configure ('oddrow', background='#4a5052')
         trv.tag_configure ('evenrow', background='#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
+        #### Format to move the data table both horizontally and vertically
         scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=778, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
         scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=782, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=774, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function to delete users
         def button_del ():
@@ -233,6 +288,7 @@ def userssysview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos')
             data_editing_menu.geometry ('800x500')
             data_editing_menu.resizable (False, False)
@@ -337,28 +393,60 @@ def userssysview (mainmenu):
             idus_entry.configure (state='readonly')
 
         #### Button area
-        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=240, y=450)
+        button_del = CTkButton(main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(200, 0), sticky='w')
         
-        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton(main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 200), sticky='e')
 
         #### Function to display the data automatically after opening the window
         find ()
 
     ### Function to delete the window or close
     def delete_pages ():
-        
+
         for frame in main_frame.winfo_children ():
             frame.destroy ()
 
     ### Function to return to the menu window
     def menu_page ():
+
+        #### Calls the variable to find out what its previous state was
+        global current_page
+
+        #### Fonts for the letters
+        font1 = ('Roboto', 22, 'bold')
+
+        #### Format for the background of the output page
+        CTkLabel (main_frame, text='Sistema de inventario', font=font1).pack (pady=(80, 0))
+        CTkLabel (main_frame, text='para', font=font1).pack (pady=2)
+        CTkLabel (main_frame, text='equipos informáticos', font=font1).pack (pady=2)
+        logo_image_central = CTkImage (Image.open('Resources\\Img\\Logo_SIEI_icon.png'), size=(150, 150))
+        logo_image_central_label = CTkLabel (main_frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
+        logo_image_central_label.pack (pady=20)
+
+        #### Exit confirmation message, also if the exit is rejected it will return to the window that was open
         if messagebox.askyesno ('Confirmación', '¿Está seguro que desea salir?'):
             mainuserssys.destroy ()
             mainmenu.deiconify ()
+        else:
+            if current_page == 'view_page':
+                delete_pages ()
+                view_page ()
+                view_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
+            elif current_page == 'reg_page':
+                delete_pages ()
+                reg_page ()
+                reg_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
 
-    mainuserssys.protocol("WM_DELETE_WINDOW", menu_page)
+    ## Function to detect when I want to leave the window
+    def closing ():
+        switch_indication (exit_btn_indicator, menu_page)
+
+    ## Detector of whether I want to close the window
+    mainuserssys.protocol ("WM_DELETE_WINDOW", closing)
 
     ## Function to show which button and window is being selected
     def hide_indicator ():
@@ -367,57 +455,13 @@ def userssysview (mainmenu):
         reg_btn_indicator.config (bg=menu_bar_colour)
         view_btn_indicator.config (bg=menu_bar_colour)
 
-    ## Function that shows the page and marks which is the button that is being used
+    ## Function that shows the page and marks which button is being used and allows to work with the variable
     def switch_indication (lb, page):
-
+        global current_page
         hide_indicator ()
         lb.config (bg='white')
         delete_pages ()
         page ()
-
-    ## Generator of help message for objects in which the cursor is needed to be positioned to know more about the object
-    class CustomHovertip (Hovertip):
-        def showcontents (main):
-            label = tk.Label (main.tipwindow, text=f'''{main.text}''', justify=tk.LEFT, bg='#151515', fg='#ffffff', relief=tk.SOLID, borderwidth=1, font=('Roboto', 12))
-            label.pack ()
-
-    ## Format of the menu
-    menu_bar_frame = tk.Frame (mainuserssys, bg=menu_bar_colour)
-
-    ### Menu buttons
-    exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, menu_page))
-    exit_btn.place (x=9, y=20)
-    CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
-
-    ### For the separation of the buttons you should always add 60 from where "Y" starts for example 130 + 60 = 190 + 60 = 250 and so on
-    reg_btn = CTkButton (menu_bar_frame, text='', image=reg_icon, width=10, height=10, command=lambda: switch_indication (reg_btn_indicator, reg_page))
-    reg_btn.place (x=9, y=130)
-    CustomHovertip (reg_btn, text='Ventana para añadir datos de usuarios', hover_delay=500)
-
-    view_btn = CTkButton (menu_bar_frame, text='', image=view_icon, width=10, height=10, command=lambda: switch_indication (view_btn_indicator, view_page))
-    view_btn.place (x=9, y=190)
-    CustomHovertip (view_btn, text='Ventana para ver los datos de usuarios', hover_delay=500)
-
-    ### Usage indicator for the button
-    exit_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    exit_btn_indicator.place (x=3, y=20, width=2, height=28)
-
-    reg_btn_indicator = tk.Label (menu_bar_frame, bg='white')
-    reg_btn_indicator.place (x=3, y=130, width=2, height=28)
-
-    view_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    view_btn_indicator.place (x=3, y=190, width=2, height=28)
-
-    ### Form of the menu
-    menu_bar_frame.pack (side=tk.LEFT, fill=tk.Y, pady=4, padx=3)
-    menu_bar_frame.pack_propagate (flag=False)
-    menu_bar_frame.configure (width=45)
-
-    ### Area where the objects that are selected in the menu will be displayed
-    main_frame = CTkFrame (mainuserssys)
-    main_frame.pack (side=tk.LEFT)
-    main_frame.pack_propagate (False)
-    main_frame.configure (width=800, height=500)
 
     ## To display one of the pages
     reg_page ()
