@@ -24,7 +24,7 @@ def dataviewview (mainmenu):
 
     ## Format of the window interface
     maindataview = customtkinter.CTkToplevel ()
-    maindataview.iconbitmap ('Resources\\Img\\ico.ico')
+    maindataview.after(250, lambda:  maindataview.iconbitmap('Resources\\Img\\Ico.ico'))
     maindataview.title ('Datos de los equipos')
     maindataview.geometry ('1000x580')
     maindataview.resizable (False, False)
@@ -67,9 +67,85 @@ def dataviewview (mainmenu):
     pmo_icon = CTkImage (Image.open('Resources\\Img\\Mouse.png'), size=(20, 20))
     pp_icon = CTkImage (Image.open('Resources\\Img\\Printer.png'), size=(20, 20))
 
+    ## Generator of help message for objects in which the cursor is needed to be positioned to know more about the object
+    class CustomHovertip (Hovertip):
+        def showcontents (main):
+            label = tk.Label (main.tipwindow, text=f'''{main.text}''', justify=tk.LEFT, bg='#151515', fg='#ffffff', relief=tk.SOLID, borderwidth=1, font=('Roboto', 12))
+            label.pack ()
+
+    ## Fonts for the letters
+    font1 = ('Roboto', 18, 'bold')
+
+    ### Format for the title to be displayed each time one of the menu sections is opened
+    title_label_area = tk.Label (maindataview, font=font1, fg='#fff', background="#242424")
+    title_label_area.place (x=60, y=10)
+
+    ## Format of the menu
+    menu_bar_frame = tk.Frame (maindataview, bg=menu_bar_colour)
+
+    ### Menu buttons
+    exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, menu_page))
+    exit_btn.grid (row=0, column=0, padx=(5, 0), pady=(13.2, 0))
+    CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
+
+    ### For the separation of the buttons you should always add 60 from where "Y" starts for example 130 + 60 = 190 + 60 = 250 and so on
+    pc_btn = CTkButton (menu_bar_frame, text='', image=pc_icon, width=10, height=10, command=lambda: switch_indication (pc_btn_indicator, pc_page))
+    pc_btn.grid (row=1, column=0, padx=(5, 0), pady=(60, 0))
+    CustomHovertip (pc_btn, text='Ver las computadoras registradas', hover_delay=500)
+
+    pk_btn = CTkButton (menu_bar_frame, text='', image=pk_icon, width=10, height=10, command=lambda: switch_indication (pk_btn_indicator, pk_page))
+    pk_btn.grid (row=2, column=0, padx=(5, 0), pady=(20, 0))
+    CustomHovertip (pk_btn, text='Ver los teclados registrados', hover_delay=500)
+
+    pm_btn = CTkButton (menu_bar_frame, text='', image=pm_icon, width=10, height=10, command=lambda: switch_indication (pm_btn_indicator, pm_page))
+    pm_btn.grid (row=3, column=0, padx=(6, 0), pady=(20, 0))
+    CustomHovertip (pm_btn, text='Ver los monitores registrados', hover_delay=500)
+
+    pmo_btn = CTkButton (menu_bar_frame, text='', image=pmo_icon, width=10, height=10,  command=lambda: switch_indication (pmo_btn_indicator, pmo_page))
+    pmo_btn.grid (row=4, column=0, padx=(6, 0), pady=(20, 0))
+    CustomHovertip (pmo_btn, text='Ver los mouses registrados', hover_delay=500)
+
+    pp_btn = CTkButton (menu_bar_frame, text='', image=pp_icon, width=10, height=10,  command=lambda: switch_indication (pp_btn_indicator, pp_page))
+    pp_btn.grid (row=5, column=0, padx=(6, 0), pady=(20, 0))
+    CustomHovertip (pp_btn, text='Ver las impresoras registradas', hover_delay=500)
+
+    ### Usage indicator for the button
+    exit_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    exit_btn_indicator.grid(row=0, column=1, padx=(2, 0), pady=(15, 0), sticky='n')
+
+    pc_btn_indicator = tk.Label (menu_bar_frame, bg='white', width=0, height=3)
+    pc_btn_indicator.grid(row=1, column=1, padx=(2, 0), pady=(72, 0), sticky='n')
+
+    pk_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    pk_btn_indicator.grid(row=2, column=1, padx=(2, 0), pady=(23, 0), sticky='n')
+
+    pm_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    pm_btn_indicator.grid(row=3, column=1, padx=(2, 0), pady=(23, 0), sticky='n')
+
+    pmo_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    pmo_btn_indicator.grid(row=4, column=1, padx=(2, 0), pady=(23, 0), sticky='n')
+
+    pp_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour, width=0, height=3)
+    pp_btn_indicator.grid(row=5, column=1, padx=(2, 0), pady=(23, 0), sticky='n')
+
+    ### Form of the menu
+    menu_bar_frame.pack (side=tk.LEFT, fill=tk.Y, pady=4, padx=3)
+    menu_bar_frame.pack_propagate (flag=False)
+    menu_bar_frame.configure (width=45)
+
+    ### Area where the objects that are selected in the menu will be displayed
+    main_frame = CTkFrame (maindataview)
+    main_frame.pack (fill='both', side=tk.LEFT, padx=(0,20), pady=(40, 10))
+    main_frame.pack_propagate (False)
+    main_frame.configure (width=910, height=500)
+
     ## Functions to display the data
     ### Computers data window
     def pc_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'pc_page'
 
         #### Search function within the database for obtaining data from computers
         def find ():
@@ -108,26 +184,9 @@ def dataviewview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (7, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (8, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (14, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (15, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (16, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (17, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (18, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (19, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (20, stretch=NO, width=150, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 21):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -154,18 +213,22 @@ def dataviewview (mainmenu):
         trv.tag_configure ('oddrow', background='#4a5052')
         trv.tag_configure ('evenrow', background='#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
-        scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
+        #### Format to move the data table both horizontally and vertically
+        scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=878, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
-        scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
+        scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=882, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=874, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function of deleting data
         def button_del ():
@@ -182,6 +245,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos del computador')
             data_editing_menu.geometry ('960x600')
             data_editing_menu.resizable (False, False)
@@ -463,6 +527,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.after(250, lambda:  print_data_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             print_data_menu.title ('Menu para generar el oficio')
             print_data_menu.geometry ('500x550')
             print_data_menu.resizable (False, False)
@@ -562,16 +627,17 @@ def dataviewview (mainmenu):
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
-        button_docx.place (x=50, y=450)
+        button_docx.grid (row=3, column=0, columnspan=2, pady=10, padx=(136, 0), sticky='w')
 
-        button_del = CTkButton (main_frame, font=font1, text='Borrar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=220, y=450)
+        #### Button area
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(300, 0), sticky='w')
 
-        button_edi = CTkButton (main_frame, font=font1, text='Editar computador', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 300), sticky='e')
 
         button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pc)
-        button_graph.place (x=650, y=450)
+        button_graph.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 150), sticky='e')
 
         #### Function to display the data automatically after opening the window
         button_search ['command'] = find
@@ -580,6 +646,10 @@ def dataviewview (mainmenu):
 
     ### Keyboards data window
     def pk_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'pk_page'
 
         #### Search function within the database to get data from keyboards
         def find ():
@@ -618,18 +688,9 @@ def dataviewview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (7, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (8, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 13):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -648,18 +709,22 @@ def dataviewview (mainmenu):
         trv.tag_configure ('oddrow', background='#4a5052')
         trv.tag_configure ('evenrow', background='#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
-        scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
+        #### Format to move the data table both horizontally and vertically
+        scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=878, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
-        scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
+        scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=882, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=874, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function of deleting data
         def button_del ():
@@ -676,6 +741,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos del teclado')
             data_editing_menu.geometry ('960x600')
             data_editing_menu.resizable (False, False)
@@ -883,6 +949,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.after(250, lambda:  print_data_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             print_data_menu.title ('Menu para generar el oficio')
             print_data_menu.geometry ('500x550')
             print_data_menu.resizable (False, False)
@@ -970,16 +1037,17 @@ def dataviewview (mainmenu):
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
-        button_docx.place (x=50, y=450)
+        button_docx.grid (row=3, column=0, columnspan=2, pady=10, padx=(136, 0), sticky='w')
 
-        button_del = CTkButton (main_frame, font=font1, text='Borrar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=240, y=450)
+        #### Button area
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(300, 0), sticky='w')
 
-        button_edi = CTkButton (main_frame, font=font1, text='Editar teclado', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 300), sticky='e')
 
         button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pk)
-        button_graph.place (x=650, y=450)
+        button_graph.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 150), sticky='e')
 
         #### Function to display the data automatically after opening the window
         button_search ['command'] = find
@@ -988,6 +1056,10 @@ def dataviewview (mainmenu):
 
     ### Monitors data window
     def pm_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'pm_page'
 
         #### Search function within the database to get data from the monitors
         def find ():
@@ -1026,20 +1098,9 @@ def dataviewview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (7, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (8, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (14, stretch=NO, width=150, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 15):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1060,18 +1121,22 @@ def dataviewview (mainmenu):
         trv.tag_configure ('oddrow', background= '#4a5052')
         trv.tag_configure ('evenrow', background= '#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
-        scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
+        #### Format to move the data table both horizontally and vertically
+        scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=878, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
-        scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
+        scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=882, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=874, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function to delete users
         def button_del ():
@@ -1088,6 +1153,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos del monitor')
             data_editing_menu.geometry ('960x600')
             data_editing_menu.resizable (False, False)
@@ -1316,6 +1382,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.after(250, lambda:  print_data_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             print_data_menu.title ('Menu para generar el oficio')
             print_data_menu.geometry ('500x550')
             print_data_menu.resizable (False, False)
@@ -1403,16 +1470,17 @@ def dataviewview (mainmenu):
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
-        button_docx.place (x=50, y=450)
+        button_docx.grid (row=3, column=0, columnspan=2, pady=10, padx=(136, 0), sticky='w')
 
-        button_del = CTkButton (main_frame, font=font1, text='Borrar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=240, y=450)
+        #### Button area
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(300, 0), sticky='w')
 
-        button_edi = CTkButton (main_frame, font=font1, text='Editar monitor', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 300), sticky='e')
 
         button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pm)
-        button_graph.place (x=650, y=450)
+        button_graph.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 150), sticky='e')
 
         #### Function to display the data automatically after opening the window
         button_search ['command'] = find
@@ -1421,6 +1489,10 @@ def dataviewview (mainmenu):
 
     ### Mouses data window
     def pmo_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'pmo_page'
 
         #### Search function within the database for obtaining data from mouses
         def find ():
@@ -1459,18 +1531,9 @@ def dataviewview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (7, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (8, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 13):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1489,18 +1552,22 @@ def dataviewview (mainmenu):
         trv.tag_configure ('oddrow', background='#4a5052')
         trv.tag_configure ('evenrow', background='#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
-        scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
+        #### Format to move the data table both horizontally and vertically
+        scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=878, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
-        scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
+        scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=882, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=874, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function to delete users
         def button_del ():
@@ -1517,6 +1584,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos del mouse')
             data_editing_menu.geometry ('960x600')
             data_editing_menu.resizable (False, False)
@@ -1724,6 +1792,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.after(250, lambda:  print_data_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             print_data_menu.title ('Menu para generar el oficio')
             print_data_menu.geometry ('500x550')
             print_data_menu.resizable (False, False)
@@ -1811,16 +1880,17 @@ def dataviewview (mainmenu):
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
-        button_docx.place (x=50, y=450)
+        button_docx.grid (row=3, column=0, columnspan=2, pady=10, padx=(136, 0), sticky='w')
 
-        button_del = CTkButton (main_frame, font=font1, text='Borrar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=240, y=450)
+        #### Button area
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(300, 0), sticky='w')
 
-        button_edi = CTkButton (main_frame, font=font1, text='Editar mouse', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 300), sticky='e')
 
         button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pmo)
-        button_graph.place (x=650, y=450)
+        button_graph.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 150), sticky='e')
 
         #### Function to display the data automatically after opening the window
         button_search ['command'] = find
@@ -1829,6 +1899,10 @@ def dataviewview (mainmenu):
 
     ### Printers data window
     def pp_page ():
+
+        #### The window that is open is saved in the variable
+        global current_page
+        current_page = 'pp_page'
 
         #### Search function within the database to get data from printers
         def find ():
@@ -1867,19 +1941,9 @@ def dataviewview (mainmenu):
 
         trv.configure (columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13))
 
-        trv.column (1, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (2, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (3, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (4, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (5, stretch=NO, width=100, anchor=tk.CENTER)
-        trv.column (6, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (7, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (8, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (9, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (10, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (11, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (12, stretch=NO, width=150, anchor=tk.CENTER)
-        trv.column (13, stretch=NO, width=150, anchor=tk.CENTER)
+        ##### Defines the columns of the table, all equally and automatically
+        for col in range (1, 14):
+            trv.column (col, stretch=NO, anchor=tk.CENTER)
 
         trv.heading (1, text='ID', anchor=tk.CENTER)
         trv.heading (2, text='Nombre', anchor=tk.CENTER)
@@ -1899,18 +1963,22 @@ def dataviewview (mainmenu):
         trv.tag_configure ('oddrow', background='#4a5052')
         trv.tag_configure ('evenrow', background='#2a2d2e')
 
-        ##### Format to move the data table both horizontally and vertically
-        scrollbarx = ttk.Scrollbar (main_frame, orient=tk.HORIZONTAL, command=trv.xview)
+        #### Format to move the data table both horizontally and vertically
+        scrollbarx = ttk.Scrollbar (main_frame, orient=HORIZONTAL, command=trv.xview)
         trv.configure (xscroll=scrollbarx.set)
         trv.configure (selectmode='extended')
-        scrollbarx.place (x=5, y=408, width=878, height=20)
+        scrollbarx.grid (row=1, column=0,  columnspan=2, sticky='ew')
 
-        scrollbary = ttk.Scrollbar (main_frame, orient=tk.VERTICAL, command=trv.yview)
+        scrollbary = ttk.Scrollbar (main_frame, orient=VERTICAL, command=trv.yview)
         trv.configure (yscroll=scrollbary.set)
         trv.configure (selectmode='extended')
-        scrollbary.place (x=882, y=5, width=20, height=420)
+        scrollbary.grid (row=0, column=1,  columnspan=2, sticky='ns')
 
-        trv.place (x=5, y=5, width=874, height=400)
+        trv.grid (row=0, column=0,  columnspan=2, padx=(0, 16), pady=(0, 1), sticky='nsew')
+
+        #### Setting so that the objects are centered
+        main_frame.grid_rowconfigure (0, weight=1)
+        main_frame.grid_columnconfigure (0, weight=1)
 
         #### Function to delete users
         def button_del ():
@@ -1927,6 +1995,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             data_editing_menu = customtkinter.CTkToplevel ()
+            data_editing_menu.after(250, lambda:  data_editing_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             data_editing_menu.title ('Menu de edición de datos de la impresora')
             data_editing_menu.geometry ('960x600')
             data_editing_menu.resizable (False, False)
@@ -2145,6 +2214,7 @@ def dataviewview (mainmenu):
 
             ##### Format of the window interface
             print_data_menu = customtkinter.CTkToplevel ()
+            print_data_menu.after(250, lambda:  print_data_menu.iconbitmap('Resources\\Img\\Ico.ico'))
             print_data_menu.title ('Menu para generar el oficio')
             print_data_menu.geometry ('500x550')
             print_data_menu.resizable (False, False)
@@ -2235,16 +2305,17 @@ def dataviewview (mainmenu):
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
-        button_docx.place (x=50, y=450)
+        button_docx.grid (row=3, column=0, columnspan=2, pady=10, padx=(136, 0), sticky='w')
 
-        button_del = CTkButton (main_frame, font=font1, text='Borrar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
-        button_del.place (x=240, y=450)
+        #### Button area
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(300, 0), sticky='w')
 
-        button_edi = CTkButton (main_frame, font=font1, text='Editar impresora', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
-        button_edi.place (x=420, y=450)
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+        button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 300), sticky='e')
 
         button_graph = CTkButton (main_frame, font=font1, text='Estadisticas', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=graph_pp)
-        button_graph.place (x=650, y=450)
+        button_graph.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 150), sticky='e')
 
         #### Function to display the data automatically after opening the window
         button_search ['command'] = find
@@ -2259,11 +2330,58 @@ def dataviewview (mainmenu):
 
     ### Function to return to the menu window
     def menu_page ():
+
+        #### Calls the variable to find out what its previous state was
+        global current_page
+
+        #### Fonts for the letters
+        font1 = ('Roboto', 22, 'bold')
+
+        #### Format for the background of the output page
+        CTkLabel (main_frame, text='Sistema de inventario', font=font1).pack (pady=(80, 0))
+        CTkLabel (main_frame, text='para', font=font1).pack (pady=2)
+        CTkLabel (main_frame, text='equipos informáticos', font=font1).pack (pady=2)
+        logo_image_central = CTkImage (Image.open('Resources\\Img\\Logo_SIEI_icon.png'), size=(150, 150))
+        logo_image_central_label = CTkLabel (main_frame, text='', image=logo_image_central, fg_color=None, bg_color='transparent')
+        logo_image_central_label.pack (pady=20)
+
+        #### Exit confirmation message, also if the exit is rejected it will return to the window that was open
         if messagebox.askyesno ('Confirmación', '¿Está seguro que desea salir?'):
             maindataview.destroy ()
             mainmenu.deiconify ()
+        else:
+            if current_page == 'pc_page':
+                delete_pages ()
+                pc_page ()
+                pc_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
+            elif current_page == 'pk_page':
+                delete_pages ()
+                pk_page ()
+                pk_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
+            elif current_page == 'pm_page':
+                delete_pages ()
+                pm_page ()
+                pm_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
+            elif current_page == 'pmo_page':
+                delete_pages ()
+                pmo_page ()
+                pmo_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
+            elif current_page == 'pp_page':
+                delete_pages ()
+                pp_page ()
+                pp_btn_indicator.config (bg='white')
+                exit_btn_indicator.config (bg=menu_bar_colour)
 
-    maindataview.protocol('WM_DELETE_WINDOW', menu_page)
+    ## Function to detect when I want to leave the window
+    def closing ():
+        switch_indication (exit_btn_indicator, menu_page)
+
+    ## Detector of whether I want to close the window
+    maindataview.protocol ("WM_DELETE_WINDOW", closing)
 
     ## Function to show which button and window is being selected
     def hide_indicator ():
@@ -2275,85 +2393,15 @@ def dataviewview (mainmenu):
         pmo_btn_indicator.config (bg=menu_bar_colour)
         pp_btn_indicator.config (bg=menu_bar_colour)
 
-    ## Function that shows the page and marks which is the button that is being used
+    ## Function that shows the page and marks which button is being used and allows to work with the variable
     def switch_indication (lb, page):
-
+        global current_page
         hide_indicator ()
         lb.config (bg='white')
         delete_pages ()
         page ()
 
-    ## Generator of help message for objects in which the cursor is needed to be positioned to know more about the object
-    class CustomHovertip (Hovertip):
-        def showcontents (main):
-            label = tk.Label (main.tipwindow, text=f'''{main.text}''', justify=tk.LEFT, bg='#151515', fg='#ffffff', relief=tk.SOLID, borderwidth=1, font=('Roboto', 12))
-            label.pack ()
 
-    ## Fonts for the letters
-    font1 = ('Roboto', 18, 'bold')
-
-    ### Format for the title to be displayed each time one of the menu sections is opened
-    title_label_area = tk.Label (maindataview, font=font1, fg='#fff', background="#242424")
-    title_label_area.place (x=60, y=10)
-
-    ## Format of the menu
-    menu_bar_frame = tk.Frame (maindataview, bg=menu_bar_colour)
-
-    ### Menu buttons
-    exit_btn = CTkButton (menu_bar_frame, text='', image=exit_icon, width=10, height=10, command=lambda: switch_indication (exit_btn_indicator, menu_page))
-    exit_btn.place (x=9, y=20)
-    CustomHovertip (exit_btn, text='Ir al menu', hover_delay=500)
-
-    ### For the separation of the buttons you should always add 60 from where "Y" starts for example 130 + 60 = 190 + 60 = 250 and so on
-    pc_btn = CTkButton (menu_bar_frame, text='', image=pc_icon, width=10, height=10, command=lambda: switch_indication (pc_btn_indicator, pc_page))
-    pc_btn.place (x=9, y=130)
-    CustomHovertip (pc_btn, text='Ver las computadoras registradas', hover_delay=500)
-
-    pk_btn = CTkButton (menu_bar_frame, text='', image=pk_icon, width=10, height=10, command=lambda: switch_indication (pk_btn_indicator, pk_page))
-    pk_btn.place (x=9, y=190)
-    CustomHovertip (pk_btn, text='Ver los teclados registrados', hover_delay=500)
-
-    pm_btn = CTkButton (menu_bar_frame, text='', image=pm_icon, width=10, height=10, command=lambda: switch_indication (pm_btn_indicator, pm_page))
-    pm_btn.place (x=9, y=250)
-    CustomHovertip (pm_btn, text='Ver los monitores registrados', hover_delay=500)
-
-    pmo_btn = CTkButton (menu_bar_frame, text='', image=pmo_icon, width=10, height=10,  command=lambda: switch_indication (pmo_btn_indicator, pmo_page))
-    pmo_btn.place (x=9, y=310)
-    CustomHovertip (pmo_btn, text='Ver los mouses registrados', hover_delay=500)
-
-    pp_btn = CTkButton (menu_bar_frame, text='', image=pp_icon, width=10, height=10,  command=lambda: switch_indication (pp_btn_indicator, pp_page))
-    pp_btn.place (x=9, y=370)
-    CustomHovertip (pp_btn, text='Ver las impresoras registradas', hover_delay=500)
-
-    ### Usage indicator for the button
-    exit_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    exit_btn_indicator.place (x=3, y=20, width=2, height=28)
-
-    pc_btn_indicator = tk.Label (menu_bar_frame, bg='white')
-    pc_btn_indicator.place (x=3, y=130, width=2, height=28)
-
-    pk_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    pk_btn_indicator.place (x=3, y=190, width=2, height=28)
-
-    pm_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    pm_btn_indicator.place (x=3, y=250, width=2, height=28)
-
-    pmo_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    pmo_btn_indicator.place (x=3, y=310, width=2, height=28)
-
-    pp_btn_indicator = tk.Label (menu_bar_frame, bg=menu_bar_colour)
-    pp_btn_indicator.place (x=3, y=370, width=2, height=28)
-
-    ### Form of the menu
-    menu_bar_frame.pack (side=tk.LEFT, fill=tk.Y, pady=4, padx=3)
-    menu_bar_frame.pack_propagate (flag=False)
-    menu_bar_frame.configure (width=45)
-
-    ### Area where the objects that are selected in the menu will be displayed
-    main_frame = CTkFrame (maindataview)
-    main_frame.pack (side=tk.LEFT)
-    main_frame.pack_propagate (False)
-    main_frame.configure (width=910, height=500)
 
     ## Search box and button to be used with the options box for filtering
     entry_search = CTkEntry (maindataview, text_color='#000', fg_color='#fff', border_color='#B2016C', border_width=2, width=300)
@@ -2373,6 +2421,8 @@ def dataviewview (mainmenu):
     department_options = CTkComboBox (maindataview, text_color='#000', fg_color='#fff', dropdown_hover_color='#7d01b2', button_color='#7d01b2', button_hover_color='#7d01b2', border_color="#7d01b2", width=150, variable=departments, values=options, state='readonly')
     department_options.set ('Todo')
     department_options.place (x=810, y=10)
+
+
 
     ## To display one of the pages
     pc_page ()
