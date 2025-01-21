@@ -393,10 +393,10 @@ def userssysview (mainmenu):
             idus_entry.configure (state='readonly')
 
         #### Button area
-        button_del = CTkButton(main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
+        button_del = CTkButton (main_frame, font=font1, text='Borrar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_del)
         button_del.grid (row=3, column=0, columnspan=2, pady=10, padx=(200, 0), sticky='w')
-        
-        button_edi = CTkButton(main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
+
+        button_edi = CTkButton (main_frame, font=font1, text='Editar usuario', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_dem)
         button_edi.grid (row=3, column=0, columnspan=2, pady=10, padx=(0, 200), sticky='e')
 
         #### Function to display the data automatically after opening the window
