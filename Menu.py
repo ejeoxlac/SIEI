@@ -20,7 +20,7 @@ def menuview (mainlogin):
 
   ## Format of the window interface
   mainmenu = CTkToplevel ()
-  mainmenu.iconbitmap ('Resources\\Img\\Ico.ico')
+  mainmenu.after(250, lambda:  mainmenu.iconbitmap('Resources\\Img\\Ico.ico'))
   mainmenu.title ('Menu')
   mainmenu.geometry ('600x500')
   mainmenu.resizable (False, False)
@@ -41,9 +41,9 @@ def menuview (mainlogin):
   mainmenu.geometry(f"+{x}+{y}")
 
   ## Format to create the background of the application
-  bg_image = CTkImage (Image.open('Resources\\Img\\InventoryMenu.jpg'), size=(600, 500))
+  bg_image = CTkImage (Image.open('Resources\\Img\\InventoryMenu.jpg'), size=(324, 500))
   bg_image_label = CTkLabel (mainmenu, text='', image=bg_image)
-  bg_image_label.place (x=0, y=0)
+  bg_image_label.place (x=276, y=0)
 
   ## Images for menu icons
   image1 = CTkImage (Image.open('Resources\\Img\\Fileadd.png'), size=(30, 30))
@@ -73,10 +73,13 @@ def menuview (mainlogin):
   ### Protocol that when you hit the 'X' in the window, it returns you to the login
   mainmenu.protocol('WM_DELETE_WINDOW', m4)
 
+
+##### de aqui trabajar hacia abajo
   ### Function to open the database options window
   def m5 ():
     #### Format of the window interface
     options_database = CTkToplevel ()
+    options_database.after(250, lambda:  options_database.iconbitmap('Resources\\Img\\Ico.ico'))
     options_database.title ('Opciones para la base de datos')
     options_database.geometry ('500x450')
     options_database.resizable (False, False)
@@ -258,21 +261,25 @@ def menuview (mainlogin):
 
   ## Format of the frame that forms the main body of the window
   frame_button = CTkFrame (mainmenu)
-  frame_button.pack (expand=True, fill='both', padx=140, pady=50)
+  frame_button.pack (side=LEFT, expand=False, fill='both', padx=(0, 140))
 
   ### Title
+  Logo_SIEI_Icon = CTkImage (Image.open('Resources\\Img\\Logo_SIEI_icon.png'), size=(60, 60))
+  Logo_SIEI_Icon_label = CTkLabel (frame_button, text='', image=Logo_SIEI_Icon)
+  Logo_SIEI_Icon_label.pack (pady=10)
+
   CTkLabel (frame_button, text='Menu', font=('Roboto', 26)).pack (pady=10)
 
   ### Buttons for accessing the functions of the application
-  CTkButton (frame_button, text='Registro de equipos informáticos', image=image1, corner_radius=15, command=m1).pack (pady=15)
+  CTkButton (frame_button, text='Registro de equipos informáticos', image=image1, corner_radius=15, command=m1).pack (padx=10, pady=15)
 
-  CTkButton (frame_button, text='Vista de registros guardados', image=image2, corner_radius=15, command=m2).pack (pady=15)
+  CTkButton (frame_button, text='Vista de registros guardados', image=image2, corner_radius=15, command=m2).pack (padx=10, pady=15)
 
-  CTkButton (frame_button, text='Administrador de usuarios', image=image3, corner_radius=15, command=m3).pack (pady=15)
+  CTkButton (frame_button, text='Administrador de usuarios', image=image3, corner_radius=15, command=m3).pack (padx=10, pady=15)
+
+  CTkButton (frame_button, text='Opciones para la base de datos', image=image5, corner_radius=15, command=m5).pack (padx=10, pady=15)
 
   CTkButton (frame_button, text='Salir', image=image4, corner_radius=15, command=m4).pack (pady=15)
-
-  CTkButton (frame_button, text='Opciones para la base de datos', image=image5, corner_radius=15, command=m5).pack (pady=15)
 
   ## Button to open the application information window
   CTkButton (mainmenu, text='', image=image6, width=50, corner_radius=0, command=m6).place (x=550, y=462)
