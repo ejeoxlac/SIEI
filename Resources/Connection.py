@@ -139,14 +139,14 @@ def docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ##### Add logo on the left
   tll = hflp.add_run ()
-  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  tll.add_picture ('Resources\\Img\\Logo_for_SIEI_1.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
   ##### Add a space between the images
   hflp.add_run ('                                                                                         ')
 
   ##### Add logo on the right
   trl = hflp.add_run ()
-  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  trl.add_picture ('Resources\\Img\\Logo_for_SIEI_2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
   hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
   #### Modification of the body for the creation of the document
@@ -505,14 +505,14 @@ def docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ##### Add logo on the left
   tll = hflp.add_run ()
-  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  tll.add_picture ('Resources\\Img\\Logo_for_SIEI_1.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
   ##### Add a space between the images
   hflp.add_run ('                                                                                         ')
 
   ##### Add logo on the right
   trl = hflp.add_run ()
-  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  trl.add_picture ('Resources\\Img\\Logo_for_SIEI_2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
   hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
   #### Modification of the body for the creation of the document
@@ -870,14 +870,14 @@ def docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ##### Add logo on the left
   tll = hflp.add_run ()
-  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  tll.add_picture ('Resources\\Img\\Logo_for_SIEI_1.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
   ##### Add a space between the images
   hflp.add_run ('                                                                                         ')
 
   ##### Add logo on the right
   trl = hflp.add_run ()
-  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  trl.add_picture ('Resources\\Img\\Logo_for_SIEI_2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
   hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
   #### Modification of the body for the creation of the document
@@ -1236,14 +1236,14 @@ def docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, name
 
   ##### Add logo on the left
   tll = hflp.add_run ()
-  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  tll.add_picture ('Resources\\Img\\Logo_for_SIEI_1.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
   ##### Add a space between the images
   hflp.add_run ('                                                                                         ')
 
   ##### Add logo on the right
   trl = hflp.add_run ()
-  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  trl.add_picture ('Resources\\Img\\Logo_for_SIEI_2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
   hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
   #### Modification of the body for the creation of the document
@@ -1602,14 +1602,14 @@ def docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namep
 
   ##### Add logo on the left
   tll = hflp.add_run ()
-  tll.add_picture ('Resources\\Img\\Logo.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  tll.add_picture ('Resources\\Img\\Logo_for_SIEI_1.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
 
   ##### Add a space between the images
   hflp.add_run ('                                                                                         ')
 
   ##### Add logo on the right
   trl = hflp.add_run ()
-  trl.add_picture ('Resources\\Img\\Logo2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
+  trl.add_picture ('Resources\\Img\\Logo_for_SIEI_2.png', width=Inches(1.5))  # Ajusta el tamaño de la imagen
   hflp.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
   #### Modification of the body for the creation of the document
