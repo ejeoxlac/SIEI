@@ -61,7 +61,7 @@ def loginview ():
   frame_left.pack (side=LEFT, expand=True, fill='both', padx=(0, 0))
 
   ## Backgraund image
-  image_path = 'Resources\\Img\\Login_SIEI_img_background.png'
+  image_path = 'Resources\\Img\\Login_SIEI_img_background_Alt.png'
   image = Image.open (image_path)
 
   ### Automatically resizes the image to the size of the left frame to avoid problems if the screen is scaled to other percentages

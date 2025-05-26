@@ -11,6 +11,11 @@ from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
 import Resources.Connection
+import Resources.Previewpk
+import Resources.Previewpc
+import Resources.Previewpm
+import Resources.Previewpmo
+import Resources.Previewpp
 
 # I define the view so I can call it
 def dataviewview (mainmenu):
@@ -619,7 +624,10 @@ def dataviewview (mainmenu):
 
             ##### Button to confirm and generate the document
             button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
-            button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
+            button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
+
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpc.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
+            button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pc ():
@@ -1029,7 +1037,10 @@ def dataviewview (mainmenu):
 
             ##### Button to confirm and generate the document
             button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
-            button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
+            button_confirm.grid (row=8, column=0, columnspan=2,  padx=(0, 60),  pady=5)
+
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpk.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pk ():
@@ -1462,7 +1473,10 @@ def dataviewview (mainmenu):
 
             ##### Button to confirm and generate the document
             button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
-            button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
+            button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
+            
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpm.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pm ():
@@ -1872,7 +1886,10 @@ def dataviewview (mainmenu):
 
             ##### Button to confirm and generate the document
             button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
-            button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
+            button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
+            
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpmo.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pmo ():
@@ -2297,7 +2314,10 @@ def dataviewview (mainmenu):
 
             ##### Button to confirm and generate the document
             button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
-            button_confirm.grid (row=8, column=0, columnspan=2,  pady=5)
+            button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
+            
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpp.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
+            button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pp ():
