@@ -8,7 +8,7 @@ from idlelib.tooltip import Hovertip
 from PIL import Image
 
 # Communication with SQLite3 to get the data from the database
-import Resources.Connection
+import Services.DB.Connection
 
 # I define the view so I can call it
 def userssysview (mainmenu):
@@ -137,10 +137,10 @@ def userssysview (mainmenu):
             try:
                 if not (idus and user and psw and firstnameperson and lastnameperson and idcardperson):
                     messagebox.showerror ('Error', 'Se deben llenar todas las celdas')
-                elif Resources.Connection.id_exist_users (idus):
+                elif Services.DB.Connection.id_exist_users (idus):
                     messagebox.showerror ('Error', 'El ID ya existe')
                 else:
-                    Resources.Connection.insert_users (idus, user, psw, firstnameperson, lastnameperson, idcardperson)
+                    Services.DB.Connection.insert_users (idus, user, psw, firstnameperson, lastnameperson, idcardperson)
                     messagebox.showinfo ('Éxito', 'La información fue registrada')
             except:
                 messagebox.showerror ('Error', 'A ocurrido un error')
@@ -222,8 +222,8 @@ def userssysview (mainmenu):
                 trv.delete (item)
             global count
             count = 0
-            Resources.Connection.search_users ()
-            users = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_users ()
+            users = Services.DB.Connection.cur.fetchall ()
             for row in users:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -278,7 +278,7 @@ def userssysview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_users (rowid)
+                Services.DB.Connection.del_users (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror ('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -361,11 +361,11 @@ def userssysview (mainmenu):
                 if not (idus and user and psw and firstnameperson and lastnameperson and idcardperson):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_users (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson)
+                    Services.DB.Connection.edit_users (rowid, idus, user, psw, firstnameperson, lastnameperson, idcardperson)
                     for item in trv.get_children ():
                         trv.delete (item)
-                    Resources.Connection.search_users ()
-                    users = Resources.Connection.cur.fetchall ()
+                    Services.DB.Connection.search_users ()
+                    users = Services.DB.Connection.cur.fetchall ()
                     for row in users:
                         trv.insert (parent='', index='end', iid=row[0], text='', values=row)
                     data_editing_menu.destroy ()

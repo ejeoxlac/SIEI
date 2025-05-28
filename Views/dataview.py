@@ -10,12 +10,12 @@ from tkcalendar import *
 from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
-import Resources.Connection
-import Resources.Previewpk
-import Resources.Previewpc
-import Resources.Previewpm
-import Resources.Previewpmo
-import Resources.Previewpp
+import Services.DB.Connection
+import Services.Docs.Previewpk
+import Services.Docs.Previewpc
+import Services.Docs.Previewpm
+import Services.Docs.Previewpmo
+import Services.Docs.Previewpp
 
 # I define the view so I can call it
 def dataviewview (mainmenu):
@@ -163,8 +163,8 @@ def dataviewview (mainmenu):
             val = entry_search.get ()
             stat = status.get ()
             dp = departments.get ()
-            Resources.Connection.search_pc (val, stat, dp)
-            PC = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_pc (val, stat, dp)
+            PC = Services.DB.Connection.cur.fetchall ()
             for row in PC:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -240,7 +240,7 @@ def dataviewview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_pc (rowid)
+                Services.DB.Connection.del_pc (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -486,7 +486,7 @@ def dataviewview (mainmenu):
                 if not (idpc and name and model and serial and color and modelmb and colormb and cpu and ram and disk and pcso and dp and stat and dom):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pc (rowid, idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dom, dtd, obs)
+                    Services.DB.Connection.edit_pc (rowid, idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dom, dtd, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -623,15 +623,15 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.DB.Connection.docx_pc (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
 
-            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpc.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.Docs.Previewpc.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepc, model, serial, mb, cpu, ram, disk, observation_docx_entry, item_values))
             button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pc ():
-            Resources.Connection.graph_pc ()
+            Services.DB.Connection.graph_pc ()
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
@@ -670,8 +670,8 @@ def dataviewview (mainmenu):
             val = entry_search.get ()
             stat = status.get ()
             dp = departments.get ()
-            Resources.Connection.search_pk (val, stat, dp)
-            PK = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_pk (val, stat, dp)
+            PK = Services.DB.Connection.cur.fetchall ()
             for row in PK:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -739,7 +739,7 @@ def dataviewview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_pk (rowid)
+                Services.DB.Connection.del_pk (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -919,7 +919,7 @@ def dataviewview (mainmenu):
                 if not (idpk and name and model and serial and color and dp and stat and dom):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pk (rowid, idpk, name, model, serial, color, dp, user, stat, dom, dtd, obs)
+                    Services.DB.Connection.edit_pk (rowid, idpk, name, model, serial, color, dp, user, stat, dom, dtd, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1036,15 +1036,15 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.DB.Connection.docx_pk (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2,  padx=(0, 60),  pady=5)
 
-            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpk.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.Docs.Previewpk.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepk, model, serial, observation_docx_entry, item_values))
             button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pk ():
-            Resources.Connection.graph_pk ()
+            Services.DB.Connection.graph_pk ()
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
@@ -1083,8 +1083,8 @@ def dataviewview (mainmenu):
             val = entry_search.get ()
             stat = status.get ()
             dp = departments.get ()
-            Resources.Connection.search_pm (val, stat, dp)
-            PM = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_pm (val, stat, dp)
+            PM = Services.DB.Connection.cur.fetchall ()
             for row in PM:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -1154,7 +1154,7 @@ def dataviewview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_pm (rowid)
+                Services.DB.Connection.del_pm (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -1353,7 +1353,7 @@ def dataviewview (mainmenu):
                 if not (idpm and name and model and serial and color and tsi and tcp and dp and stat and dom):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pm (rowid, idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dom, dtd, obs)
+                    Services.DB.Connection.edit_pm (rowid, idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dom, dtd, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1472,15 +1472,15 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.DB.Connection.docx_pm (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
             
-            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpm.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.Docs.Previewpm.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepm, model, serial, observation_docx_entry, item_values))
             button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pm ():
-            Resources.Connection.graph_pm ()
+            Services.DB.Connection.graph_pm ()
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
@@ -1519,8 +1519,8 @@ def dataviewview (mainmenu):
             val = entry_search.get ()
             stat = status.get ()
             dp = departments.get ()
-            Resources.Connection.search_pmo (val, stat, dp)
-            PMO = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_pmo (val, stat, dp)
+            PMO = Services.DB.Connection.cur.fetchall ()
             for row in PMO:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -1588,7 +1588,7 @@ def dataviewview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_pmo (rowid)
+                Services.DB.Connection.del_pmo (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -1768,7 +1768,7 @@ def dataviewview (mainmenu):
                 if not (idpmo and name and model and serial and color and dp and stat and dom):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, dp, user, stat, dom, dtd, obs)
+                    Services.DB.Connection.edit_pmo (rowid, idpmo, name, model, serial, color, dp, user, stat, dom, dtd, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -1885,15 +1885,15 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.DB.Connection.docx_pmo (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
             
-            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpmo.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.Docs.Previewpmo.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepmo, model, serial, observation_docx_entry, item_values))
             button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pmo ():
-            Resources.Connection.graph_pmo ()
+            Services.DB.Connection.graph_pmo ()
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)
@@ -1932,8 +1932,8 @@ def dataviewview (mainmenu):
             val = entry_search.get ()
             stat = status.get ()
             dp = departments.get ()
-            Resources.Connection.search_pp (val, stat, dp)
-            PP = Resources.Connection.cur.fetchall ()
+            Services.DB.Connection.search_pp (val, stat, dp)
+            PP = Services.DB.Connection.cur.fetchall ()
             for row in PP:
                 ###### Format so that the divisions of the data can be created within the table
                 if count % 2 == 0:
@@ -2002,7 +2002,7 @@ def dataviewview (mainmenu):
             selected = trv.selection ()
             if selected:
                 rowid = selected [0]
-                Resources.Connection.del_pp (rowid)
+                Services.DB.Connection.del_pp (rowid)
                 trv.delete (rowid)
             else:
                 messagebox.showerror('Error - sin elemento seleccionado', 'Se debe seleccionar un elemento para eliminarlo de la base de datos')
@@ -2191,7 +2191,7 @@ def dataviewview (mainmenu):
                 if not (idpp and name and model and serial and color and tp and dp and stat and dom):
                     messagebox.showerror ('Error', 'Por favor asegurese que todos los campos este completos antes de editar el elemento')
                 else:
-                    Resources.Connection.edit_pp (rowid, idpp, name, model, serial, color, tp, dp, user, stat, dom, dtd, obs)
+                    Services.DB.Connection.edit_pp (rowid, idpp, name, model, serial, color, tp, dp, user, stat, dom, dtd, obs)
                     for item in trv.get_children ():
                         trv.delete (item)
                     find ()
@@ -2313,15 +2313,15 @@ def dataviewview (mainmenu):
             item_values = trv.item (selected_item[0], 'values')
 
             ##### Button to confirm and generate the document
-            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Connection.docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
+            button_confirm = CTkButton (print_data_menu, font=font2, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.DB.Connection.docx_pp (print_data_menu, addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
             button_confirm.grid (row=8, column=0, columnspan=2, padx=(0, 60),  pady=5)
             
-            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Resources.Previewpp.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
+            button_confirm_pv = CTkButton (print_data_menu, font=font2, text='Vista Previa', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=lambda: Services.Docs.Previewpp.convertir_a_pdf (addressed_to_entry, by_entry, subject_entry, namepp, model, serial, typeprinting, observation_docx_entry, item_values))
             button_confirm_pv.grid (row=8, column=1, columnspan=2, padx=(60, 0),  pady=5)
 
         #### Function to display a statistical graph on the operability of computer goods
         def graph_pp ():
-            Resources.Connection.graph_pp ()
+            Services.DB.Connection.graph_pp ()
 
         #### Button area
         button_docx = CTkButton (main_frame, font=font1, text='Generar oficio', border_width=1.5, corner_radius=15, border_color='#3484F0', fg_color='#343638', command=button_docx)

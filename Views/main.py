@@ -9,7 +9,7 @@ from tkcalendar import *
 from datetime import datetime
 
 # Communicating with SQLite3 to get the login data from the database
-import Resources.Connection
+import Services.DB.Connection
 
 # I define the view so I can call it
 def mainview (mainmenu):
@@ -171,10 +171,10 @@ def mainview (mainmenu):
       try:
         if not (idpc and name and model and serial and color and modelmb and colormb and cpu and ram and disk and pcso and dp and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-        elif Resources.Connection.id_exist_pc (idpc):
+        elif Services.DB.Connection.id_exist_pc (idpc):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pc (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs)
+          Services.DB.Connection.insert_pc (idpc, name, model, serial, color, modelmb, colormb, gcn, gcm, cpu, ram, disk, pcso, dp, user, stat, dfa, dtd, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -431,10 +431,10 @@ def mainview (mainmenu):
       try:
         if not (idpk and name and model and serial and color and dp and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-        elif Resources.Connection.id_exist_pk (idpk):
+        elif Services.DB.Connection.id_exist_pk (idpk):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs)
+          Services.DB.Connection.insert_pk (idpk, name, model, serial, color, dp, user, stat, dfa, dtd, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -634,10 +634,10 @@ def mainview (mainmenu):
       try:
         if not (idpm and name and model and serial and color and tsi and tcp and dp and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-        elif Resources.Connection.id_exist_pm (idpm):
+        elif Services.DB.Connection.id_exist_pm (idpm):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs)
+          Services.DB.Connection.insert_pm (idpm, name, model, serial, color, tsi, tcp, dp, user, stat, dfa, dtd, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -851,10 +851,10 @@ def mainview (mainmenu):
       try:
         if not (idpmo and name and model and serial and color and dp and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-        elif Resources.Connection.id_exist_pmo (idpmo):
+        elif Services.DB.Connection.id_exist_pmo (idpmo):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pmo (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs)
+          Services.DB.Connection.insert_pmo (idpmo, name, model, serial, color, dp, user, stat, dfa, dtd, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')
@@ -1052,10 +1052,10 @@ def mainview (mainmenu):
       try:
         if not (idpp and name and model and serial and color and tp and dp and stat and dfa):
           messagebox.showerror ('Error', 'Se deben llenar las celdas, y si es necesario la fecha de salida de la entidad')
-        elif Resources.Connection.id_exist_pp (idpp):
+        elif Services.DB.Connection.id_exist_pp (idpp):
           messagebox.showerror ('Error', 'El ID ya existe')
         else:
-          Resources.Connection.insert_pp (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs)
+          Services.DB.Connection.insert_pp (idpp, name, model, serial, color, tp, dp, user, stat, dfa, dtd, obs)
           messagebox.showinfo ('Éxito', 'La información fue registrada')
       except:
         messagebox.showerror ('Error', 'A ocurrido un error')

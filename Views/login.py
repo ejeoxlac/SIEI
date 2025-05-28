@@ -2,10 +2,10 @@
 from customtkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import Menu
+import Views.Menu as Menu
 
 # Communicating with SQLite3 to get the login data from the database
-import Resources.Connection
+import Services.DB.Connection
 
 # I define the view so I can call it
 def loginview ():
@@ -14,8 +14,8 @@ def loginview ():
   def login():
     user = name.get ()
     psw = password.get ()
-    Resources.Connection.loginv (user, psw)
-    if Resources.Connection.cur.fetchall ():
+    Services.DB.Connection.loginv (user, psw)
+    if Services.DB.Connection.cur.fetchall ():
       messagebox.showinfo ('Login', 'Acceso permitido')
       mainlogin.withdraw ()
       Menu.menuview (mainlogin)

@@ -4,12 +4,12 @@ from tkinter import messagebox, filedialog
 import shutil
 from PIL import Image
 import webbrowser
-import Main
-import Dataview
-import UsersSys
+import Views.Main as Main
+import Views.Dataview as Dataview
+import Views.UsersSys as UsersSys
 
 # Communicating with SQLite3 to get the login data from the database
-import Resources.Connection
+import Services.DB.Connection
 
 # I define the view so I can call it
 def menuview (mainlogin):
@@ -165,22 +165,22 @@ def menuview (mainlogin):
     size_db_label.pack (pady=10)
 
     #### Show the total records in the database
-    total_records_label = CTkLabel (options_database, text=Resources.Connection.number_of_DB_records())
+    total_records_label = CTkLabel (options_database, text=Services.DB.Connection.number_of_DB_records())
     total_records_label.pack (pady=10)
 
-    xlsx_pcs = CTkButton (options_database, text='Imprimir todos los datos PCs', command=Resources.Connection.xlsx_pcs)
+    xlsx_pcs = CTkButton (options_database, text='Imprimir todos los datos PCs', command=Services.DB.Connection.xlsx_pcs)
     xlsx_pcs.pack (pady=10)
 
-    xlsx_pks = CTkButton (options_database, text='Imprimir todos los datos Teclados', command=Resources.Connection.xlsx_pks)
+    xlsx_pks = CTkButton (options_database, text='Imprimir todos los datos Teclados', command=Services.DB.Connection.xlsx_pks)
     xlsx_pks.pack (pady=10)
 
-    xlsx_pms = CTkButton (options_database, text='Imprimir todos los datos Monitores', command=Resources.Connection.xlsx_pms)
+    xlsx_pms = CTkButton (options_database, text='Imprimir todos los datos Monitores', command=Services.DB.Connection.xlsx_pms)
     xlsx_pms.pack (pady=10)
 
-    xlsx_pmos = CTkButton (options_database, text='Imprimir todos los datos Mouses', command=Resources.Connection.xlsx_pmos)
+    xlsx_pmos = CTkButton (options_database, text='Imprimir todos los datos Mouses', command=Services.DB.Connection.xlsx_pmos)
     xlsx_pmos.pack (pady=10)
 
-    xlsx_pps = CTkButton (options_database, text='Imprimir todos los datos Impresoras', command=Resources.Connection.xlsx_pps)
+    xlsx_pps = CTkButton (options_database, text='Imprimir todos los datos Impresoras', command=Services.DB.Connection.xlsx_pps)
     xlsx_pps.pack (pady=10)
 
   ### Function to open the 'about us' window, in this it shows who participated in the creation of the application, the reason for the creation of the application and other things related to the application
